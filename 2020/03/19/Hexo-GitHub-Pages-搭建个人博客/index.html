@@ -470,21 +470,21 @@
 
       
         <h3 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h3><h4 id="1、安装Node-js"><a href="#1、安装Node-js" class="headerlink" title="1、安装Node.js"></a>1、安装Node.js</h4><p>(1) 下载Node.js：<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">官网下载地址</a> （这里以Windows 为例）;</p>
-<p><img src="/images/node.png" alt></p>
+<p><img src="/images/node.png" alt=""></p>
 <a id="more"></a>
 <p>(2) 双击下载好的.msi文件，按下一步下一步，安装好就可以；</p>
 <p>(3) 在cmd命令窗口，输入下面的这个命令，如果能够显示Node.js的版本，说明安装成功了。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-<p><img src="/images/node_v.png" alt></p>
+<p><img src="/images/node_v.png" alt=""></p>
 <h4 id="2、安装Git"><a href="#2、安装Git" class="headerlink" title="2、安装Git"></a>2、安装Git</h4><p>(1) 下载Git：<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网下载</a></p>
 <p>(2) 双击下载好的Git安装包，按下一步下一步，进行安装即可；</p>
 <p>(3) 在cmd命令窗口，输入下面的这个命令，如果能够显示Git的版本，说明安装成功了。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br></pre></td></tr></table></figure>
 
-<p><img src="/images/git_v.png" alt></p>
+<p><img src="/images/git_v.png" alt=""></p>
 <h3 id="二、Hexo搭建博客"><a href="#二、Hexo搭建博客" class="headerlink" title="二、Hexo搭建博客"></a>二、Hexo搭建博客</h3><h4 id="1、安装Hexo"><a href="#1、安装Hexo" class="headerlink" title="1、安装Hexo"></a>1、安装Hexo</h4><p>（1）在计算机中，新建一个Blog文件夹，用于存放自己的博客内容。</p>
 <p>（2）在Blog文件夹内，鼠标右键，选择Git Bash,进入到命令窗口</p>
-<p><img src="/images/blog.png" alt></p>
+<p><img src="/images/blog.png" alt=""></p>
 <p>（3）在命令窗口中，输入下面代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
 
@@ -501,43 +501,43 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s  &#x2F;&#x2F;或者 hexo server</span><br></pre></td></tr></table></figure>
 
 <p>(2) 在浏览器地址栏中输入<a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> （默认端口是4000），如果能够看到如图所示的效果，说明初始化的Hexo博客搭建成功了。<br>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/hexo-blog.png" alt></p>
+<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/hexo-blog.png" alt=""></p>
 <h4 id="三、将本地的-Hexo-博客部署到-GitHub-Pages上"><a href="#三、将本地的-Hexo-博客部署到-GitHub-Pages上" class="headerlink" title="三、将本地的 Hexo 博客部署到 GitHub Pages上"></a>三、将本地的 Hexo 博客部署到 GitHub Pages上</h4><p>（1）新建一个仓库，仓库名为bryceustc.github.io（这个仓库的名称必须严格按照 username.github.io 的格式来命名）【前提是你要有一个Github账号】<br>如图所示：（因为我已经创建过这个库了，所以会显示红色警告，只是后来为了截图，重新写一个同名的）</p>
-<p><img src="/images/github.png" alt></p>
+<p><img src="/images/github.png" alt=""></p>
 <p>（2）进入已经创建好的仓库（点击自己的头像，选择Your profile，点击刚创建好的那个仓库进去仓库里面），点击settings，找到GitHub Pages 选项，点击 Choose a theme 选择一个主题（可以选择也可以不选择，根据自己的需求决定是否操作这一步）<br>如图所示：</p>
-<p><img src="/images/gitpages.png" alt></p>
+<p><img src="/images/gitpages.png" alt=""></p>
 <p>（3）配置Git个人信息，在winneyBlog目录下，鼠标右键，选择Git Bash，进入命令窗口，输入下面的命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;Github用户名&quot;       &#x2F;&#x2F;自己Github的账号名</span><br><span class="line">git config --global user.email &quot;Github邮箱&quot;        &#x2F;&#x2F;自己注册Github的邮箱地址</span><br></pre></td></tr></table></figure>
 
 <p>（4）生成SSH KEY,意思是生成一个公钥和密钥，因为Github需要一个密钥才能与本地相连接。在命令窗口输入下面的命令，然后需要连续按3次回车生成密钥（每按一次回车你可以看到对应的信息） 【你也可以先查看是否已经有了ssh密钥：cd ~/.ssh 如果没有密钥则不会有此文件夹，有则备份删除】</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C  &quot;Github邮箱&quot;        &#x2F;&#x2F;自己注册Github的邮箱地址</span><br></pre></td></tr></table></figure>
 
-<p>如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-key.png" alt></p>
+<p>如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-key.png" alt=""></p>
 <p>（5）生成的SSH KEY会保存到 C:/Users/电脑名用户名/.ssh 目录中（根据你自己电脑用户名，打开对应的目录）</p>
 <ul>
-<li>打开.ssh 这个目录，打开 id_rsa.pub 文件，复制里面的全部内容（这些内容就是密钥）<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/user-ssh.png" alt></li>
+<li>打开.ssh 这个目录，打开 id_rsa.pub 文件，复制里面的全部内容（这些内容就是密钥）<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/user-ssh.png" alt=""></li>
 </ul>
 <p>（6）在GitHub中添加SSH keys</p>
 <ul>
 <li><p>打开Github，点击头像，选择Settings；</p>
 </li>
-<li><p>选择SSH and GPG keys项,点击右上角New SSH key按钮，将刚刚复制到的密钥粘贴到key输入框中，title自己给它命一个名就好<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/add-key.png" alt></p>
+<li><p>选择SSH and GPG keys项,点击右上角New SSH key按钮，将刚刚复制到的密钥粘贴到key输入框中，title自己给它命一个名就好<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/add-key.png" alt=""></p>
 </li>
-<li><p>最后点击Add Key，如果显示这样的界面，说明SSH KEY 配置成功：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-keys.png" alt></p>
+<li><p>最后点击Add Key，如果显示这样的界面，说明SSH KEY 配置成功：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-keys.png" alt=""></p>
 </li>
 </ul>
 <p>（7）修改全局配置文件</p>
 <ul>
-<li><p>在blog文件夹下，找到_config.yml文件；如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt></p>
+<li><p>在blog文件夹下，找到_config.yml文件；如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt=""></p>
 </li>
-<li><p>复制仓库地址：如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-href.png" alt></p>
+<li><p>复制仓库地址：如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-href.png" alt=""></p>
 </li>
-<li><p>修改_config.yml文件里的deploy属性(目的是将本地hexo项目放到Github上)如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt></p>
+<li><p>修改_config.yml文件里的deploy属性(目的是将本地hexo项目放到Github上)如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt=""></p>
 </li>
 </ul>
 <p><strong>注：</strong>【如果repository中填写的是https协议的，hexo d上传代码到Github时有下面类似错误，可以将repository改为ssh的链接】<br>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy-error.png" alt></p>
-<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-link.png" alt></p>
+<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy-error.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-link.png" alt=""></p>
 <p>（8）安装hexo-deployer-git 插件，目的是将代码快速托管到Github上</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 
@@ -694,7 +694,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
