@@ -85,11 +85,15 @@
 <meta property="og:url" content="https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/index.html">
 <meta property="og:site_name" content="Bryce&#39;s Blog">
 <meta property="og:description" content="一、添加文章版权声明功能打开博客目录下的主题配置文件（&#x2F;themes&#x2F;next&#x2F;_config.yml），找到Declare license on posts 标签，进行配置： 12345# Declare license on postspost_copyright:  enable: true    #激活版权声明模块  license: CC BY-NC-SA 3.0     #版权许可协议">
+<meta property="og:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png">
+<meta property="og:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/favicon.png">
+<meta property="og:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/friend-link.png">
 <meta property="article:published_time" content="2020-03-21T10:00:22.000Z">
-<meta property="article:modified_time" content="2020-03-29T10:03:35.856Z">
+<meta property="article:modified_time" content="2020-03-29T10:33:59.970Z">
 <meta property="article:author" content="Bryce">
 <meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png">
 
 
 
@@ -415,7 +419,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  113
+                  358
                 </span>
               
 
@@ -453,10 +457,22 @@
 
       
         <h4 id="一、添加文章版权声明功能"><a href="#一、添加文章版权声明功能" class="headerlink" title="一、添加文章版权声明功能"></a>一、添加文章版权声明功能</h4><p>打开博客目录下的主题配置文件（/themes/next/_config.yml），找到Declare license on posts 标签，进行配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Declare license on posts</span><br><span class="line">post_copyright:</span><br><span class="line">  enable: true    #激活版权声明模块</span><br><span class="line">  license: CC BY-NC-SA 3.0     #版权许可协议</span><br><span class="line">  license_url: https:&#x2F;&#x2F;bryceustc.github.io&#x2F;     #声明的文章的可点击链接（域名）</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Declare license on posts</span><br><span class="line">post_copyright:</span><br><span class="line">  enable: true    #激活版权声明模块</span><br><span class="line">  license: CC BY-NC-SA 3.0     #版权许可协议</span><br><span class="line">  license_url: https:&#x2F;&#x2F;winney07.github.io&#x2F;      #声明的文章的可点击链接（域名）</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>配置完后，执行以下命令，在浏览器中访问，效果如图所示：</p>
+<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png" alt></p>
+<h4 id="二、设置favicon图标"><a href="#二、设置favicon图标" class="headerlink" title="二、设置favicon图标"></a>二、设置favicon图标</h4><p>1、选择一个favicon制作网站完成制作，例如：比特虫 ，制作一个16*16，一个32*32的；</p>
+<p>2、两个不同尺寸大小的文件，重名为favicon-16x16-next.png和favicon-32x32-next.png；</p>
+<p>3、将重命名的两个图片文件放到博客目录下的themes/next/source/images中（覆盖原来的两个默认的）<br>如图所示：</p>
+<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/favicon.png" alt></p>
+<h3 id="三、添加友情链接"><a href="#三、添加友情链接" class="headerlink" title="三、添加友情链接"></a>三、添加友情链接</h3><p>打开主题配置文件（/themes/next/_config.yml），找到以下内容进行修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Blog rolls</span><br><span class="line">links_icon: link</span><br><span class="line">links_title: 友情链接 </span><br><span class="line"># links_layout: block   &#x2F;&#x2F;块状显示（选择了行内显示，这个要注释掉，不然会报错）</span><br><span class="line">links_layout: inline    &#x2F;&#x2F;行内显示</span><br><span class="line">links:</span><br><span class="line">  小超: https:&#x2F;&#x2F;www.xiaochao.me&#x2F;</span><br><span class="line">  Github: https:&#x2F;&#x2F;www.github.com</span><br></pre></td></tr></table></figure>
 
+<p>如图所示：</p>
+<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/friend-link.png" alt></p>
+<h4 id="四、调整hexo页面宽度"><a href="#四、调整hexo页面宽度" class="headerlink" title="四、调整hexo页面宽度"></a>四、调整hexo页面宽度</h4><p>博客在浏览器上的留白太多，因此想增加文章的宽度。</p>
+<p>打开/themes/next/source/css/_variables/custom.styl 添加两行代码即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$main-desktop &#x3D; 1200px </span><br><span class="line">$content-desktop &#x3D; 900px</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -467,24 +483,6 @@
 
     
 
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    Bryce
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/" title="Hexo + NexT主题博客相关设置">https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>
-    本博客所有文章除特别声明外，均采用 <a href="https://bryceustc.github.io/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-
-      </div>
     
 
     <footer class="post-footer">
@@ -680,7 +678,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、添加文章版权声明功能"><span class="nav-number">1.</span> <span class="nav-text">一、添加文章版权声明功能</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、添加文章版权声明功能"><span class="nav-number">1.</span> <span class="nav-text">一、添加文章版权声明功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、设置favicon图标"><span class="nav-number">2.</span> <span class="nav-text">二、设置favicon图标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、添加友情链接"><span class="nav-number"></span> <span class="nav-text">三、添加友情链接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#四、调整hexo页面宽度"><span class="nav-number">1.</span> <span class="nav-text">四、调整hexo页面宽度</span></a></li></ol></div>
             
 
           </div>
