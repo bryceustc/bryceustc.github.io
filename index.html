@@ -453,44 +453,15 @@
 
       
         
-          
-            <p>1、把默认主题更改成Next主题，在blog目录中（就是命令行的位置处于blog目录）打开命令行输入：</p>
+          <p>1、把默认主题更改成Next主题，在blog目录中（就是命令行的位置处于blog目录）打开命令行输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;iissnan&#x2F;hexo-theme-next themes&#x2F;next</span><br></pre></td></tr></table></figure>
-
-<p>这是将Next主题下载到blog目录的themes主题下的next文件夹中。打开站点的_config.yml配置文件，修改主题为next<br><img src="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/1.jpg" alt></p>
-<p>打开<strong>主题theme</strong>的_config.yml配置文件，不是<strong>站点site</strong>主题文件，找到Scheme Settings<br><img src="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/2.jpg" alt><br>next主题有三个样式，我用的是Pisces，可以选择你自己喜欢的样式（只需要把行首的#去除，#是注释），选择好后，再次部署网站，hexo g、hexo d，查看效果。选择其他主题，按照上述过程即可实现。</p>
-<p>2、在主题配置文件 _config.yml中配置博客网站底部的基本信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">footer:</span><br><span class="line">  # Specify the date when the site was setup.</span><br><span class="line">  # If not defined, current year will be used.</span><br><span class="line">  since: 2020      #网站起始运营年份</span><br><span class="line"></span><br><span class="line">  # Icon between year and copyright info.</span><br><span class="line">  icon: user     #声明图标</span><br><span class="line"></span><br><span class="line">  # If not defined, will be used &#96;author&#96; from Hexo main config.</span><br><span class="line">  copyright: bryceustc   #版权所有</span><br><span class="line">  # ------------------------------------------------------------</span><br><span class="line">  # Hexo link (Powered by Hexo).</span><br><span class="line">  powered: true</span><br><span class="line"></span><br><span class="line">  theme:</span><br><span class="line">    # Theme &amp; scheme info link (Theme - NexT.scheme).</span><br><span class="line">    enable: false    #是否显示主题</span><br><span class="line">    # Version info of NexT after scheme info (vX.X.X).</span><br><span class="line">    version: false     #是否显示驱动</span><br></pre></td></tr></table></figure>
-
-<p>3、在主题配置文件 _config.yml中配置菜单按钮，找到menu属性，做以下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: &#x2F; || home     #首页，后面的表示图标</span><br><span class="line"> categories: &#x2F;categories&#x2F; || th   #分类</span><br><span class="line"> tags: &#x2F;tags&#x2F; || tags       #标签</span><br><span class="line"> archives: &#x2F;archives&#x2F; || archive     #归档</span><br><span class="line"> about: &#x2F;about&#x2F; || user       #关于</span><br><span class="line"> #schedule: &#x2F;schedule&#x2F; || calendar</span><br><span class="line"> #sitemap: &#x2F;sitemap.xml || sitemap</span><br><span class="line"> #commonweal: &#x2F;404&#x2F; || heartbeat</span><br></pre></td></tr></table></figure>
-<p>4、创建相应的页面</p>
-<p>（1）执行命令hexo s，本地预览我们的博客页面，会发现，点击分类、标签、关于这几个页面的时候，会显示404。</p>
-<p>（2）在Git Bash命令窗口，输入以下命令来创建相应页面：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo new page &#39;categories&#39;</span><br><span class="line">hexo new page &#39;tags&#39;</span><br><span class="line">hexo new page &#39;about&#39;</span><br></pre></td></tr></table></figure>
-<p>（3）可以在hexo/source目录下看到创建的3个文件夹<br><img src="https://winney07.github.io/2018/08/01/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/source.png" alt></p>
-<p>5、每一个分类菜单都生成了一个 index.md 初始文件（在刚创建的文件夹目录下），默认包含了 title 和 date 字段，我们需要给每一 index.md 文件添加上 type 字段<br>如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: categories</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: tags</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: about</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: about</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<p>6、配置搜索菜单：<br>（1）安装 hexo-generator-searchdb ，在 Git Bash 命令窗口，输入以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
-
-<p>（2）打开全局配置文件（hexo/_config.yml），新增以下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure>
-
-<p>（3）打开主题配置文件（hexo/themes/next/_config.yml），找到 local_search 属性，开启本地搜索功能：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  enable: true</span><br><span class="line">  # if auto, trigger search by changing input</span><br><span class="line">  # if manual, trigger search by pressing enter key or search button</span><br><span class="line">  trigger: auto</span><br><span class="line">  # show top n results per article, show all results by setting to -1</span><br><span class="line">  top_n_per_article: 1</span><br></pre></td></tr></table></figure>
-<p>7、执行命令hexo s，本地预览我们的博客页面，发现刚才的配置已经完成</p>
-<p>8、在命令窗口，输入以下命令，将修改后的本地hexo项目托管到GitHub上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
-
-<p>9、上传成功后，可以通过自己的博客域名访问修改主题和修改相关配置后的博客页面</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
