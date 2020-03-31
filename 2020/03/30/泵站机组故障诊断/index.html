@@ -252,6 +252,13 @@
             </span>
 
           
+            <span id="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/" class="post-meta-item leancloud_visitors" data-flag-title="泵站机组故障诊断" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -294,10 +301,10 @@
 <p>（6）使用TPOT进行模型训练。采用基于遗传算法的自动化机器学习方法TPOT是使用遗传算法对特征归一化、特征选择、模型和参数选择等环节组成的机器学习流程进行自动构建并寻优的方法。</p>
 <p>（7）故障诊断模型工程部署。所研究的故障诊断模型工程部署方法是基于Python轻型Web服务器框架Flask通过HTTP协议实现Python环境与Java环境的交互。</p>
 <p>故障诊断系统工作流程图如下所示：</p>
-<p><img src="liucheng1.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/liucheng1.png" alt></p>
 <h3 id="故障诊断系统研究"><a href="#故障诊断系统研究" class="headerlink" title="故障诊断系统研究"></a>故障诊断系统研究</h3><h4 id="故障数据库设计规范"><a href="#故障数据库设计规范" class="headerlink" title="故障数据库设计规范"></a>故障数据库设计规范</h4><p>在泵站机组型号或运行工况不一样的情况下，虽然机组发生了同一种故障类型，但同样位置的传感器数据会有所不同，这就导致提取的特征也有点不同。因此，在故障数据存储时必须要体现出故障样本的来源背景，这里用机组型号和运行工况来表示。</p>
 <p>以机组某个部件有两个传感器为例设计的故障数据库规范如下表所示：</p>
-<p><img src="shujuku1.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/shujuku1.png" alt></p>
 <h4 id="故障样本不平衡处理"><a href="#故障样本不平衡处理" class="headerlink" title="故障样本不平衡处理"></a>故障样本不平衡处理</h4><h5 id="样本不平衡下的训练方法"><a href="#样本不平衡下的训练方法" class="headerlink" title="样本不平衡下的训练方法"></a>样本不平衡下的训练方法</h5><p>针对样本不平衡下的训练数据集采用简单易行的调整类的权重方法，该方法是在误差函数里添加类别权重，以达到误差平衡，带权重的误差函数为：</p>
 <p>$$<br>\text { error }=\frac{\sum_{i=1}^{n} w_{i}\left(y_{i}^{\prime}-y_{i}\right)^{2}}{n}<br>$$</p>
 <p>其中：</p>
@@ -307,7 +314,7 @@
 <p>$𝑦_𝑖$代表第$i$个样本的实际结果。</p>
 <h5 id="样本不平衡下的评估方法"><a href="#样本不平衡下的评估方法" class="headerlink" title="样本不平衡下的评估方法"></a>样本不平衡下的评估方法</h5><p>在统计和机器学习中，常常用AUC 来评估二分类模型的性能（多分类也可以使用，作为二分类的拓展）。AUC 的全称是Area under the curve，即曲线下的面积。通常这里的曲线指的是受试者操作曲线(Receiver Operating Characteristic,ROC)。相比于准确率、召回率、F1 值等依赖于判决阈值的评估指标，AUC则没有这个问题。</p>
 <p>ROC 曲线：</p>
-<p><img src="ROC.jpg" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/ROC.jpg" alt></p>
 <p>AUC值为ROC 曲线下方所覆盖的区域面积，AUC越大, 说明曲线越靠近(0,1) 这个点，越接近理想曲线，分类效果自然更好。</p>
 <p>AUC指标为什么可以作为样本不平衡情况下的模型评价指标？因为当用来验证算法效果的数据集中的样本比例发生变化时，ROC曲线的形状能够保持不变，而AUC是ROC曲线的下方面积，所以当模型一定时，AUC的值也不随正负样本分布的变化而变化，所以能够作为不平衡数据集的模型评价指标。</p>
 <h4 id="故障特征提取"><a href="#故障特征提取" class="headerlink" title="故障特征提取"></a>故障特征提取</h4><p>泵轴的常见故障有油膜涡动、接触摩擦、油膜振荡、转子不平衡和转子不对中，这些故障都可以体现在泵轴的振动信号里，通常采用泵轴的摆度数值作为它的振动信号。通过利用FFT快速傅里叶变换将时域的振动信号转换为频域的能量分布。</p>
@@ -319,23 +326,23 @@
 <p>（b）频率分辨率𝛥𝐹 ：𝛥𝐹 = 𝐹𝑠/𝑁=2048/2048=1Hz</p>
 <p>（c）谱线数𝑀：𝑀 = 𝑁/2.56=2048/2.56=800</p>
 <p>下图为转子不平衡故障特征提取过程。</p>
-<p><img src="tezheng.jpg" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/tezheng.jpg" alt></p>
 <p>图中共有三个子图，其中最上面的图是泵轴摆度信号的时域图，表现出<br>了周期性，中间图是对摆度信号的时域数据作快速傅立叶变换得到的频谱，最下面图是从频谱提取的特征向量。</p>
-<h4 id="自动化机器学习工具TPOT"><a href="#自动化机器学习工具TPOT" class="headerlink" title="自动化机器学习工具TPOT"></a>自动化机器学习工具TPOT</h4><p><a href="">此节具体参考这里</a></p>
+<h4 id="自动化机器学习工具TPOT"><a href="#自动化机器学习工具TPOT" class="headerlink" title="自动化机器学习工具TPOT"></a>自动化机器学习工具TPOT</h4><p><a href>此节具体参考这里</a></p>
 <h4 id="诊断算法的部署"><a href="#诊断算法的部署" class="headerlink" title="诊断算法的部署"></a>诊断算法的部署</h4><p>设置Web服务器，通过HTTP协议进行调用。生产环境软件通过网络IP、端口将需要诊断的数据传递给Web服务器。Web服务器接受到数据后会进行诊断服务，在诊断结束后，诊断结果会原路返回给服务调用者。<br>诊断数据与Web 服务器之间使用HTTP协议进行通信，HTTP协议下有GET、POST、PUT 和DELETE 等方法，因为通信过程中需要传输传感器数据，所以这里使用可携带数据体的POST方法。</p>
 <p>在故障诊断的各个环节中，诊断算法具有“一次加载、多次使用”的特点，而特征提取、算法调用等步骤随着传输数据的不同而采用不同的方法，所以故障诊断Web服务器在实现时应该按照这样的方式：加载诊断算法在创建故障诊断Web服务器时进行，数据获取、特征提取、调用诊断算法和诊断结果返回这些步骤在POST方法中实现。</p>
 <h3 id="故障诊断系统实现"><a href="#故障诊断系统实现" class="headerlink" title="故障诊断系统实现"></a>故障诊断系统实现</h3><h4 id="故障诊断系统开发环境"><a href="#故障诊断系统开发环境" class="headerlink" title="故障诊断系统开发环境"></a>故障诊断系统开发环境</h4><p>故障诊断系统是在Windows 10上使用Python编程语言开发的，<br>其中数据库使用SQL Server，日志管理使用Logging，配置文件解析加载使用Configparser，频域分析工具包使用Scipy，矩阵数据处理使用Pandas 和Numpy，自动化机器学习工具使用TPOT，模型序列化保存工具使用Pickle，Web 应用框架使用Flask。</p>
 <p>下表是详细的故障诊断系统开发环境。</p>
-<p><img src="environment.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/environment.png" alt></p>
 <h4 id="建立故障数据库"><a href="#建立故障数据库" class="headerlink" title="建立故障数据库"></a>建立故障数据库</h4><p>利用数据库SQL Server 2017 与数据库可视化管理工具Navicat Premium进行搭建，首先参考<a href="https://www.cnblogs.com/ios9/p/9527939.html" target="_blank" rel="noopener external nofollow noreferrer">Win10 SQL Server 2017安装</a>，利用Navicat进行创建一个Faults数据库，并在Faults数据库中创建Rotor表如图所示：</p>
-<p><img src="guifan2.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan2.png" alt></p>
 <p>然后根据数据库设计规范，在表中创建相对应的字段。如图所示:</p>
-<p><img src="guifan.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan.png" alt></p>
 <p><strong>注意：</strong> SQL Server 2017不支持数组形式，这里采用将数组转化为字符串,将他们拼接起来当做文本写入。</p>
 <p>字段类型在设置的时候注意采用nvarchar(max)的类型，具体如下图：</p>
-<p><img src="guifan3.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan3.png" alt></p>
 <p><a href="https://data.mendeley.com/datasets/p9bsmj4xwg/1/files/9ecd3bf8-6ed0-452b-8c84-05a4833ac803" target="_blank" rel="noopener external nofollow noreferrer">Rotor数据</a>, 数据是.mat文件，利用Python处理数据后，写入数据库CGQ1这一列中，最终如图所示：</p>
-<p><img src="guifan4.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan4.png" alt></p>
 
     </div>
 
@@ -563,6 +570,92 @@
 
 
 
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"iqDebTzUizGIN2CBuEuo3QqK-gzGzoHsz","app_key":"ABIDSIKvqKDDY25khhWKFodo","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
 
 
       </div>

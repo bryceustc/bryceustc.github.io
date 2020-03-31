@@ -14,10 +14,10 @@
 <p>（6）使用TPOT进行模型训练。采用基于遗传算法的自动化机器学习方法TPOT是使用遗传算法对特征归一化、特征选择、模型和参数选择等环节组成的机器学习流程进行自动构建并寻优的方法。</p>
 <p>（7）故障诊断模型工程部署。所研究的故障诊断模型工程部署方法是基于Python轻型Web服务器框架Flask通过HTTP协议实现Python环境与Java环境的交互。</p>
 <p>故障诊断系统工作流程图如下所示：</p>
-<p><img src="liucheng1.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/liucheng1.png" alt></p>
 <h3 id="故障诊断系统研究"><a href="#故障诊断系统研究" class="headerlink" title="故障诊断系统研究"></a>故障诊断系统研究</h3><h4 id="故障数据库设计规范"><a href="#故障数据库设计规范" class="headerlink" title="故障数据库设计规范"></a>故障数据库设计规范</h4><p>在泵站机组型号或运行工况不一样的情况下，虽然机组发生了同一种故障类型，但同样位置的传感器数据会有所不同，这就导致提取的特征也有点不同。因此，在故障数据存储时必须要体现出故障样本的来源背景，这里用机组型号和运行工况来表示。</p>
 <p>以机组某个部件有两个传感器为例设计的故障数据库规范如下表所示：</p>
-<p><img src="shujuku1.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/shujuku1.png" alt></p>
 <h4 id="故障样本不平衡处理"><a href="#故障样本不平衡处理" class="headerlink" title="故障样本不平衡处理"></a>故障样本不平衡处理</h4><h5 id="样本不平衡下的训练方法"><a href="#样本不平衡下的训练方法" class="headerlink" title="样本不平衡下的训练方法"></a>样本不平衡下的训练方法</h5><p>针对样本不平衡下的训练数据集采用简单易行的调整类的权重方法，该方法是在误差函数里添加类别权重，以达到误差平衡，带权重的误差函数为：</p>
 <p>$$<br>\text { error }=\frac{\sum_{i=1}^{n} w_{i}\left(y_{i}^{\prime}-y_{i}\right)^{2}}{n}<br>$$</p>
 <p>其中：</p>
@@ -27,7 +27,7 @@
 <p>$𝑦_𝑖$代表第$i$个样本的实际结果。</p>
 <h5 id="样本不平衡下的评估方法"><a href="#样本不平衡下的评估方法" class="headerlink" title="样本不平衡下的评估方法"></a>样本不平衡下的评估方法</h5><p>在统计和机器学习中，常常用AUC 来评估二分类模型的性能（多分类也可以使用，作为二分类的拓展）。AUC 的全称是Area under the curve，即曲线下的面积。通常这里的曲线指的是受试者操作曲线(Receiver Operating Characteristic,ROC)。相比于准确率、召回率、F1 值等依赖于判决阈值的评估指标，AUC则没有这个问题。</p>
 <p>ROC 曲线：</p>
-<p><img src="ROC.jpg" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/ROC.jpg" alt></p>
 <p>AUC值为ROC 曲线下方所覆盖的区域面积，AUC越大, 说明曲线越靠近(0,1) 这个点，越接近理想曲线，分类效果自然更好。</p>
 <p>AUC指标为什么可以作为样本不平衡情况下的模型评价指标？因为当用来验证算法效果的数据集中的样本比例发生变化时，ROC曲线的形状能够保持不变，而AUC是ROC曲线的下方面积，所以当模型一定时，AUC的值也不随正负样本分布的变化而变化，所以能够作为不平衡数据集的模型评价指标。</p>
 <h4 id="故障特征提取"><a href="#故障特征提取" class="headerlink" title="故障特征提取"></a>故障特征提取</h4><p>泵轴的常见故障有油膜涡动、接触摩擦、油膜振荡、转子不平衡和转子不对中，这些故障都可以体现在泵轴的振动信号里，通常采用泵轴的摆度数值作为它的振动信号。通过利用FFT快速傅里叶变换将时域的振动信号转换为频域的能量分布。</p>
@@ -39,23 +39,23 @@
 <p>（b）频率分辨率𝛥𝐹 ：𝛥𝐹 = 𝐹𝑠/𝑁=2048/2048=1Hz</p>
 <p>（c）谱线数𝑀：𝑀 = 𝑁/2.56=2048/2.56=800</p>
 <p>下图为转子不平衡故障特征提取过程。</p>
-<p><img src="tezheng.jpg" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/tezheng.jpg" alt></p>
 <p>图中共有三个子图，其中最上面的图是泵轴摆度信号的时域图，表现出<br>了周期性，中间图是对摆度信号的时域数据作快速傅立叶变换得到的频谱，最下面图是从频谱提取的特征向量。</p>
-<h4 id="自动化机器学习工具TPOT"><a href="#自动化机器学习工具TPOT" class="headerlink" title="自动化机器学习工具TPOT"></a>自动化机器学习工具TPOT</h4><p><a href="">此节具体参考这里</a></p>
+<h4 id="自动化机器学习工具TPOT"><a href="#自动化机器学习工具TPOT" class="headerlink" title="自动化机器学习工具TPOT"></a>自动化机器学习工具TPOT</h4><p><a href>此节具体参考这里</a></p>
 <h4 id="诊断算法的部署"><a href="#诊断算法的部署" class="headerlink" title="诊断算法的部署"></a>诊断算法的部署</h4><p>设置Web服务器，通过HTTP协议进行调用。生产环境软件通过网络IP、端口将需要诊断的数据传递给Web服务器。Web服务器接受到数据后会进行诊断服务，在诊断结束后，诊断结果会原路返回给服务调用者。<br>诊断数据与Web 服务器之间使用HTTP协议进行通信，HTTP协议下有GET、POST、PUT 和DELETE 等方法，因为通信过程中需要传输传感器数据，所以这里使用可携带数据体的POST方法。</p>
 <p>在故障诊断的各个环节中，诊断算法具有“一次加载、多次使用”的特点，而特征提取、算法调用等步骤随着传输数据的不同而采用不同的方法，所以故障诊断Web服务器在实现时应该按照这样的方式：加载诊断算法在创建故障诊断Web服务器时进行，数据获取、特征提取、调用诊断算法和诊断结果返回这些步骤在POST方法中实现。</p>
 <h3 id="故障诊断系统实现"><a href="#故障诊断系统实现" class="headerlink" title="故障诊断系统实现"></a>故障诊断系统实现</h3><h4 id="故障诊断系统开发环境"><a href="#故障诊断系统开发环境" class="headerlink" title="故障诊断系统开发环境"></a>故障诊断系统开发环境</h4><p>故障诊断系统是在Windows 10上使用Python编程语言开发的，<br>其中数据库使用SQL Server，日志管理使用Logging，配置文件解析加载使用Configparser，频域分析工具包使用Scipy，矩阵数据处理使用Pandas 和Numpy，自动化机器学习工具使用TPOT，模型序列化保存工具使用Pickle，Web 应用框架使用Flask。</p>
 <p>下表是详细的故障诊断系统开发环境。</p>
-<p><img src="environment.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/environment.png" alt></p>
 <h4 id="建立故障数据库"><a href="#建立故障数据库" class="headerlink" title="建立故障数据库"></a>建立故障数据库</h4><p>利用数据库SQL Server 2017 与数据库可视化管理工具Navicat Premium进行搭建，首先参考<a href="https://www.cnblogs.com/ios9/p/9527939.html" target="_blank" rel="noopener external nofollow noreferrer">Win10 SQL Server 2017安装</a>，利用Navicat进行创建一个Faults数据库，并在Faults数据库中创建Rotor表如图所示：</p>
-<p><img src="guifan2.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan2.png" alt></p>
 <p>然后根据数据库设计规范，在表中创建相对应的字段。如图所示:</p>
-<p><img src="guifan.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan.png" alt></p>
 <p><strong>注意：</strong> SQL Server 2017不支持数组形式，这里采用将数组转化为字符串,将他们拼接起来当做文本写入。</p>
 <p>字段类型在设置的时候注意采用nvarchar(max)的类型，具体如下图：</p>
-<p><img src="guifan3.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan3.png" alt></p>
 <p><a href="https://data.mendeley.com/datasets/p9bsmj4xwg/1/files/9ecd3bf8-6ed0-452b-8c84-05a4833ac803" target="_blank" rel="noopener external nofollow noreferrer">Rotor数据</a>, 数据是.mat文件，利用Python处理数据后，写入数据库CGQ1这一列中，最终如图所示：</p>
-<p><img src="guifan4.png" alt=""></p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan4.png" alt></p>
 ]]></content>
       <categories>
         <category>项目</category>
@@ -150,16 +150,16 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Declare license on posts</span><br><span class="line">post_copyright:</span><br><span class="line">  enable: true    #激活版权声明模块</span><br><span class="line">  license: CC BY-NC-SA 3.0     #版权许可协议</span><br><span class="line">  license_url: https:&#x2F;&#x2F;winney07.github.io&#x2F;      #声明的文章的可点击链接（域名）</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>配置完后，执行以下命令，在浏览器中访问，效果如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png" alt></p>
 <h4 id="二、设置favicon图标"><a href="#二、设置favicon图标" class="headerlink" title="二、设置favicon图标"></a>二、设置favicon图标</h4><p>1、选择一个favicon制作网站完成制作，例如：比特虫 ，制作一个16*16，一个32*32的；</p>
 <p>2、两个不同尺寸大小的文件，重名为favicon-16x16-next.png和favicon-32x32-next.png；</p>
 <p>3、将重命名的两个图片文件放到博客目录下的themes/next/source/images中（覆盖原来的两个默认的）<br>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/favicon.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/favicon.png" alt></p>
 <h3 id="三、添加友情链接"><a href="#三、添加友情链接" class="headerlink" title="三、添加友情链接"></a>三、添加友情链接</h3><p>打开主题配置文件（/themes/next/_config.yml），找到以下内容进行修改：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Blog rolls</span><br><span class="line">links_icon: link</span><br><span class="line">links_title: 友情链接 </span><br><span class="line"># links_layout: block   &#x2F;&#x2F;块状显示（选择了行内显示，这个要注释掉，不然会报错）</span><br><span class="line">links_layout: inline    &#x2F;&#x2F;行内显示</span><br><span class="line">links:</span><br><span class="line">  小超: https:&#x2F;&#x2F;www.xiaochao.me&#x2F;</span><br><span class="line">  Github: https:&#x2F;&#x2F;www.github.com</span><br></pre></td></tr></table></figure>
 
 <p>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/friend-link.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/friend-link.png" alt></p>
 <h4 id="四、调整hexo页面宽度"><a href="#四、调整hexo页面宽度" class="headerlink" title="四、调整hexo页面宽度"></a>四、调整hexo页面宽度</h4><p>博客在浏览器上的留白太多，因此想增加文章的宽度。</p>
 <p>打开/themes/next/source/css/_variables/custom.styl 添加两行代码即可：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$main-desktop &#x3D; 1200px </span><br><span class="line">$content-desktop &#x3D; 900px</span><br></pre></td></tr></table></figure>]]></content>
@@ -176,13 +176,13 @@
     <content><![CDATA[<h4 id="1、新建一篇文章"><a href="#1、新建一篇文章" class="headerlink" title="1、新建一篇文章"></a>1、新建一篇文章</h4><p>（1）在hexo博客目录下，进入Git Bash命令窗口中，输入以下命令：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new &quot;在这里&quot;</span><br></pre></td></tr></table></figure>
 
-<p>（2）在博客目录下的/source/_posts/ 文件夹下，可以看到已经生成了标题为(在这里.md)的博客文件：<br>如图所示：<br><img src="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai.png" alt=""></p>
+<p>（2）在博客目录下的/source/_posts/ 文件夹下，可以看到已经生成了标题为(在这里.md)的博客文件：<br>如图所示：<br><img src="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai.png" alt></p>
 <a id="more"></a>
 <p>（3）在（在这里.md）文件中编辑自己的博客文章即可。<br>注意：Hexo 发布的文章是 Markdown 格式的文件， Markdown 基本语法的网址：<a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener external nofollow noreferrer">点这里前往</a></p>
 <h4 id="2、给文章添加分类和标签"><a href="#2、给文章添加分类和标签" class="headerlink" title="2、给文章添加分类和标签"></a>2、给文章添加分类和标签</h4><p>(1) 在（在这里.md）文件中设置tags和categories属性：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: 在这里</span><br><span class="line">date: 2018-08-02 11:41:10</span><br><span class="line">tags:</span><br><span class="line">- 博客           &#x2F;&#x2F;多个标签可以这样添加</span><br><span class="line">- hexo</span><br><span class="line">categories: test</span><br></pre></td></tr></table></figure>
 <p>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai-edit.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai-edit.png" alt></p>
 <h4 id="3、启动服务器，本地测试"><a href="#3、启动服务器，本地测试" class="headerlink" title="3、启动服务器，本地测试"></a>3、启动服务器，本地测试</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
 
 <h4 id="4、添加“阅读全文”按钮"><a href="#4、添加“阅读全文”按钮" class="headerlink" title="4、添加“阅读全文”按钮"></a>4、添加“阅读全文”按钮</h4><p>方法一：在文章任意你想添加的位置添加即可</p>
@@ -226,9 +226,9 @@
     <content><![CDATA[<p>1、把默认主题更改成Next主题，在blog目录中（就是命令行的位置处于blog目录）打开命令行输入：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;iissnan&#x2F;hexo-theme-next themes&#x2F;next</span><br></pre></td></tr></table></figure>
 
-<p>这是将Next主题下载到blog目录的themes主题下的next文件夹中。打开站点的_config.yml配置文件，修改主题为next<br><img src="%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/1.jpg" alt=""></p>
+<p>这是将Next主题下载到blog目录的themes主题下的next文件夹中。打开站点的_config.yml配置文件，修改主题为next<br><img src="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/1.jpg" alt></p>
 <a id="more"></a>
-<p>打开<strong>主题theme</strong>的_config.yml配置文件，不是<strong>站点site</strong>主题文件，找到Scheme Settings<br><img src="%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/2.jpg" alt=""><br>next主题有三个样式，我用的是Pisces，可以选择你自己喜欢的样式（只需要把行首的#去除，#是注释），选择好后，再次部署网站，hexo g、hexo d，查看效果。选择其他主题，按照上述过程即可实现。</p>
+<p>打开<strong>主题theme</strong>的_config.yml配置文件，不是<strong>站点site</strong>主题文件，找到Scheme Settings<br><img src="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/2.jpg" alt><br>next主题有三个样式，我用的是Pisces，可以选择你自己喜欢的样式（只需要把行首的#去除，#是注释），选择好后，再次部署网站，hexo g、hexo d，查看效果。选择其他主题，按照上述过程即可实现。</p>
 <p>2、在主题配置文件 _config.yml中配置博客网站底部的基本信息：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">footer:</span><br><span class="line">  # Specify the date when the site was setup.</span><br><span class="line">  # If not defined, current year will be used.</span><br><span class="line">  since: 2020      #网站起始运营年份</span><br><span class="line"></span><br><span class="line">  # Icon between year and copyright info.</span><br><span class="line">  icon: user     #声明图标</span><br><span class="line"></span><br><span class="line">  # If not defined, will be used &#96;author&#96; from Hexo main config.</span><br><span class="line">  copyright: bryceustc   #版权所有</span><br><span class="line">  # ------------------------------------------------------------</span><br><span class="line">  # Hexo link (Powered by Hexo).</span><br><span class="line">  powered: true</span><br><span class="line"></span><br><span class="line">  theme:</span><br><span class="line">    # Theme &amp; scheme info link (Theme - NexT.scheme).</span><br><span class="line">    enable: false    #是否显示主题</span><br><span class="line">    # Version info of NexT after scheme info (vX.X.X).</span><br><span class="line">    version: false     #是否显示驱动</span><br></pre></td></tr></table></figure>
 
@@ -238,7 +238,7 @@
 <p>（1）执行命令hexo s，本地预览我们的博客页面，会发现，点击分类、标签、关于这几个页面的时候，会显示404。</p>
 <p>（2）在Git Bash命令窗口，输入以下命令来创建相应页面：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new page &#39;categories&#39;</span><br><span class="line">hexo new page &#39;tags&#39;</span><br><span class="line">hexo new page &#39;about&#39;</span><br></pre></td></tr></table></figure>
-<p>（3）可以在hexo/source目录下看到创建的3个文件夹<br><img src="https://winney07.github.io/2018/08/01/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/source.png" alt=""></p>
+<p>（3）可以在hexo/source目录下看到创建的3个文件夹<br><img src="https://winney07.github.io/2018/08/01/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/source.png" alt></p>
 <p>5、每一个分类菜单都生成了一个 index.md 初始文件（在刚创建的文件夹目录下），默认包含了 title 和 date 字段，我们需要给每一 index.md 文件添加上 type 字段<br>如下所示：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: categories</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
 
@@ -271,21 +271,21 @@
     <title>Hexo + GitHub Pages 搭建个人博客</title>
     <url>/2020/03/19/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
     <content><![CDATA[<h3 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h3><h4 id="1、安装Node-js"><a href="#1、安装Node-js" class="headerlink" title="1、安装Node.js"></a>1、安装Node.js</h4><p>(1) 下载Node.js：<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener external nofollow noreferrer">官网下载地址</a> （这里以Windows 为例）;</p>
-<p><img src="/images/node.png" alt=""></p>
+<p><img src="/images/node.png" alt></p>
 <a id="more"></a>
 <p>(2) 双击下载好的.msi文件，按下一步下一步，安装好就可以；</p>
 <p>(3) 在cmd命令窗口，输入下面的这个命令，如果能够显示Node.js的版本，说明安装成功了。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-<p><img src="/images/node_v.png" alt=""></p>
+<p><img src="/images/node_v.png" alt></p>
 <h4 id="2、安装Git"><a href="#2、安装Git" class="headerlink" title="2、安装Git"></a>2、安装Git</h4><p>(1) 下载Git：<a href="https://git-scm.com/downloads" target="_blank" rel="noopener external nofollow noreferrer">官网下载</a></p>
 <p>(2) 双击下载好的Git安装包，按下一步下一步，进行安装即可；</p>
 <p>(3) 在cmd命令窗口，输入下面的这个命令，如果能够显示Git的版本，说明安装成功了。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git --version</span><br></pre></td></tr></table></figure>
 
-<p><img src="/images/git_v.png" alt=""></p>
+<p><img src="/images/git_v.png" alt></p>
 <h3 id="二、Hexo搭建博客"><a href="#二、Hexo搭建博客" class="headerlink" title="二、Hexo搭建博客"></a>二、Hexo搭建博客</h3><h4 id="1、安装Hexo"><a href="#1、安装Hexo" class="headerlink" title="1、安装Hexo"></a>1、安装Hexo</h4><p>（1）在计算机中，新建一个Blog文件夹，用于存放自己的博客内容。</p>
 <p>（2）在Blog文件夹内，鼠标右键，选择Git Bash,进入到命令窗口</p>
-<p><img src="/images/blog.png" alt=""></p>
+<p><img src="/images/blog.png" alt></p>
 <p>（3）在命令窗口中，输入下面代码：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
 
@@ -302,43 +302,43 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s  &#x2F;&#x2F;或者 hexo server</span><br></pre></td></tr></table></figure>
 
 <p>(2) 在浏览器地址栏中输入<a href="http://localhost:4000/" target="_blank" rel="noopener external nofollow noreferrer">http://localhost:4000/</a> （默认端口是4000），如果能够看到如图所示的效果，说明初始化的Hexo博客搭建成功了。<br>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/hexo-blog.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/hexo-blog.png" alt></p>
 <h4 id="三、将本地的-Hexo-博客部署到-GitHub-Pages上"><a href="#三、将本地的-Hexo-博客部署到-GitHub-Pages上" class="headerlink" title="三、将本地的 Hexo 博客部署到 GitHub Pages上"></a>三、将本地的 Hexo 博客部署到 GitHub Pages上</h4><p>（1）新建一个仓库，仓库名为bryceustc.github.io（这个仓库的名称必须严格按照 username.github.io 的格式来命名）【前提是你要有一个Github账号】<br>如图所示：（因为我已经创建过这个库了，所以会显示红色警告，只是后来为了截图，重新写一个同名的）</p>
-<p><img src="/images/github.png" alt=""></p>
+<p><img src="/images/github.png" alt></p>
 <p>（2）进入已经创建好的仓库（点击自己的头像，选择Your profile，点击刚创建好的那个仓库进去仓库里面），点击settings，找到GitHub Pages 选项，点击 Choose a theme 选择一个主题（可以选择也可以不选择，根据自己的需求决定是否操作这一步）<br>如图所示：</p>
-<p><img src="/images/gitpages.png" alt=""></p>
+<p><img src="/images/gitpages.png" alt></p>
 <p>（3）配置Git个人信息，在winneyBlog目录下，鼠标右键，选择Git Bash，进入命令窗口，输入下面的命令</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.name &quot;Github用户名&quot;       &#x2F;&#x2F;自己Github的账号名</span><br><span class="line">git config --global user.email &quot;Github邮箱&quot;        &#x2F;&#x2F;自己注册Github的邮箱地址</span><br></pre></td></tr></table></figure>
 
 <p>（4）生成SSH KEY,意思是生成一个公钥和密钥，因为Github需要一个密钥才能与本地相连接。在命令窗口输入下面的命令，然后需要连续按3次回车生成密钥（每按一次回车你可以看到对应的信息） 【你也可以先查看是否已经有了ssh密钥：cd ~/.ssh 如果没有密钥则不会有此文件夹，有则备份删除】</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C  &quot;Github邮箱&quot;        &#x2F;&#x2F;自己注册Github的邮箱地址</span><br></pre></td></tr></table></figure>
 
-<p>如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-key.png" alt=""></p>
+<p>如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-key.png" alt></p>
 <p>（5）生成的SSH KEY会保存到 C:/Users/电脑名用户名/.ssh 目录中（根据你自己电脑用户名，打开对应的目录）</p>
 <ul>
-<li>打开.ssh 这个目录，打开 id_rsa.pub 文件，复制里面的全部内容（这些内容就是密钥）<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/user-ssh.png" alt=""></li>
+<li>打开.ssh 这个目录，打开 id_rsa.pub 文件，复制里面的全部内容（这些内容就是密钥）<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/user-ssh.png" alt></li>
 </ul>
 <p>（6）在GitHub中添加SSH keys</p>
 <ul>
 <li><p>打开Github，点击头像，选择Settings；</p>
 </li>
-<li><p>选择SSH and GPG keys项,点击右上角New SSH key按钮，将刚刚复制到的密钥粘贴到key输入框中，title自己给它命一个名就好<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/add-key.png" alt=""></p>
+<li><p>选择SSH and GPG keys项,点击右上角New SSH key按钮，将刚刚复制到的密钥粘贴到key输入框中，title自己给它命一个名就好<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/add-key.png" alt></p>
 </li>
-<li><p>最后点击Add Key，如果显示这样的界面，说明SSH KEY 配置成功：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-keys.png" alt=""></p>
+<li><p>最后点击Add Key，如果显示这样的界面，说明SSH KEY 配置成功：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-keys.png" alt></p>
 </li>
 </ul>
 <p>（7）修改全局配置文件</p>
 <ul>
-<li><p>在blog文件夹下，找到_config.yml文件；如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt=""></p>
+<li><p>在blog文件夹下，找到_config.yml文件；如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt></p>
 </li>
-<li><p>复制仓库地址：如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-href.png" alt=""></p>
+<li><p>复制仓库地址：如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-href.png" alt></p>
 </li>
-<li><p>修改_config.yml文件里的deploy属性(目的是将本地hexo项目放到Github上)如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt=""></p>
+<li><p>修改_config.yml文件里的deploy属性(目的是将本地hexo项目放到Github上)如图所示：<br><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png" alt></p>
 </li>
 </ul>
 <p><strong>注：</strong>【如果repository中填写的是https协议的，hexo d上传代码到Github时有下面类似错误，可以将repository改为ssh的链接】<br>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy-error.png" alt=""></p>
-<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-link.png" alt=""></p>
+<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy-error.png" alt></p>
+<p><img src="https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-link.png" alt></p>
 <p>（8）安装hexo-deployer-git 插件，目的是将代码快速托管到Github上</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 
