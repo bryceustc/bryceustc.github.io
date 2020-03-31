@@ -54,6 +54,8 @@
 <p><strong>注意：</strong> SQL Server 2017不支持数组形式，这里采用将数组转化为字符串,将他们拼接起来当做文本写入。</p>
 <p>字段类型在设置的时候注意采用nvarchar(max)的类型，具体如下图：</p>
 <p><img src="guifan3.png" alt=""></p>
+<p><a href="https://data.mendeley.com/datasets/p9bsmj4xwg/1/files/9ecd3bf8-6ed0-452b-8c84-05a4833ac803" target="_blank" rel="noopener external nofollow noreferrer">Rotor数据</a>, 数据是.mat文件，利用Python处理数据后，写入数据库CGQ1这一列中，最终如图所示：</p>
+<p><img src="guifan4.png" alt=""></p>
 ]]></content>
       <categories>
         <category>项目</category>
