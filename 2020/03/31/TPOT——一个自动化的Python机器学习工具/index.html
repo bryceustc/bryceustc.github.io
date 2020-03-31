@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="TPOT—一个自动化的Python机器学习工具 TPOT全称是基于树的pipeline优化工具(Tree-based Pipeline Optimization Tool)，这是一个非常棒Python自动机器学习工具，使用遗传编程优化机器学习pipeline。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TPOT——一个自动化的Python机器学习工具">
+<meta property="og:url" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="TPOT—一个自动化的Python机器学习工具 TPOT全称是基于树的pipeline优化工具(Tree-based Pipeline Optimization Tool)，这是一个非常棒Python自动机器学习工具，使用遗传编程优化机器学习pipeline。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/1.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/2.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/3.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/4.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/5.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/6.png">
+<meta property="article:published_time" content="2020-03-31T13:55:55.000Z">
+<meta property="article:modified_time" content="2020-03-31T14:11:18.774Z">
+<meta property="article:author" content="Bryce">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/1.png">
+
+<link rel="canonical" href="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>TPOT——一个自动化的Python机器学习工具 | Bryce's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="好记性不如烂笔头">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TPOT——一个自动化的Python机器学习工具
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-31 21:55:55 / 修改时间：22:11:18" itemprop="dateCreated datePublished" datetime="2020-03-31T21:55:55+08:00">2020-03-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="TPOT—一个自动化的Python机器学习工具"><a href="#TPOT—一个自动化的Python机器学习工具" class="headerlink" title="TPOT—一个自动化的Python机器学习工具"></a>TPOT—一个自动化的Python机器学习工具</h2><p><img src="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/1.png" alt></p>
+<p>TPOT全称是基于树的pipeline优化工具(Tree-based Pipeline Optimization Tool)，这是一个非常棒Python自动机器学习工具，使用遗传编程优化机器学习pipeline。</p>
+<a id="more"></a>
+
+<p><img src="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/2.png" alt></p>
+<p>TPOT可以自动化许多东西，包括生命特性选择、模型选择、特性构建等等。如果你是Python机器学习者，很幸运，TPOT是构建在Scikit-learn之上的，所以它生成的所有代码看起来应该很熟悉。</p>
+<p>它的作用是通过智能地探索数千种可能的pipeline来自动化机器学习中最繁琐的部分，找到最适合你的数据的pipeline，然后为你提供最佳的 Python 代码。</p>
+<p>它的工作原理如下：</p>
+<p><img src="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/3.png" alt></p>
+<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1 安装"></a>1 安装</h2><p>安装TPOT，可参考以下文档：<br><a href="http://epistasislab.github.io/tpot/installing/" target="_blank" rel="noopener external nofollow noreferrer">http://epistasislab.github.io/tpot/installing/</a></p>
+<h2 id="2-使用"><a href="#2-使用" class="headerlink" title="2 使用"></a>2 使用</h2><h3 id="2-1-TPOT代码"><a href="#2-1-TPOT代码" class="headerlink" title="2.1 TPOT代码"></a>2.1 TPOT代码</h3><p>TPOT的接口，与scikit-learn很类似。</p>
+<p>TPOT可以像任何常规的Python模块一样导入：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br></pre></td></tr></table></figure>
+<p>然后创建一个TPOT实例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipeline_optimizer = TPOTClassifier()</span><br></pre></td></tr></table></figure>
+<p>当然，TPOTRegressor（）也可以。</p>
+<p>一些带有定制TPOT参数的示例代码可能如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipeline_optimizer = TPOTClassifier(generations=<span class="number">5</span>, population_size=<span class="number">20</span>, cv=<span class="number">5</span>, random_state=<span class="number">42</span>, verbosity=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>现在，可以利用fit函数来寻找最优的管道：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipeline_optimizer.fit(X_train, y_train)</span><br></pre></td></tr></table></figure>
+<p>fit函数初始化了遗传算法，以找到基于平均k倍交叉验证的最高评分管道，然后对整个提供的样本进行训练，TPOT实例可以作为一个合适的模型使用。</p>
+<p>然后，可以使用score函数来评估测试集中的最终管道：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(pipeline_optimizer.score(X_test, y_test))</span><br></pre></td></tr></table></figure>
+<p>最后，可以把TPOT将相应的Python代码导出到文本文件中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipeline_optimizer.export(<span class="string">'tpot_exported_pipeline.py'</span>)</span><br></pre></td></tr></table></figure>
+<p>下面是一个完整的示例脚本，使用TPOT优化管道，对其进行评分，并将最好的管道导出到文件中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_digits</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"> </span><br><span class="line">digits = load_digits()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(digits.data, digits.target,train_size=<span class="number">0.75</span>, test_size=<span class="number">0.25</span>)</span><br><span class="line"> </span><br><span class="line">pipeline_optimizer = TPOTClassifier(generations=<span class="number">5</span>, population_size=<span class="number">20</span>, cv=<span class="number">5</span>,random_state=<span class="number">42</span>, verbosity=<span class="number">2</span>)</span><br><span class="line">pipeline_optimizer.fit(X_train, y_train)</span><br><span class="line">print(pipeline_optimizer.score(X_test, y_test))</span><br><span class="line">pipeline_optimizer.export(<span class="string">'tpot_exported_pipeline.py'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-TPOT命令行"><a href="#2-2-TPOT命令行" class="headerlink" title="2.2 TPOT命令行"></a>2.2 TPOT命令行</h3><p>TPOT可以通过命令行导入使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tpot &#x2F;path_to&#x2F;data_file.csv</span><br></pre></td></tr></table></figure>
+<p>命令行导入使用TPOT的示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tpot data&#x2F;mnist.csv -is , -target class -o tpot_exported_pipeline.py -g 5 -p 20 -cv 5 -s 42 -v 2</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-评估函数"><a href="#2-3-评估函数" class="headerlink" title="2.3 评估函数"></a>2.3 评估函数</h3><p>TPOT允许自定义评分函数，具体例子可以参考<a href="https://epistasislab.github.io/tpot/using/#scoring-functions" target="_blank" rel="noopener external nofollow noreferrer">Scoring Functions</a><br>##2.4 内置TPOT配置<br>TPOT提供了一些默认的操作符和参数配置，它可以很好地优化机器学习管道。下面是TPOT当前内置配置的<a href="https://epistasislab.github.io/tpot/using/#built-in-tpot-configurations" target="_blank" rel="noopener external nofollow noreferrer">列表</a>。它有4种：</p>
+<ul>
+<li>Default TPOT：默认的参数，在一些大数据集上可能需要较长时间。</li>
+<li>TPOT light：与Default TPOT相比，使用了更简单、快速运行的操作符，因此TPOT light对于查找用于分类或回归问题的快速简单的管道非常有用。</li>
+<li>TPOT MDR：专门用于全基因组关联研究（GWAS）</li>
+<li>TPOT sparse：带有one-hot编码，且支持稀疏矩阵。<br>如果要使用这些配置只需将配置的字符串名称传递给config_dict 参数。示例代码如下：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_digits</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line">digits = load_digits()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(digits.data, digits.target,train_size=<span class="number">0.75</span>, test_size=<span class="number">0.25</span>)</span><br><span class="line"></span><br><span class="line">tpot = TPOTClassifier(generations=<span class="number">5</span>, population_size=<span class="number">20</span>, verbosity=<span class="number">2</span>,config_dict=<span class="string">'TPOT light'</span>)</span><br><span class="line">tpot.fit(X_train, y_train)</span><br><span class="line">print(tpot.score(X_test, y_test))</span><br><span class="line">tpot.export(<span class="string">'tpot_mnist_pipeline.py'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-定制TPOT的操作符和参数"><a href="#2-5-定制TPOT的操作符和参数" class="headerlink" title="2.5 定制TPOT的操作符和参数"></a>2.5 定制TPOT的操作符和参数</h3>除了TPOT所带来的默认配置之外，在某些情况下，限制TPOT所考虑的算法和参数是很有用的（用于减少寻优的时间等）。出于这个原因，TPOT允许用户为TPOT提供其操作符和参数的自定义配置。<br>自定义TPOT配置必须采用嵌套字典格式，举一个例子：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_digits</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"> </span><br><span class="line">digits = load_digits()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(digits.data, digits.target,train_size=<span class="number">0.75</span>, test_size=<span class="number">0.25</span>)</span><br><span class="line"> </span><br><span class="line">tpot_config = &#123;</span><br><span class="line">    <span class="string">'sklearn.naive_bayes.GaussianNB'</span>: &#123;</span><br><span class="line">    &#125;,</span><br><span class="line"> </span><br><span class="line">    <span class="string">'sklearn.naive_bayes.BernoulliNB'</span>: &#123;</span><br><span class="line">        <span class="string">'alpha'</span>: [<span class="number">1e-3</span>, <span class="number">1e-2</span>, <span class="number">1e-1</span>, <span class="number">1.</span>, <span class="number">10.</span>, <span class="number">100.</span>],</span><br><span class="line">        <span class="string">'fit_prior'</span>: [<span class="literal">True</span>, <span class="literal">False</span>]</span><br><span class="line">    &#125;,</span><br><span class="line"> </span><br><span class="line">    <span class="string">'sklearn.naive_bayes.MultinomialNB'</span>: &#123;</span><br><span class="line">        <span class="string">'alpha'</span>: [<span class="number">1e-3</span>, <span class="number">1e-2</span>, <span class="number">1e-1</span>, <span class="number">1.</span>, <span class="number">10.</span>, <span class="number">100.</span>],</span><br><span class="line">        <span class="string">'fit_prior'</span>: [<span class="literal">True</span>, <span class="literal">False</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">tpot = TPOTClassifier(generations=<span class="number">5</span>, population_size=<span class="number">20</span>, verbosity=<span class="number">2</span>,</span><br><span class="line">                      config_dict=tpot_config)</span><br><span class="line">tpot.fit(X_train, y_train)</span><br><span class="line">print(tpot.score(X_test, y_test))</span><br><span class="line">tpot.export(<span class="string">'tpot_mnist_pipeline.py'</span>)</span><br></pre></td></tr></table></figure>
+这样，TPOT寻找最优的pipeline，就只会在tpot_config中寻找了，无疑大大减少了时间复杂度，不过准确性可能会下降。<h3 id="2-6-Note"><a href="#2-6-Note" class="headerlink" title="2.6 Note"></a>2.6 Note</h3>搜索整个管道空间是特别耗时的。认识到原因是必要的，在默认的TPOT参数下（100 generations with 100 population size），TPOT将在完成前评估1万个管道配置。考虑一个网格搜索1万个超参数组合用于机器学习算法以及网格搜索需要多长时间。用10倍的交叉验证来评估这1万个模型，这意味着大约有10万个模型在一个网格搜索的训练数据中被匹配和评估。这是一个耗时的过程，即使对于像决策树这样的简单模型也是如此。</li>
+</ul>
+<p>典型的TPOT运行将需要数小时到数天才能完成（除非是一个小数据集），但是可以中断运行，并看到目前为止最好的结果。TPOT还提供warm_start参数，可以从中断的地方重新启动之前运行的TPOT。</p>
+<h2 id="3-TPOT-API"><a href="#3-TPOT-API" class="headerlink" title="3. TPOT API"></a>3. TPOT API</h2><p>以TPOTRegressor为例，分类问题一样。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">tpot</span>.<span class="title">TPOTRegressor</span><span class="params">(generations=<span class="number">100</span>, population_size=<span class="number">100</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">offspring_size=None, mutation_rate=<span class="number">0.9</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">crossover_rate=<span class="number">0.1</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">scoring=<span class="string">'neg_mean_squared_error'</span>, cv=<span class="number">5</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">subsample=<span class="number">1.0</span>, n_jobs=<span class="number">1</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">max_time_mins=None, max_eval_time_mins=<span class="number">5</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">random_state=None, config_dict=None,</span></span></span><br><span class="line"><span class="class"><span class="params">warm_start=False,</span></span></span><br><span class="line"><span class="class"><span class="params">memory=None,</span></span></span><br><span class="line"><span class="class"><span class="params">periodic_checkpoint_folder=None,</span></span></span><br><span class="line"><span class="class"><span class="params">early_stop=None,</span></span></span><br><span class="line"><span class="class"><span class="params">verbosity=<span class="number">0</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">disable_update_check=False)</span></span></span><br></pre></td></tr></table></figure>
+<p>在默认情况下，TPOTRegressor将搜索广泛的监督的回归模型，包括预处理，特征选择，学习器和它们的超参数。当然，TPOTRegressor可以完全自己定制。</p>
+<p>参数，属性和方法的详情可以参考<a href="https://epistasislab.github.io/tpot/api/#regression" target="_blank" rel="noopener external nofollow noreferrer">如下</a></p>
+<p>下面列出主要的参数和方法：</p>
+<p>参数：</p>
+<ul>
+<li>generations: int, optional (default=100)，运行管道优化过程的迭代次数。一定是正数,默认是100。一般来说，值越大，性能越好。</li>
+</ul>
+<p>TPOT将评估population_size+generations×offspring_size的规模。</p>
+<ul>
+<li><p>population_size: int, optional (default=100)，在每一代遗传中保留的个体数。一定是正数。一般来说，值越大，性能越好。</p>
+</li>
+<li><p>offspring_size: int, optional (default=100)，在每一次遗传过程中产生的后代数量。一定是正数。</p>
+</li>
+<li><p>mutation_rate: float, optional (default=0.9)，变异率，采用默认值即可。</p>
+</li>
+<li><p>crossover_rate: float, optional (default=0.1)，交叉率，采用默认值即可。</p>
+</li>
+<li><p>scoring: string or callable, optional (default=’neg_mean_squared_error’)，回归问题中用于评估给定管道的质量的函数。可以使用以下内置评分函数： ‘neg_median_absolute_error’, ‘neg_mean_absolute_error’, ‘neg_mean_squared_error’, ‘r2’</p>
+</li>
+<li><p>cv: int, cross-validation generator, or an iterable, optional (default=5)</p>
+</li>
+<li><p>subsample: float, optional (default=1.0)，在TPOT优化过程中使用的训练样本的比例。必须在0到1之间。</p>
+</li>
+<li><p>n_jobs: integer, optional (default=1)</p>
+</li>
+<li><p>max_time_mins: integer or None, optional (default=None)，TPOT需要多少分钟来优化管道。</p>
+</li>
+<li><p>max_eval_time_mins: integer, optional (default=5)，TPOT需要多少分钟来评估一个管道。</p>
+</li>
+<li><p>random_state: integer or None, optional (default=None)，使用这个参数来确保TPOT每次运行时都会有相同的结果。</p>
+</li>
+<li><p>config_dict: Python dictionary, string, or None, optional (default=None)，用于定制TPOT在优化过程中搜索的操作符和参数的配置字典。</p>
+</li>
+<li><p>warm_start: boolean, optional (default=False)，表明TPOT实例是否会重用以前调用fit（）的入口。</p>
+</li>
+<li><p>early_stop: integer, optional (default: None)</p>
+</li>
+<li><p>verbosity: integer, optional (default=0)，<br>0，TPOT将不会打印任何东西，<br>1，将打印很少的信息，<br>2，TPOT将会打印更多的信息并提供一个进度条<br>3，TPOT将打印所有内容，并提供一个进度条</p>
+</li>
+</ul>
+<p>方法：</p>
+<ul>
+<li>fit(features, target, sample_weight=None, groups=None)，在给定的训练数据上运行TPOT优化过程。</li>
+<li>predict(features)，使用优化的管道来预测测试集的目标值。</li>
+<li>score(testing_features, testing_target)，使用用户指定的评分函数在给定的测试数据上返回优化的管道的得分。</li>
+<li>export(output_file_name)，将优化的管道导出为Python代码。</li>
+</ul>
+<h2 id="4-实例"><a href="#4-实例" class="headerlink" title="4.实例"></a>4.实例</h2><h3 id="例4-1"><a href="#例4-1" class="headerlink" title="例4.1"></a>例4.1</h3><p>数据集地址：<a href="https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/" target="_blank" rel="noopener external nofollow noreferrer">https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/</a></p>
+<p>使用的数据集：breast-cancer-wisconsin.data<br>直接把数据全选复制到txt中，然后直接改文件后缀为csv，把文件转换为csv格式。并加上属性名</p>
+<p><img src="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/4.png" alt></p>
+<p>程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">使用TPOT自动选择scikit-learn机器学习模型和参数</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> model_selection</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br><span class="line"> </span><br><span class="line">inputfile=<span class="string">'C:/Users/bryce/Desktop/breast-cancer-wisconsin.data.csv'</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    df=pd.read_csv(inputfile)</span><br><span class="line">    <span class="comment">#print(df.head())</span></span><br><span class="line">    df.replace(<span class="string">'?'</span>,np.nan,inplace=<span class="literal">True</span>)</span><br><span class="line">    df.dropna(inplace=<span class="literal">True</span>)</span><br><span class="line">    df.drop([<span class="string">'id'</span>],<span class="number">1</span>,inplace=<span class="literal">True</span>)</span><br><span class="line">    <span class="comment">#print(df.head())</span></span><br><span class="line">    df[<span class="string">'Bare Nuclei'</span>] = df[<span class="string">'Bare Nuclei'</span>].astype(int)</span><br><span class="line">    X=np.array(df.drop([<span class="string">'Class'</span>],<span class="number">1</span>))</span><br><span class="line">    Y=np.array(df[<span class="string">'Class'</span>])</span><br><span class="line">    x_train,x_test,y_train,y_test=model_selection.train_test_split(X,Y,test_size=<span class="number">0.2</span>)</span><br><span class="line">    tpot=TPOTClassifier(generations=<span class="number">6</span>,verbosity=<span class="number">2</span>)</span><br><span class="line">    tpot.fit(x_train,y_train)</span><br><span class="line">    tpot.score(x_test,y_test)</span><br><span class="line">    tpot.export(<span class="string">'pipeline.py'</span>)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<p><img src="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/5.png" alt></p>
+<p>可以看到运行的最优结果是随机森林算法,并给出具体的参数。<br>再运行一下随机森林算法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">使用TPOT自动选择scikit-learn机器学习模型和参数</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> model_selection</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br><span class="line"> </span><br><span class="line">inputfile=<span class="string">'C:/Users/bryce/Desktop/breast-cancer-wisconsin.data.csv'</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    df=pd.read_csv(inputfile)</span><br><span class="line">    <span class="comment">#print(df.head())</span></span><br><span class="line">    df.replace(<span class="string">'?'</span>,np.nan,inplace=<span class="literal">True</span>)</span><br><span class="line">    df.dropna(inplace=<span class="literal">True</span>)</span><br><span class="line">    df.drop([<span class="string">'id'</span>],<span class="number">1</span>,inplace=<span class="literal">True</span>)</span><br><span class="line">    df[<span class="string">'Bare Nuclei'</span>] = df[<span class="string">'Bare Nuclei'</span>].astype(int)</span><br><span class="line">    <span class="comment">#print(df.head())</span></span><br><span class="line">    X=np.array(df.drop([<span class="string">'Class'</span>],<span class="number">1</span>))</span><br><span class="line">    Y=np.array(df[<span class="string">'Class'</span>])</span><br><span class="line">    x_train,x_test,y_train,y_test=model_selection.train_test_split(X,Y,test_size=<span class="number">0.2</span>)</span><br><span class="line">    <span class="comment"># tpot=TPOTClassifier(generations=6,verbosity=2)</span></span><br><span class="line">    <span class="comment"># tpot.fit(x_train,y_train)</span></span><br><span class="line">    <span class="comment"># tpot.score(x_test,y_test)</span></span><br><span class="line">    <span class="comment"># tpot.export('pipeline.py')</span></span><br><span class="line"> </span><br><span class="line">    rfc=RandomForestClassifier(bootstrap=<span class="literal">True</span>, criterion=<span class="string">'entropy'</span>, max_features=<span class="number">0.05</span>, min_samples_leaf=<span class="number">3</span>, min_samples_split=<span class="number">16</span>, n_estimators=<span class="number">100</span>)</span><br><span class="line">    rfc.fit(x_train,y_train)</span><br><span class="line">    accuracy=rfc.score(x_test,y_test)</span><br><span class="line">    print(<span class="string">"accuracy:%s"</span>%accuracy)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<p><img src="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/6.png" alt></p>
+<h3 id="例4-2"><a href="#例4-2" class="headerlink" title="例4.2"></a>例4.2</h3><p>数据集：sklearn自带的波士顿房价数据集</p>
+<h2 id="5-参考文献"><a href="#5-参考文献" class="headerlink" title="5. 参考文献"></a>5. 参考文献</h2><ol>
+<li><a href="https://epistasislab.github.io/tpot/examples/" target="_blank" rel="noopener external nofollow noreferrer">TPOT官方参考文档</a></li>
+<li><a href="https://github.com/EpistasisLab/tpot" target="_blank" rel="noopener external nofollow noreferrer">TPOTgithub</a></li>
+<li><a href="https://blog.csdn.net/anshuai_aw1/article/details/82498947" target="_blank" rel="noopener external nofollow noreferrer">利用TPOT完成自动化机器学习</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2020\03\28\TPOT优化原理部分源码解读\" rel="bookmark">TPOT优化原理部分源码解读</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>喜欢你就打赏一下</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Bryce 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Bryce
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bryceustc.github.io/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/" title="TPOT——一个自动化的Python机器学习工具">https://bryceustc.github.io/2020/03/31/TPOT——一个自动化的Python机器学习工具/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/31/%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="prev" title="常见排序算法">
+      <i class="fa fa-chevron-left"></i> 常见排序算法
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TPOT—一个自动化的Python机器学习工具"><span class="nav-number">1.</span> <span class="nav-text">TPOT—一个自动化的Python机器学习工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-安装"><span class="nav-number">2.</span> <span class="nav-text">1 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用"><span class="nav-number">3.</span> <span class="nav-text">2 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-TPOT代码"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 TPOT代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-TPOT命令行"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 TPOT命令行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-评估函数"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 评估函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-定制TPOT的操作符和参数"><span class="nav-number">3.4.</span> <span class="nav-text">2.5 定制TPOT的操作符和参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-Note"><span class="nav-number">3.5.</span> <span class="nav-text">2.6 Note</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-TPOT-API"><span class="nav-number">4.</span> <span class="nav-text">3. TPOT API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-实例"><span class="nav-number">5.</span> <span class="nav-text">4.实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#例4-1"><span class="nav-number">5.1.</span> <span class="nav-text">例4.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例4-2"><span class="nav-number">5.2.</span> <span class="nav-text">例4.2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-参考文献"><span class="nav-number">6.</span> <span class="nav-text">5. 参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">好记性不如烂笔头</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">47k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">43 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
