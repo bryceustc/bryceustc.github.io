@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C++ vector拷贝使用总结</title>
+    <url>/2020/04/02/C-vector%E6%8B%B7%E8%B4%9D%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>一些vector拷贝使用的细节，挖过填过的坑，记录一下。</p>
+<p>主要有以下几种方法</p>
+<h3 id="初始化构造时拷贝（深复制）"><a href="#初始化构造时拷贝（深复制）" class="headerlink" title="初始化构造时拷贝（深复制）"></a>初始化构造时拷贝（深复制）</h3><p>这种拷贝，相当于复制了一份数据，array中的数据不变。 如下</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>&#123;<span class="number">3</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">outArray</span><span class="params">(<span class="built_in">array</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="利用拷贝赋值操作符（深复制）"><a href="#利用拷贝赋值操作符（深复制）" class="headerlink" title="利用拷贝赋值操作符（深复制）"></a>利用拷贝赋值操作符（深复制）</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>&#123;<span class="number">3</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; outArray;</span><br><span class="line">outArray = <span class="built_in">array</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="利用assign-函数（清空并深复制）"><a href="#利用assign-函数（清空并深复制）" class="headerlink" title="利用assign()函数（清空并深复制）"></a>利用assign()函数（清空并深复制）</h3><p>一样的复制了一份数据，array中的数据不变。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>&#123;<span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">4</span>&#125;;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; outArray&#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;;</span><br><span class="line">outArray.assign(<span class="built_in">array</span>.<span class="built_in">begin</span>(),<span class="built_in">array</span>.<span class="built_in">end</span>());<span class="comment">//清空原数据，赋予新数据=&#123;3,5,2,6,4&#125;</span></span><br><span class="line">outArray.assign(<span class="number">5</span>, <span class="number">0</span>);<span class="comment">//5个0，清空原数据=&#123;0,0,0,0,0,&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="利用swap-函数（交换两个vector）"><a href="#利用swap-函数（交换两个vector）" class="headerlink" title="利用swap()函数（交换两个vector）"></a>利用swap()函数（交换两个vector）</h3><p>会清空原vector数组</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>&#123;<span class="number">3</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; outArray;<span class="comment">//设为空</span></span><br><span class="line">outArray.swap(<span class="built_in">array</span>);<span class="comment">//清空array数组</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>&#123;<span class="number">3</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">4</span>&#125;;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; outArray&#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;;</span><br><span class="line">outArray.swap(<span class="built_in">array</span>);<span class="comment">//outArray=&#123;3,5,2,6,4&#125;；array=&#123;1,2,3&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>C++单例模式Singleton的实现</title>
     <url>/2020/04/01/C-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8FSingleton%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
     <content><![CDATA[<h3 id="问题情景"><a href="#问题情景" class="headerlink" title="问题情景"></a>问题情景</h3><p>在windows下面打开任务管理器，我们会发现，你只能打开一个任务管理器。如果在已打开一个任务管理器的情况下，再次打开任务管理器，系统会调出已经打开的窗口，而不是重新打开新的窗口。在系统中，之多只能存在一个任务管理器的实例。按照一般的思路，我们需要定义一个TaskManager的类（如下）</p>
@@ -44,7 +67,11 @@ _GLIBCXX_HAS_GTHREADS没有在Windows上定义。mutex运行时支持是不存�
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Singleton* p_instance = <span class="keyword">new</span> Singleton();<span class="comment">//在此直接实例化</span></span><br><span class="line">        Singleton()&#123;&#125;;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">static</span> Singleton* <span class="title">GetInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> p_instance;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>饿汉模式适用于Singleton在程序运行过程中一直被频繁调用，这样由于预先加载了实例，访问实例时没有if语句，效率更高。但要注意到，如果Singleton的成员比较庞大、复杂，实例化Singleton会花一些时间，且这个实例一直占用着大量内存，在使用时要注意这部分的开销。使用饿汉模式用于多线程编程的话，由于线程访问之前，实例已存在，就不需要像懒汉模式中加入锁，因此饿汉模式保证了多线程安全。饿汉模式比较适用于程序整个运行过程中都需要访问、会被频繁访问或者需要被多线程访问的情况。</p>
-]]></content>
+<pre><code>PS:
+类名加*，有两种作用情况：
+1. 用于定义时，或用于函数参数，返回值时，表示对应变量值为类指针类型；
+2. 用于变量前，以(CLASS_NAME *)var_name，形式出现时，表示将变量或
+常量var_name强制转换为类指针类型。</code></pre>]]></content>
       <categories>
         <category>C++</category>
       </categories>
