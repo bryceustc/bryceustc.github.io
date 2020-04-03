@@ -1,6 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C++二维数组按行遍历和按列遍历的区别</title>
+    <url>/2020/04/03/C-%E6%8C%89%E8%A1%8C%E9%81%8D%E5%8E%86%E5%92%8C%E6%8C%89%E5%88%97%E9%81%8D%E5%8E%86%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<p>按行遍历的效率更高。</p>
+<p>数组在内存中是按行储存的，按行遍历时可以由指向数组第一个数的指针一直往下走，就可以遍历完整个数组，而按列遍历则要获得指向每一列的第一行的元素的指针，然后每次将指针指下一行，但是指针的寻址很快，所以不会有明显的区别。</p>
+<a id="more"></a>
+
+<p>按行遍历比按列遍历效率高具体体现在以下几点</p>
+<p>1、<a href="https://zh.wikipedia.org/wiki/CPU%E7%BC%93%E5%AD%98" target="_blank" rel="noopener external nofollow noreferrer">CPU高速缓存</a></p>
+<p>计算机存在Cache机制，当处理器发出内存访问请求时，会先查看缓存内是否有请求数据。如果存在，则不经访问内存直接返回该数据；如果不存在，则要先把内存中的相应数据载入缓存，再将其返回处理器。</p>
+<p>缓存从内存中抓取一般都是整个数据块，所以它的物理内存是连续的，几乎都是同行不同列的，而如果内循环以列的方式进行遍历的话，将会使整个缓存块无法被利用，而不得不从内存中读取数据，而从内存读取速度是远远小于从缓存中读取数据的。</p>
+<p>2、分页调度</p>
+<p>物理内存是以页的方式进行划分的，当一个二维数组很大是如 int[128][1024],假设一页的内存为4096个字节，而每一行正好占据内存的一页（int 存储是4个字节），如果以列的形式进行遍历，就会发生128*1024次的页面调度，而如果以行遍历则只有128次页面调度，而页面调度是有时间消耗的，因而调度次数越多，遍历的时间就越长。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vector扩容原理说明</title>
+    <url>/2020/04/02/vector%E6%89%A9%E5%AE%B9%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E/</url>
+    <content><![CDATA[<h3 id="扩容原理概述"><a href="#扩容原理概述" class="headerlink" title="扩容原理概述"></a>扩容原理概述</h3><ul>
+<li>新增元素：Vector通过一个连续的数组存放元素，如果集合已满，在新增数据的时候，就要分配一块更大的内存，将原来的数据复制过来，释放之前的内存，在插入新增的元素</li>
+<li>对vector的任何操作，一旦引起空间重新配置，指向原vector的所有迭代器就都失效了</li>
+<li>初始时刻vector的capacity为0，塞入第一个元素后capacity增加为1</li>
+<li>不同的编译器实现的扩容方式不一样，VS2015中以1.5倍扩容，GCC以2倍扩容。<a id="more"></a>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vec;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; vec.capacity() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;<span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        vec.push_back(i);</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"size: "</span> &lt;&lt; vec.<span class="built_in">size</span>() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"capacity: "</span> &lt;&lt; vec.capacity() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    system(<span class="string">"pause"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="输出："><a href="#输出：" class="headerlink" title="输出："></a>输出：</h3><ul>
+<li>GCC输出</li>
+</ul>
+<p><img src="/2020/04/02/vector%E6%89%A9%E5%AE%B9%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E/1.png" alt></p>
+<ul>
+<li>VS2015输出</li>
+</ul>
+<p><img src="/2020/04/02/vector%E6%89%A9%E5%AE%B9%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E/2.png" alt></p>
+<h3 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h3><ul>
+<li><p>可以根据输出看到，vector是以2倍的方式扩容的。有两个疑问：</p>
+<ul>
+<li>为什么要成倍的扩容而不是一次增加一个固定大小的容量呢？</li>
+<li>为什么是以两倍的方式扩容而不是三倍四倍，或者其他方式呢？</li>
+</ul>
+</li>
+<li><p>第一个问题：</p>
+<ul>
+<li><p>以成倍方式增长</p>
+<ol>
+<li>假定有 n 个元素,倍增因子为 m；</li>
+<li>完成这 n 个元素往一个 vector 中的 push_back​操作，需要重新分配内存的次数大约为 logm(n)；</li>
+<li>第 i 次重新分配将会导致复制 m^(i) (也就是当前的vector.size() 大小)个旧空间中元素;</li>
+<li>n 次 push_back 操作所花费的时间复制度为O(n):<br>$$<br>\sum_{i=1}^{\log _{n}^{n}} m^{i} \approx \frac{n m}{m-1}<br>$$</li>
+<li>m / (m - 1)，这是一个常量，均摊分析的方法可知，vector 中 push_back 操作的时间复杂度为常量时间.​</li>
+</ol>
+</li>
+<li><p>一次增加固定值大小</p>
+<ol>
+<li>假定有 n 个元素,每次增加k个；</li>
+<li>第i次增加复制的数量为为：100i</li>
+<li>n 次 push_back 操作所花费的时间复杂度为O(n^2):<br>$$\sum_{i=1}^{n / k} k i$$</li>
+<li>均摊下来每次push_back 操作的时间复杂度为O(n)；</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>总结：对比可以发现采用采用成倍方式扩容，可以保证常数的时间复杂度，而增加指定大小的容量只能达到O(n)的时间复杂度，因此，使用成倍的方式扩容。</p>
+</li>
+<li><p>第二个问题：</p>
+<ol>
+<li><p>根据查阅的资料显示，考虑可能产生的堆空间浪费，成倍增长倍数不能太大，使用较为广泛的扩容方式有两种，以2二倍的方式扩容，或者以1.5倍的方式扩容。</p>
+</li>
+<li><p>以2倍的方式扩容，导致下一次申请的内存必然大于之前分配内存的总和，导致之前分配的内存不能再被使用，所以最好倍增长因子设置为(1,2)之间:</p>
+<p>$$k \sum_{i=0}^{n} 2^{i}=k\left(2^{n+1}-1\right)&lt;k 2^{n+1}$$</p>
+<p><a href="https://www.zhihu.com/question/36538542/answer/67929747" target="_blank" rel="noopener external nofollow noreferrer">知乎上看到一个很好的解释</a></p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li><p>vector在push_back以成倍增长可以在均摊后达到O(1)的事件复杂度，相对于增长指定大小的O(n)时间复杂度更好。</p>
+</li>
+<li><p>为了防止申请内存的浪费，现在使用较多的有2倍与1.5倍的增长方式，而1.5倍的增长方式可以更好的实现对内存的重复利用，更好一点。</p>
+</li>
+</ol>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><ul>
+<li><a href="https://blog.csdn.net/yangshiziping/article/details/52550291" target="_blank" rel="noopener external nofollow noreferrer">vector扩容原理说明</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>C++ vector拷贝使用总结</title>
     <url>/2020/04/02/C-vector%E6%8B%B7%E8%B4%9D%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>一些vector拷贝使用的细节，挖过填过的坑，记录一下。</p>
