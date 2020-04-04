@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C++ thread用法总结</title>
+    <url>/2020/04/04/C-thread%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>C++11????<thread>?????????????std::thread????C++11????std::thread????????????C++11????????????????????????????C++11??std::thread???????????</thread></p>
+<a id="more"></a>
+<p>std::thread??????</p>
+<p>(1)?get_id?????ID????????std::thread::id????</p>
+<p>(2)?joinable?????????join???thread??????????(active)????????????thread???????join?thread?????detach?thread?????joinable?</p>
+<p>(3)?join???????????????????(caller)????????join?std::thread????????????</p>
+<p>(4)?detach?????????????????????????????????????????????????????????????</p>
+<p>(5)?native_handle???????std::thread????????????native_handle_type???thread??????SDK API????????Linux g++(libstdc++)??native_handle_type????pthread???pthread_t????thread????????????????(????????????)?????thread????native_handle()?????????????pthread???????This member function is only present in class thread if the library implementation supports it. If present, it returns a value used to access implementation-specific information associated to the thread.</p>
+<p>(6)?swap??????????????????</p>
+<p>(7)?operator=?moves the thread object</p>
+<p>(8)?hardware_concurrency???????????????????????????????????????????</p>
+<p>???std::thread::id????ID?????????????????????????????????????????????Values of this type are returned by thread::get_id and this_thread::get_id to identify threads.</p>
+<p>????????????????????????????????????C++11?????????????this_thread??????????<thread>?????????get_id()??????????????ID?yield()?????????????????????????????????????????????????????????sleep_until()????????????????(time point),??????????sleep_for()????????????????(time span)????????????????????????????????sleep_duration??????????</thread></p>
+<h3 id="1"><a href="#1" class="headerlink" title="1.??????"></a>1.??????</h3><p>???????????std?thread???????????????????</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt; //sleep</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">t1</span><span class="params">()</span>  <span class="comment">//????????????</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"t1111\n"</span>;</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">t2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"t22222\n"</span>;</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">thread <span class="title">th1</span><span class="params">(t1)</span></span>;  <span class="comment">//?????????th1?????t1???????????????t1()?</span></span><br><span class="line">    <span class="function">thread <span class="title">th2</span><span class="params">(t2)</span></span>;</span><br><span class="line"> </span><br><span class="line">    th1.join(); <span class="comment">// ?????join??detach ???????????????</span></span><br><span class="line">    th2.join(); </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//or use detach</span></span><br><span class="line">    <span class="comment">//th1.detach();</span></span><br><span class="line">    <span class="comment">//th2.detach();</span></span><br><span class="line"> </span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"here is main\n\n"</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>?????????????detach????detach????????????????????????????????thread???????????????????????????????????????????????????????????????????????????????????detach?????join?</p>
+<h3 id="2-mutex-std-lock-guard"><a href="#2-mutex-std-lock-guard" class="headerlink" title="2?mutex?std::lock_guard???"></a>2?mutex?std::lock_guard???</h3><p>????#include <mutex>?mutex??????????????????????????????</mutex></p>
+<p>???lock_guard????????????????????????????????m.lock()???????????????????????(unlock)????????????????????????</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> cnt = <span class="number">20</span>;</span><br><span class="line"><span class="built_in">std</span>::mutex m;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">t1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (cnt &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;    </span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lockGuard</span><span class="params">(m)</span></span>;</span><br><span class="line">       <span class="comment">// std::m.lock();</span></span><br><span class="line">        <span class="keyword">if</span> (cnt &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//sleep(1);</span></span><br><span class="line">            --cnt;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; cnt &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">       <span class="comment">// std::m.unlock();</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">t2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (cnt &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lockGuard</span><span class="params">(m)</span></span>;</span><br><span class="line">        <span class="comment">// std::m.lock();</span></span><br><span class="line">        <span class="keyword">if</span> (cnt &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            --cnt;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; cnt &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// std::m.unlock();</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function"><span class="built_in">std</span>::thread <span class="title">th1</span><span class="params">(t1)</span></span>;</span><br><span class="line">	<span class="function"><span class="built_in">std</span>::thread <span class="title">th2</span><span class="params">(t2)</span></span>;</span><br><span class="line"> </span><br><span class="line">	th1.join();    <span class="comment">//??t1??</span></span><br><span class="line">	th2.join();    <span class="comment">//??t2??</span></span><br><span class="line"> </span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"here is the main()"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>?????cnt?????????????????????</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="number">19</span></span><br><span class="line"><span class="number">18</span></span><br><span class="line"><span class="number">17</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line"><span class="number">15</span></span><br><span class="line"><span class="number">14</span></span><br><span class="line"><span class="number">13</span></span><br><span class="line"><span class="number">12</span></span><br><span class="line"><span class="number">11</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="number">9</span></span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">7</span></span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="function">here is the <span class="title">main</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++虚函数与纯虚函数区别和重载的概念</title>
+    <url>/2020/04/04/C-%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB%E5%92%8C%E9%87%8D%E8%BD%BD%E7%9A%84%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h2 id="虚函数"><a href="#虚函数" class="headerlink" title="虚函数"></a>虚函数</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>虚函数是在类中添加函数的修饰关键字“Virtual”，且对它进行定义，这时函数变被指定为虚函数。格式如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CInterFace</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Func_Virtual</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>虚函数的作用是允许在派生类中重新定义与基类同名的函数，并且可以通过基类指针或引用来访问基类和派生类中的同名函数。</p>
+<h3 id="引入原因"><a href="#引入原因" class="headerlink" title="引入原因"></a>引入原因</h3><p>为了方便使用多态特性，常常需要在基类中定义虚函数。下面顺便列出C++实现多态的三个条件：</p>
+<p>（1）在基类中将这些成员函数声明为虚函数，并实现（必须要实现）。</p>
+<p>（2）在派生类中也声明这些成员函数并实现（必须实现），基类和派生类的这些函数必须同名，而且其形参个数和类型，返回值类型必须与基类中的这些函数完全相同。</p>
+<p>（3）将派生类对象赋给基类的指针变量或者引用。至此，多态实现，可用基类指针或引用调用派生类的方法（符合多态条件的方法，而不是普通方法）。</p>
+<p>相应的不是多态的情况：</p>
+<p>（1）基类中声明为虚函数，派生类中也声明为虚函数，并且也同名。但是派生类中该函数的形参类型或者形参个数和基类中的不相同。此时，多态不满足，派生类和基类的这两个虚函数仅仅是隐藏关系，没有虚特性。</p>
+<p>（2）基类中声明为虚函数，派生类中也声明了一个同名函数，但没有使用virtual，并且形参类型或者形参个数和基类不相同。这时候基类中的虚函数也丢失虚特性，派生类的该函数不会被虚化，当然也就够不成多态，这两个函数也仅仅是隐藏关系。</p>
+<p>（3）基类中的函数不是虚函数，派生类中声明为虚函数，它们同名，这时也够不成多态，派生类的虚函数没有虚特性，它们也是隐藏关系。</p>
+<p>（4）基类和派生类的两个函数同名，都是虚函数，形参的个数和类型也都相同，但是返回值类型不同，这时编译会报错，因为两个虚函数在隐藏时，返回值类型发生了冲突，因此隐藏发生错误。注意，如果这两个函数不是虚函数，这不会报错，隐藏会成功；同时，如果派生类中是虚函数，基类中不是虚函数，也不过报错，隐藏也是成功的。这也说明，虚化并隐藏时，返回值类型一定要保持相同。</p>
+<h3 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h3><p>是通过虚函数表机制来实现的，当类中存在虚函数时，编译器会在类中自动生成一个虚函数表，并由编译器自动生成和维护，virtual 修饰的成员函数会被编译器放入虚函数表中。</p>
+<p>虚表指针：指向自己所使用的虚表</p>
+<p>虚函数表:虚函数表是顺序存放虚函数地址的，虚表是顺序表，表里存放了虚函数的地址。</p>
+<h2 id="纯虚函数"><a href="#纯虚函数" class="headerlink" title="纯虚函数"></a>纯虚函数</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>纯虚函数是在基类中声明的虚函数，在许多情况下，在基类中不能对虚函数给出有意义的实现，而把它声明为纯虚函数，它的实现留给该基类的派生类去做。这就是纯虚函数的作用。</p>
+<p>在基类中实现纯虚函数的方法是在函数原型后加“=0”</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CInterFace</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Func_PureVirtual</span><span class="params">()</span></span>=<span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>纯虚函数可以让类先具有一个操作名称，而没有操作内容，让派生类在继承时再去具体地给出定义。凡是含有纯虚函数的类叫做抽象类。这种类不能声明对象，只是作为基类为派生类服务。除非在派生类中完全实现基类中所有的的纯虚函数，否则，派生类也变成了抽象类，不能实例化对象。包含纯虚函数的类叫做抽象类（ 也叫接口类） ， 抽象类不能实例化出对象。 纯虚函数在派生类中重新定义以后， 派生类才能实例化出对象。</p>
+<h2 id="虚函数和纯虚函数总结"><a href="#虚函数和纯虚函数总结" class="headerlink" title="虚函数和纯虚函数总结"></a>虚函数和纯虚函数总结</h2><ol>
+<li><p>虚函数的定义形式：virtual {method body}   纯虚函数的定义形式：virtual { } = 0;</p>
+</li>
+<li><p>虚函数和纯虚函数可定义在同一个类(class)中，含有纯虚函数的类是抽象类(abstract class)，而含有虚函数的类则不是。</p>
+</li>
+<li><p>虚函数可以被直接使用，也可以被子类(sub class)重载以后以多态的形式调用，而纯虚函数必须在子类(sub class)中实现该函数才可以使用，因为纯虚函数在基类(base class)只有声明而没有定义。</p>
+</li>
+<li><p>在虚函数和纯虚函数的定义中不能有static标识符，原因很简单，被static修饰的函数在编译时候要求前期bind,然而虚函数却是动态绑定(run-time bind)，而且被两者修饰的函数生命周期(life recycle)也不一样。</p>
+</li>
+</ol>
+<h2 id="函数重载"><a href="#函数重载" class="headerlink" title="函数重载"></a>函数重载</h2><h3 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h3><p>就是函数或者方法有相同的名称，但是参数列表不同的情形，这样的同名不同参数的函数之间，互相称之为重载函数。</p>
+<p>重载的规则：<br>   1、在使用重载时只能通过相同的方法名、不同的参数形式实现。不同的参数可以是参数类型，参数个数，参数顺序（参数类型必须不一样）；</p>
+<p>   2、不能通过访问权限、返回类型、抛出的异常进行重载；</p>
+<p>   3、方法的异常类型和数目不会对重载造成影响；</p>
+<p>成员函数被重载的特征：</p>
+<p>（1）相同的范围（在同一个类中）； </p>
+<p>（2）函数名字相同； </p>
+<p>（3）参数不同； </p>
+<p>（4）virtual 关键字可有可无 。</p>
+<p><strong>函数重载在同一个作用域内。</strong>，重载绝对不会发生在基类和派生类之间，在同一个类中，重载函数之间必须依靠形参个数或者形参类型来进行区分，不能依靠返回类型。</p>
+<h3 id="函数重载与虚函数的区别"><a href="#函数重载与虚函数的区别" class="headerlink" title="函数重载与虚函数的区别"></a>函数重载与虚函数的区别</h3><p>1.函数重载可以用于非成员函数和类的成员函数，而虚函数只能用于类的成员函数</p>
+<p>2.函数重载可用于构造函数，而虚函数不能用于构造函数</p>
+<p>3.如果对成员函数进行重载，重载的函数与被重载的函数应该是用一个类中的成员函数，不能分属于两个不同继承层次的类，函数重载处理的是横向的重载。虚函数是对同一类族中的基类和派生类的同名函数的处理，即允许在派生类中对基类的成员函数重新定义。虚函数处理的是纵向的同名函数。</p>
+<p>4.重载的函数必须具有相同的函数名，函数类型可以相同也可以不同，但函数的参数个数和参数类型二者中至少有一个不同，否则在编译时无法区分。而虚函数则要求同一类族中的所有虚函数的函数名，函数类型，函数的参数个数和参数类型都全部相同，否则就不是重定义了，也就不是虚函数了</p>
+<p>5.函数重载是在程序编译阶段确定操作的对象的，属于静态关联。虚函数是在程序运行阶段确定操作对象的，属于动态关联。</p>
+]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>单调栈总结</title>
     <url>/2020/04/04/%E5%8D%95%E8%B0%83%E6%A0%88%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>单调栈主要回答这样的几种问题</p>
