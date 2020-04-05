@@ -20,23 +20,20 @@
     var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="1、新建一篇文章（1）在hexo博客目录下，进入Git Bash命令窗口中，输入以下命令： 1hexo new &quot;在这里&quot;  （2）在博客目录下的&#x2F;source&#x2F;_posts&#x2F; 文件夹下，可以看到已经生成了标题为(在这里.md)的博客文件：如图所示：">
+  <meta name="description" content="在浏览器的地址栏输入一个URL，然后回车，回车这一瞬间到看到页面到底发生了什么呢？ 主要是进行了一下几个步骤： 1.DNS域名解析； 2.建立TCP连接； 3.发送http请求； 4.服务器处理请求； 5.返回响应结果； 6.关闭TCP连接； 7.浏览器解析HTML； 8.浏览器布局渲染； DNS域名解析我们在浏览器输入网址，其实就是要向服务器请求我们想要的页面内容，所有浏览器首先要确认的是域名所">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在Hexo博客中发布文章">
-<meta property="og:url" content="https://bryceustc.github.io/2020/03/21/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/index.html">
+<meta property="og:title" content="HTTP请求与响应全过程">
+<meta property="og:url" content="https://bryceustc.github.io/2020/04/04/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E5%85%A8%E8%BF%87%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Bryce&#39;s Blog">
-<meta property="og:description" content="1、新建一篇文章（1）在hexo博客目录下，进入Git Bash命令窗口中，输入以下命令： 1hexo new &quot;在这里&quot;  （2）在博客目录下的&#x2F;source&#x2F;_posts&#x2F; 文件夹下，可以看到已经生成了标题为(在这里.md)的博客文件：如图所示：">
+<meta property="og:description" content="在浏览器的地址栏输入一个URL，然后回车，回车这一瞬间到看到页面到底发生了什么呢？ 主要是进行了一下几个步骤： 1.DNS域名解析； 2.建立TCP连接； 3.发送http请求； 4.服务器处理请求； 5.返回响应结果； 6.关闭TCP连接； 7.浏览器解析HTML； 8.浏览器布局渲染； DNS域名解析我们在浏览器输入网址，其实就是要向服务器请求我们想要的页面内容，所有浏览器首先要确认的是域名所">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai.png">
-<meta property="og:image" content="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai-edit.png">
-<meta property="article:published_time" content="2020-03-21T09:44:15.000Z">
-<meta property="article:modified_time" content="2020-03-29T09:55:02.094Z">
+<meta property="article:published_time" content="2020-04-04T13:27:32.000Z">
+<meta property="article:modified_time" content="2020-04-04T14:20:29.057Z">
 <meta property="article:author" content="Bryce">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai.png">
 
-<link rel="canonical" href="https://bryceustc.github.io/2020/03/21/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/">
+<link rel="canonical" href="https://bryceustc.github.io/2020/04/04/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E5%85%A8%E8%BF%87%E7%A8%8B/">
 
 
 <script id="page-configurations">
@@ -49,7 +46,7 @@
   };
 </script>
 
-  <title>在Hexo博客中发布文章 | Bryce's Blog</title>
+  <title>HTTP请求与响应全过程 | Bryce's Blog</title>
   
 
 
@@ -208,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/03/21/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/04/04/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E5%85%A8%E8%BF%87%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.jfif">
@@ -221,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          在Hexo博客中发布文章
+          HTTP请求与响应全过程
         </h1>
 
         <div class="post-meta">
@@ -230,23 +227,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-03-21 17:44:15" itemprop="dateCreated datePublished" datetime="2020-03-21T17:44:15+08:00">2020-03-21</time>
+              <time title="创建时间：2020-04-04 21:27:32 / 修改时间：22:20:29" itemprop="dateCreated datePublished" datetime="2020-04-04T21:27:32+08:00">2020-04-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-29 17:55:02" itemprop="dateModified" datetime="2020-03-29T17:55:02+08:00">2020-03-29</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
                 </span>
             </span>
 
@@ -263,7 +254,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
+              <span>1.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -282,45 +273,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h4 id="1、新建一篇文章"><a href="#1、新建一篇文章" class="headerlink" title="1、新建一篇文章"></a>1、新建一篇文章</h4><p>（1）在hexo博客目录下，进入Git Bash命令窗口中，输入以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;在这里&quot;</span><br></pre></td></tr></table></figure>
-
-<p>（2）在博客目录下的/source/_posts/ 文件夹下，可以看到已经生成了标题为(在这里.md)的博客文件：<br>如图所示：<br><img src="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai.png" alt></p>
-<a id="more"></a>
-<p>（3）在（在这里.md）文件中编辑自己的博客文章即可。<br>注意：Hexo 发布的文章是 Markdown 格式的文件， Markdown 基本语法的网址：<a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener external nofollow noreferrer">点这里前往</a></p>
-<h4 id="2、给文章添加分类和标签"><a href="#2、给文章添加分类和标签" class="headerlink" title="2、给文章添加分类和标签"></a>2、给文章添加分类和标签</h4><p>(1) 在（在这里.md）文件中设置tags和categories属性：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">title: 在这里</span><br><span class="line">date: 2018-08-02 11:41:10</span><br><span class="line">tags:</span><br><span class="line">- 博客           &#x2F;&#x2F;多个标签可以这样添加</span><br><span class="line">- hexo</span><br><span class="line">categories: test</span><br></pre></td></tr></table></figure>
-<p>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/zai-edit.png" alt></p>
-<h4 id="3、启动服务器，本地测试"><a href="#3、启动服务器，本地测试" class="headerlink" title="3、启动服务器，本地测试"></a>3、启动服务器，本地测试</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<h4 id="4、添加“阅读全文”按钮"><a href="#4、添加“阅读全文”按钮" class="headerlink" title="4、添加“阅读全文”按钮"></a>4、添加“阅读全文”按钮</h4><p>方法一：在文章任意你想添加的位置添加即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--more--&gt;</span><br></pre></td></tr></table></figure>
-
-<p>方法二：设置首页文章以摘要形式显示，打开主题配置文件，找到auto_excerpt进行修改：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">auto_excerpt:</span><br><span class="line">  enable: true</span><br><span class="line">  length: 150</span><br></pre></td></tr></table></figure>
-
-<p>其中length代表显示摘要的截取字符长度。</p>
-<p>注：这两种方法，在博客首页显示的效果不一样，根据自己的需要，选择自己喜欢的方法</p>
-<h4 id="5、在博文中添加图片"><a href="#5、在博文中添加图片" class="headerlink" title="5、在博文中添加图片"></a>5、在博文中添加图片</h4><p>方法一：</p>
-<p>(1)在blog目录下，安装插件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-asset-image --save</span><br></pre></td></tr></table></figure>
-<p>(2)在blog\source 目录下新建一个images文件夹，把图片放置在里面；</p>
-<p>(3)在xxx.md文件中引用图片：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![header]( images&#x2F;header.jpg)</span><br></pre></td></tr></table></figure>
-
-<p>方法二：</p>
-<p>(1)在全局配置文件（blog/_config.yml)中将post_asset_folder设置为true；</p>
-<p>(2)创建文章（在创建的时候，会在blog/source/_post目录下，生成一个XXX.md文件和一个XXX的文件夹）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;XXX&quot;</span><br></pre></td></tr></table></figure>
-
-<p>(3)把XXX这个博文需要展示的图片放在XXX文件夹目录下；</p>
-<p>(4)在XXX.md文件中引入图片的方式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![你想输入的替代文字](XXX&#x2F;图片名.jpg)</span><br></pre></td></tr></table></figure>
-<h4 id="6、发布到Github上"><a href="#6、发布到Github上" class="headerlink" title="6、发布到Github上"></a>6、发布到Github上</h4><p>（1）发表的文章在本地预览无误后，在 Git Bash 命令窗口执行以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
-
-<p>（2）在浏览器，访问自己的博客域名，即可看到刚 发布的文章</p>
+        <p>在浏览器的地址栏输入一个URL，然后回车，回车这一瞬间到看到页面到底发生了什么呢？</p>
+<p>主要是进行了一下几个步骤：</p>
+<p>1.DNS域名解析；</p>
+<p>2.建立TCP连接；</p>
+<p>3.发送http请求；</p>
+<p>4.服务器处理请求；</p>
+<p>5.返回响应结果；</p>
+<p>6.关闭TCP连接；</p>
+<p>7.浏览器解析HTML；</p>
+<p>8.浏览器布局渲染；</p>
+<h3 id="DNS域名解析"><a href="#DNS域名解析" class="headerlink" title="DNS域名解析"></a>DNS域名解析</h3><p>我们在浏览器输入网址，其实就是要向服务器请求我们想要的页面内容，所有浏览器首先要确认的是域名所对应的服务器在哪里。将域名解析成对应的服务器IP地址这项工作，是由DNS服务器来完成的。</p>
+<p>客户端收到你输入的域名地址后，它首先去找本地的hosts文件，检查在该文件中是否有相应的域名、IP对应关系，如果有，则向其IP地址发送请求，如果没有，再去找DNS服务器。一般用户很少去编辑修改hosts文件。</p>
+<ol>
+<li><p>Chrome浏览器会首先搜索浏览器自身的DNS缓存（缓存时间比较短，大概只有1分钟，且只能容纳1000条缓存），看自身的缓存中是否有<a href="http://www.baidu.com对应的条目，而且没有过期，如果有且没有过期则解析到此结束。" target="_blank" rel="noopener external nofollow noreferrer">www.baidu.com对应的条目，而且没有过期，如果有且没有过期则解析到此结束。</a></p>
+<pre><code>注：我们怎么查看Chrome自身的缓存？可以使用 
+chrome://net-internals/#dns 来进行查看</code></pre></li>
+<li><p>如果浏览器自身的缓存里面没有找到对应的条目，那么Chrome会搜索操作系统自身的DNS缓存,如果找到且没有过期则停止搜索解析到此结束.</p>
+<pre><code>注：怎么查看操作系统自身的DNS缓存，以Windows系统为
+例，可以在命令行下使用 ipconfig /displaydns 来进行查看</code></pre></li>
+<li><p>如果在Windows系统的DNS缓存也没有找到，那么尝试读取hosts文件（位于C:\Windows\System32\drivers\etc），看看这里面有没有该域名对应的IP地址，如果有则解析成功。</p>
+</li>
+<li><p>如果在hosts文件中也没有找到对应的条目，浏览器就会发起一个DNS的系统调用，就会向本地配置的首选DNS服务器（一般是电信运营商提供的，也可以使用像Google提供的DNS服务器）发起域名解析请求（通过的是UDP协议向DNS的53端口发起请求，这个请求是递归的请求，也就是运营商的DNS服务器必须得提供给我们该域名的IP地址），运营商的DNS服务器首先查找自身的缓存，找到对应的条目，且没有过期，则解析成功。如果没有找到对应的条目，则有运营商的DNS代我们的浏览器发起迭代DNS解析请求，它首先是会找根域的DNS的IP地址（这个DNS服务器都内置13台根域的DNS的IP地址），找打根域的DNS地址，就会向其发起请求（请问<a href="http://www.baidu.com这个域名的IP地址是多少啊？），根域发现这是一个顶级域com域的一个域名，于是就告诉运营商的DNS我不知道这个域名的IP地址，但是我知道com域的IP地址，你去找它去，于是运营商的DNS就得到了com域的IP地址，又向com域的IP地址发起了请求（请问www.baidu.com这个域名的IP地址是多少?）,com域这台服务器告诉运营商的DNS我不知道www.baidu.com这个域名的IP地址，但是我知道baidu.com这个域的DNS地址，你去找它去，于是运营商的DNS又向baidu.com这个域名的DNS地址（这个一般就是由域名注册商提供的，像万网，新网等）发起请求（请问www.baidu.com这个域名的IP地址是多少？），这个时候baidu.com域的DNS服务器一查，诶，果真在我这里，于是就把找到的结果发送给运营商的DNS服务器，这个时候运营商的DNS服务器就拿到了www.baidu.com这个域名对应的IP地址，并返回给Windows系统内核，内核又把结果返回给浏览器，终于浏览器拿到了www.baidu.com" rel="external nofollow noreferrer">www.baidu.com这个域名的IP地址是多少啊？），根域发现这是一个顶级域com域的一个域名，于是就告诉运营商的DNS我不知道这个域名的IP地址，但是我知道com域的IP地址，你去找它去，于是运营商的DNS就得到了com域的IP地址，又向com域的IP地址发起了请求（请问www.baidu.com这个域名的IP地址是多少?）,com域这台服务器告诉运营商的DNS我不知道www.baidu.com这个域名的IP地址，但是我知道baidu.com这个域的DNS地址，你去找它去，于是运营商的DNS又向baidu.com这个域名的DNS地址（这个一般就是由域名注册商提供的，像万网，新网等）发起请求（请问www.baidu.com这个域名的IP地址是多少？），这个时候baidu.com域的DNS服务器一查，诶，果真在我这里，于是就把找到的结果发送给运营商的DNS服务器，这个时候运营商的DNS服务器就拿到了www.baidu.com这个域名对应的IP地址，并返回给Windows系统内核，内核又把结果返回给浏览器，终于浏览器拿到了www.baidu.com</a>  对应的IP地址，该进行一步的动作了。</p>
+</li>
+</ol>
 
     </div>
 
@@ -328,21 +304,6 @@
     
     
       
-  <div class="popular-posts-header">相关文章推荐</div>
-  <ul class="popular-posts">
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\19\Hexo-GitHub-Pages-搭建个人博客\" rel="bookmark">Hexo + GitHub Pages 搭建个人博客</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\利用Github分支备份Hexo博客源文件\" rel="bookmark">利用Github分支备份Hexo博客源文件</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\20\将Hexo博客主题更换为NexT主题\" rel="bookmark">将Hexo博客主题更换为NexT主题</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\Hexo-NexT主题博客相关设置\" rel="bookmark">Hexo + NexT主题博客相关设置</a></div>
-    </li>
-  </ul>
 
         <div class="reward-container">
   <div>喜欢你就打赏一下</div>
@@ -368,7 +329,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://bryceustc.github.io/2020/03/21/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/" title="在Hexo博客中发布文章">https://bryceustc.github.io/2020/03/21/在Hexo博客中发布文章/</a>
+    <a href="https://bryceustc.github.io/2020/04/04/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E5%85%A8%E8%BF%87%E7%A8%8B/" title="HTTP请求与响应全过程">https://bryceustc.github.io/2020/04/04/HTTP请求与响应全过程/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -379,7 +340,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
           </div>
 
         
@@ -388,13 +349,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/" rel="prev" title="将Hexo博客主题更换为NexT主题">
-      <i class="fa fa-chevron-left"></i> 将Hexo博客主题更换为NexT主题
+    <a href="/2020/04/04/C-thread%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93/" rel="prev" title="C++ thread用法总结">
+      <i class="fa fa-chevron-left"></i> C++ thread用法总结
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/" rel="next" title="Hexo + NexT主题博客相关设置">
-      Hexo + NexT主题博客相关设置 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -454,7 +412,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、新建一篇文章"><span class="nav-number">1.</span> <span class="nav-text">1、新建一篇文章</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、给文章添加分类和标签"><span class="nav-number">2.</span> <span class="nav-text">2、给文章添加分类和标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、启动服务器，本地测试"><span class="nav-number">3.</span> <span class="nav-text">3、启动服务器，本地测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、添加“阅读全文”按钮"><span class="nav-number">4.</span> <span class="nav-text">4、添加“阅读全文”按钮</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、在博文中添加图片"><span class="nav-number">5.</span> <span class="nav-text">5、在博文中添加图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6、发布到Github上"><span class="nav-number">6.</span> <span class="nav-text">6、发布到Github上</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS域名解析"><span class="nav-number">1.</span> <span class="nav-text">DNS域名解析</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
