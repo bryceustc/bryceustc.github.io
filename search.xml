@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>TCP和TCP/IP的区别</title>
+    <url>/2020/04/06/TCP%E5%92%8CTCP-IP%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h3 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h3><p>TCP/IP是Transmission Control Protocol/Internet Protocol的简写，译名为传输控制协议/因特网协议，是Internet最基本的协议。TCP/IP是这个协议族的统称，它采用了4层的层级结构，而不是指TCP + IP两个协议的总和。</p>
+<p>主要包括TCP、IP、UDP、ICMP、RIP、TELNET、FTP、SMTP、ARP、TFTP等许多协议</p>
+<a id="more"></a>
+<h3 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h3><p>IP协议包含源主机地址、目标主机地址，还有TCP数据信息。但IP协议没有做任何事情来确认数据包是否按顺序发送或者包是否被破坏，所以IP数据包是不可靠的。</p>
+<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>面向连接的通信协议，通过三次握手建立连接（socket通过TCP/IP连接时就是经过3次握手），通信完成后要关闭连接，它只用于端对端的通讯</p>
+<p>TCP协议通过3次握手建立起一个可靠的连接，通过将数据包进行排序以及检验的方式，可以提供一种可靠的数据流服务</p>
+<p>TCP可以限制数据的发送速度，间接地控制流量</p>
+<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>面向无连接的通讯协议，UDP数据包括原端口号信息以及目标端口号信息，它可以实现广播发送</p>
+<p>由于UDP通讯不需要接收方确认，所以属于不可靠的传输，可能会出现丢包现象.</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>HTTP请求与响应全过程</title>
     <url>/2020/04/04/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
     <content><![CDATA[<p>在浏览器的地址栏输入一个URL，然后回车，回车这一瞬间到看到页面到底发生了什么呢？</p>
