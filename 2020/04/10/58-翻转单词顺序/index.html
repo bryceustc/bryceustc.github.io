@@ -20,24 +20,20 @@
     var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="1、把默认主题更改成Next主题，在blog目录中（就是命令行的位置处于blog目录）打开命令行输入： 1git clone https:&#x2F;&#x2F;github.com&#x2F;iissnan&#x2F;hexo-theme-next themes&#x2F;next  这是将Next主题下载到blog目录的themes主题下的next文件夹中。打开站点的_config.yml配置">
+  <meta name="description" content="输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student. “，则输出”student. a am I”。 说明：   无空格字符构成一个单词。 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="将Hexo博客主题更换为NexT主题">
-<meta property="og:url" content="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/index.html">
+<meta property="og:title" content="翻转单词顺序">
+<meta property="og:url" content="https://bryceustc.github.io/2020/04/10/58-%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F/index.html">
 <meta property="og:site_name" content="Bryce&#39;s Blog">
-<meta property="og:description" content="1、把默认主题更改成Next主题，在blog目录中（就是命令行的位置处于blog目录）打开命令行输入： 1git clone https:&#x2F;&#x2F;github.com&#x2F;iissnan&#x2F;hexo-theme-next themes&#x2F;next  这是将Next主题下载到blog目录的themes主题下的next文件夹中。打开站点的_config.yml配置">
+<meta property="og:description" content="输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student. “，则输出”student. a am I”。 说明：   无空格字符构成一个单词。 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/1.jpg">
-<meta property="og:image" content="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/2.jpg">
-<meta property="og:image" content="https://winney07.github.io/2018/08/01/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/source.png">
-<meta property="article:published_time" content="2020-03-20T09:13:22.000Z">
-<meta property="article:modified_time" content="2020-03-29T09:42:07.661Z">
+<meta property="article:published_time" content="2020-04-10T07:39:47.000Z">
+<meta property="article:modified_time" content="2020-04-10T07:50:29.191Z">
 <meta property="article:author" content="Bryce">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="字符串">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/1.jpg">
 
-<link rel="canonical" href="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/">
+<link rel="canonical" href="https://bryceustc.github.io/2020/04/10/58-%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F/">
 
 
 <script id="page-configurations">
@@ -50,7 +46,7 @@
   };
 </script>
 
-  <title>将Hexo博客主题更换为NexT主题 | Bryce's Blog</title>
+  <title>翻转单词顺序 | Bryce's Blog</title>
   
 
 
@@ -209,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/04/10/58-%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.jfif">
@@ -222,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          将Hexo博客主题更换为NexT主题
+          翻转单词顺序
         </h1>
 
         <div class="post-meta">
@@ -231,23 +227,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-03-20 17:13:22" itemprop="dateCreated datePublished" datetime="2020-03-20T17:13:22+08:00">2020-03-20</time>
+              <time title="创建时间：2020-04-10 15:39:47 / 修改时间：15:50:29" itemprop="dateCreated datePublished" datetime="2020-04-10T15:39:47+08:00">2020-04-10</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-29 17:42:07" itemprop="dateModified" datetime="2020-03-29T17:42:07+08:00">2020-03-29</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
                 </span>
             </span>
 
@@ -264,14 +254,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.3k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -283,42 +273,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>1、把默认主题更改成Next主题，在blog目录中（就是命令行的位置处于blog目录）打开命令行输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;iissnan&#x2F;hexo-theme-next themes&#x2F;next</span><br></pre></td></tr></table></figure>
+        <p>输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student. “，则输出”student. a am I”。</p>
+<p><strong>说明：</strong> </p>
+<ul>
+<li>无空格字符构成一个单词。</li>
+<li>输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。</li>
+<li>如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。<a id="more"></a>
 
-<p>这是将Next主题下载到blog目录的themes主题下的next文件夹中。打开站点的_config.yml配置文件，修改主题为next<br><img src="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/1.jpg" alt></p>
-<a id="more"></a>
-<p>打开<strong>主题theme</strong>的_config.yml配置文件，不是<strong>站点site</strong>主题文件，找到Scheme Settings<br><img src="/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/2.jpg" alt><br>next主题有三个样式，我用的是Pisces，可以选择你自己喜欢的样式（只需要把行首的#去除，#是注释），选择好后，再次部署网站，hexo g、hexo d，查看效果。选择其他主题，按照上述过程即可实现。</p>
-<p>2、在主题配置文件 _config.yml中配置博客网站底部的基本信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">footer:</span><br><span class="line">  # Specify the date when the site was setup.</span><br><span class="line">  # If not defined, current year will be used.</span><br><span class="line">  since: 2020      #网站起始运营年份</span><br><span class="line"></span><br><span class="line">  # Icon between year and copyright info.</span><br><span class="line">  icon: user     #声明图标</span><br><span class="line"></span><br><span class="line">  # If not defined, will be used &#96;author&#96; from Hexo main config.</span><br><span class="line">  copyright: bryceustc   #版权所有</span><br><span class="line">  # ------------------------------------------------------------</span><br><span class="line">  # Hexo link (Powered by Hexo).</span><br><span class="line">  powered: true</span><br><span class="line"></span><br><span class="line">  theme:</span><br><span class="line">    # Theme &amp; scheme info link (Theme - NexT.scheme).</span><br><span class="line">    enable: false    #是否显示主题</span><br><span class="line">    # Version info of NexT after scheme info (vX.X.X).</span><br><span class="line">    version: false     #是否显示驱动</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路:"></a>解题思路:</h2><p>方法一：</p>
+<p>1) 翻转整个句子<br>2) 翻转句中单词<br>3) 删除多余的空格</p>
+<p>方法二：字符流，用stringstream来做</p>
+<h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>  O(n)</p>
+<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>  O(1)</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Reverse</span><span class="params">(<span class="built_in">string</span> &amp;s,<span class="keyword">int</span> start,<span class="keyword">int</span> <span class="built_in">end</span>)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(start&lt;<span class="built_in">end</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            swap(s[start++],s[<span class="built_in">end</span>--]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cleanSpaces</span><span class="params">(<span class="built_in">string</span> &amp;s)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>,j=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(j&lt;n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span>(j&lt;n &amp;&amp; s[j] == <span class="string">' '</span>) j++; <span class="comment">// 跳过空格</span></span><br><span class="line">            <span class="keyword">while</span>(j&lt;n &amp;&amp; s[j] != <span class="string">' '</span>)s[i++] = s[j++]; </span><br><span class="line">            <span class="comment">// 保留单词（非空格部分）</span></span><br><span class="line">            <span class="keyword">while</span>(j&lt;n &amp;&amp; s[j] == <span class="string">' '</span>) j++; </span><br><span class="line">            <span class="comment">// 跳过空格（主要是防止结尾有空格，然后再添加空格越界）</span></span><br><span class="line">            <span class="keyword">if</span> (j&lt;n) s[i++] = <span class="string">' '</span>; <span class="comment">// 补充空格</span></span><br><span class="line">        &#125;</span><br><span class="line">        s = s.substr(<span class="number">0</span>,i); <span class="comment">// 改成引用减少一次拷贝</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">reverseWords</span><span class="params">(<span class="built_in">string</span> s)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="comment">//翻转整个语句</span></span><br><span class="line">        Reverse(s,<span class="number">0</span>,n<span class="number">-1</span>);</span><br><span class="line">        <span class="comment">// 翻转句中单词</span></span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, <span class="built_in">end</span> = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span>(i&lt;n &amp;&amp; s[i]==<span class="string">' '</span>) i++;</span><br><span class="line">            start = <span class="built_in">end</span> = i;</span><br><span class="line">            <span class="keyword">while</span>(i&lt;n &amp;&amp; s[i]!=<span class="string">' '</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                i++;</span><br><span class="line">                <span class="built_in">end</span>++;</span><br><span class="line">            &#125;</span><br><span class="line">            Reverse(s,start,<span class="built_in">end</span><span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//清除多余空格</span></span><br><span class="line">        s = cleanSpaces(s);</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="方法二：字符流"><a href="#方法二：字符流" class="headerlink" title="方法二：字符流"></a>方法二：字符流</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">reverseWords</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">stringstream</span> ss;</span><br><span class="line">        <span class="built_in">string</span> ans=<span class="string">""</span>,temp;</span><br><span class="line">        ss&lt;&lt;s;</span><br><span class="line">        <span class="keyword">while</span>(ss&gt;&gt;temp)&#123;</span><br><span class="line">            ans=<span class="string">" "</span>+temp+ans;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(ans!=<span class="string">""</span>)</span><br><span class="line">            ans.erase(ans.<span class="built_in">begin</span>());</span><br><span class="line">        <span class="keyword">return</span> ans; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>3、在主题配置文件 _config.yml中配置菜单按钮，找到menu属性，做以下配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line"> home: &#x2F; || home     #首页，后面的表示图标</span><br><span class="line"> categories: &#x2F;categories&#x2F; || th   #分类</span><br><span class="line"> tags: &#x2F;tags&#x2F; || tags       #标签</span><br><span class="line"> archives: &#x2F;archives&#x2F; || archive     #归档</span><br><span class="line"> about: &#x2F;about&#x2F; || user       #关于</span><br><span class="line"> #schedule: &#x2F;schedule&#x2F; || calendar</span><br><span class="line"> #sitemap: &#x2F;sitemap.xml || sitemap</span><br><span class="line"> #commonweal: &#x2F;404&#x2F; || heartbeat</span><br></pre></td></tr></table></figure>
-<p>4、创建相应的页面</p>
-<p>（1）执行命令hexo s，本地预览我们的博客页面，会发现，点击分类、标签、关于这几个页面的时候，会显示404。</p>
-<p>（2）在Git Bash命令窗口，输入以下命令来创建相应页面：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo new page &#39;categories&#39;</span><br><span class="line">hexo new page &#39;tags&#39;</span><br><span class="line">hexo new page &#39;about&#39;</span><br></pre></td></tr></table></figure>
-<p>（3）可以在hexo/source目录下看到创建的3个文件夹<br><img src="https://winney07.github.io/2018/08/01/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/source.png" alt></p>
-<p>5、每一个分类菜单都生成了一个 index.md 初始文件（在刚创建的文件夹目录下），默认包含了 title 和 date 字段，我们需要给每一 index.md 文件添加上 type 字段<br>如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: categories</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: tags</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: about</span><br><span class="line">date: 2020-3-20 16:28:33</span><br><span class="line">type: about</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<p>6、配置搜索菜单：<br>（1）安装 hexo-generator-searchdb ，在 Git Bash 命令窗口，输入以下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
-
-<p>（2）打开全局配置文件（hexo/_config.yml），新增以下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure>
-
-<p>（3）打开主题配置文件（hexo/themes/next/_config.yml），找到 local_search 属性，开启本地搜索功能：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  enable: true</span><br><span class="line">  # if auto, trigger search by changing input</span><br><span class="line">  # if manual, trigger search by pressing enter key or search button</span><br><span class="line">  trigger: auto</span><br><span class="line">  # show top n results per article, show all results by setting to -1</span><br><span class="line">  top_n_per_article: 1</span><br></pre></td></tr></table></figure>
-<p>7、执行命令hexo s，本地预览我们的博客页面，发现刚才的配置已经完成</p>
-<p>8、在命令窗口，输入以下命令，将修改后的本地hexo项目托管到GitHub上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
-
-<p>9、上传成功后，可以通过自己的博客域名访问修改主题和修改相关配置后的博客页面</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://segmentfault.com/a/1190000017271382" target="_blank" rel="noopener external nofollow noreferrer">C++ 学习笔记之——字符串和字符串流</a></li>
+<li><a href="https://blog.csdn.net/yyhaohaoxuexi/article/details/51416874" target="_blank" rel="noopener external nofollow noreferrer">C++ string 类中substr的使用方法</a></li>
+</ul>
 
     </div>
 
@@ -326,21 +301,6 @@
     
     
       
-  <div class="popular-posts-header">相关文章推荐</div>
-  <ul class="popular-posts">
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\19\Hexo-GitHub-Pages-搭建个人博客\" rel="bookmark">Hexo + GitHub Pages 搭建个人博客</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\利用Github分支备份Hexo博客源文件\" rel="bookmark">利用Github分支备份Hexo博客源文件</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\在Hexo博客中发布文章\" rel="bookmark">在Hexo博客中发布文章</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\Hexo-NexT主题博客相关设置\" rel="bookmark">Hexo + NexT主题博客相关设置</a></div>
-    </li>
-  </ul>
 
         <div class="reward-container">
   <div>喜欢你就打赏一下</div>
@@ -366,7 +326,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://bryceustc.github.io/2020/03/20/%E5%B0%86Hexo%E5%8D%9A%E5%AE%A2%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%8D%A2%E4%B8%BANexT%E4%B8%BB%E9%A2%98/" title="将Hexo博客主题更换为NexT主题">https://bryceustc.github.io/2020/03/20/将Hexo博客主题更换为NexT主题/</a>
+    <a href="https://bryceustc.github.io/2020/04/10/58-%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F/" title="翻转单词顺序">https://bryceustc.github.io/2020/04/10/58-翻转单词顺序/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -377,7 +337,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
           </div>
 
         
@@ -386,13 +346,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/19/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" rel="prev" title="Hexo + GitHub Pages 搭建个人博客">
-      <i class="fa fa-chevron-left"></i> Hexo + GitHub Pages 搭建个人博客
+    <a href="/2020/04/08/TCP%E5%9B%BA%E5%AE%9A%E5%A4%B4%E9%83%A8%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3/" rel="prev" title="TCP头部具体划分">
+      <i class="fa fa-chevron-left"></i> TCP头部具体划分
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/03/21/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/" rel="next" title="在Hexo博客中发布文章">
-      在Hexo博客中发布文章 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -452,6 +409,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解题思路"><span class="nav-number">1.</span> <span class="nav-text">解题思路:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间复杂度"><span class="nav-number">2.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#空间复杂度"><span class="nav-number">3.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法一"><span class="nav-number">4.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法二：字符流"><span class="nav-number">4.2.</span> <span class="nav-text">方法二：字符流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
