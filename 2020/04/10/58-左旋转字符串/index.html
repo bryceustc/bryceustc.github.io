@@ -20,24 +20,20 @@
     var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一、添加文章版权声明功能打开博客目录下的主题配置文件（&#x2F;themes&#x2F;next&#x2F;_config.yml），找到Declare license on posts 标签，进行配置： 12345# Declare license on postspost_copyright:  enable: true    #激活版权声明模块  license: CC BY-NC-SA 3.0     #版权许可协议">
+  <meta name="description" content="字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串”abcdefg”和数字2，该函数将返回左旋转两位得到的结果”cdefgab”。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo + NexT主题博客相关设置">
-<meta property="og:url" content="https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/index.html">
+<meta property="og:title" content="58_左旋转字符串">
+<meta property="og:url" content="https://bryceustc.github.io/2020/04/10/58-%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/index.html">
 <meta property="og:site_name" content="Bryce&#39;s Blog">
-<meta property="og:description" content="一、添加文章版权声明功能打开博客目录下的主题配置文件（&#x2F;themes&#x2F;next&#x2F;_config.yml），找到Declare license on posts 标签，进行配置： 12345# Declare license on postspost_copyright:  enable: true    #激活版权声明模块  license: CC BY-NC-SA 3.0     #版权许可协议">
+<meta property="og:description" content="字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串”abcdefg”和数字2，该函数将返回左旋转两位得到的结果”cdefgab”。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png">
-<meta property="og:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/favicon.png">
-<meta property="og:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/friend-link.png">
-<meta property="article:published_time" content="2020-03-21T10:00:22.000Z">
-<meta property="article:modified_time" content="2020-03-29T10:33:59.970Z">
+<meta property="article:published_time" content="2020-04-10T07:58:27.000Z">
+<meta property="article:modified_time" content="2020-04-10T08:23:09.743Z">
 <meta property="article:author" content="Bryce">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="字符串">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png">
 
-<link rel="canonical" href="https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/">
+<link rel="canonical" href="https://bryceustc.github.io/2020/04/10/58-%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/">
 
 
 <script id="page-configurations">
@@ -50,7 +46,7 @@
   };
 </script>
 
-  <title>Hexo + NexT主题博客相关设置 | Bryce's Blog</title>
+  <title>58_左旋转字符串 | Bryce's Blog</title>
   
 
 
@@ -209,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/04/10/58-%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.jfif">
@@ -222,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hexo + NexT主题博客相关设置
+          58_左旋转字符串
         </h1>
 
         <div class="post-meta">
@@ -231,23 +227,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-03-21 18:00:22" itemprop="dateCreated datePublished" datetime="2020-03-21T18:00:22+08:00">2020-03-21</time>
+              <time title="创建时间：2020-04-10 15:58:27 / 修改时间：16:23:09" itemprop="dateCreated datePublished" datetime="2020-04-10T15:58:27+08:00">2020-04-10</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-29 18:33:59" itemprop="dateModified" datetime="2020-03-29T18:33:59+08:00">2020-03-29</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
                 </span>
             </span>
 
@@ -264,7 +254,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>893</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -283,23 +273,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h4 id="一、添加文章版权声明功能"><a href="#一、添加文章版权声明功能" class="headerlink" title="一、添加文章版权声明功能"></a>一、添加文章版权声明功能</h4><p>打开博客目录下的主题配置文件（/themes/next/_config.yml），找到Declare license on posts 标签，进行配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Declare license on posts</span><br><span class="line">post_copyright:</span><br><span class="line">  enable: true    #激活版权声明模块</span><br><span class="line">  license: CC BY-NC-SA 3.0     #版权许可协议</span><br><span class="line">  license_url: https:&#x2F;&#x2F;winney07.github.io&#x2F;      #声明的文章的可点击链接（域名）</span><br></pre></td></tr></table></figure>
+        <p>字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串”abcdefg”和数字2，该函数将返回左旋转两位得到的结果”cdefgab”。</p>
 <a id="more"></a>
-<p>配置完后，执行以下命令，在浏览器中访问，效果如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/next-set1.png" alt></p>
-<h4 id="二、设置favicon图标"><a href="#二、设置favicon图标" class="headerlink" title="二、设置favicon图标"></a>二、设置favicon图标</h4><p>1、选择一个favicon制作网站完成制作，例如：比特虫 ，制作一个16*16，一个32*32的；</p>
-<p>2、两个不同尺寸大小的文件，重名为favicon-16x16-next.png和favicon-32x32-next.png；</p>
-<p>3、将重命名的两个图片文件放到博客目录下的themes/next/source/images中（覆盖原来的两个默认的）<br>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/favicon.png" alt></p>
-<h3 id="三、添加友情链接"><a href="#三、添加友情链接" class="headerlink" title="三、添加友情链接"></a>三、添加友情链接</h3><p>打开主题配置文件（/themes/next/_config.yml），找到以下内容进行修改：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Blog rolls</span><br><span class="line">links_icon: link</span><br><span class="line">links_title: 友情链接 </span><br><span class="line"># links_layout: block   &#x2F;&#x2F;块状显示（选择了行内显示，这个要注释掉，不然会报错）</span><br><span class="line">links_layout: inline    &#x2F;&#x2F;行内显示</span><br><span class="line">links:</span><br><span class="line">  小超: https:&#x2F;&#x2F;www.xiaochao.me&#x2F;</span><br><span class="line">  Github: https:&#x2F;&#x2F;www.github.com</span><br></pre></td></tr></table></figure>
 
-<p>如图所示：</p>
-<p><img src="https://winney07.github.io/2018/08/02/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/friend-link.png" alt></p>
-<h4 id="四、调整hexo页面宽度"><a href="#四、调整hexo页面宽度" class="headerlink" title="四、调整hexo页面宽度"></a>四、调整hexo页面宽度</h4><p>博客在浏览器上的留白太多，因此想增加文章的宽度。</p>
-<p>打开/themes/next/source/css/_variables/custom.styl 添加两行代码即可：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$main-desktop &#x3D; 1200px </span><br><span class="line">$content-desktop &#x3D; 900px</span><br></pre></td></tr></table></figure>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路:"></a>解题思路:</h2><p>  方法一：直接法，定义一个左移一位函数leftmove，先定义一个<code>char temp = s[0];</code>。其余<code>s[i]==s[i+1];</code>，n-1位置最后一个字符替换为temp。左移几位就循环几次左移函数。</p>
+<p>  方法二：利用reverse函数，原理：YX=(X<sup>T</sup> Y<sup>T</sup>)^<sup>T</sup></p>
+<p>  以”abcdefg“为例，我们可以把它分为两部分。由于想把它的前两个字.符移到后面，我们就把前两个字符分到第一部分， 把后面的所有字符分到第二部分。我们先分别翻转这两部分，于是就得到”bagfedc“。接下来翻转整个字符串，得到的”cdefgab“刚好就是把原始字符串左旋转两位的结果。</p>
+<p>  方法三：取巧法，<code>s+=s;</code>，复制一遍字符串，从n开始处截取原字符串长度返回即可。</p>
+<h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><ol>
+<li><p>O(kn) n为字符串长度，k旋转位数</p>
+</li>
+<li><p>O(n)</p>
+</li>
+<li><p>O(n)</p>
+</li>
+</ol>
+<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><ol>
+<li><p>O(1)</p>
+</li>
+<li><p>O(1)</p>
+</li>
+<li><p>O(n)</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2></li>
+</ol>
+<h3 id="方法一：直接左移-超时"><a href="#方法一：直接左移-超时" class="headerlink" title="方法一：直接左移(超时)"></a>方法一：直接左移(超时)</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">reverseLeftWords</span><span class="params">(<span class="built_in">string</span> s, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            leftMove(s);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">leftMove</span><span class="params">(<span class="built_in">string</span> &amp;s)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m  = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">char</span> temp = s[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i!=m<span class="number">-1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                s[i]=s[i+<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                s[i] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="方法二：YX-XT-YT-T"><a href="#方法二：YX-XT-YT-T" class="headerlink" title="方法二：YX=(XT YT)^T"></a>方法二：YX=(X<sup>T</sup> Y<sup>T</sup>)^<sup>T</sup></h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">reverseLeftWords</span><span class="params">(<span class="built_in">string</span> s, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        reverse(s.<span class="built_in">begin</span>(),s.<span class="built_in">begin</span>()+n); </span><br><span class="line">        <span class="comment">//reverse函数反转的范围是[first,last)</span></span><br><span class="line">        reverse(s.<span class="built_in">begin</span>()+n,s.<span class="built_in">end</span>());</span><br><span class="line">        reverse(s.<span class="built_in">begin</span>(),s.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="方法三：s-s"><a href="#方法三：s-s" class="headerlink" title="方法三：s+=s"></a>方法三：s+=s</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">reverseLeftWords</span><span class="params">(<span class="built_in">string</span> s, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m = s.<span class="built_in">size</span>();</span><br><span class="line">        s+=s;</span><br><span class="line">        s = s.substr(n,m);</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>空间复杂度改善为O(1)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">reverseLeftWords</span><span class="params">(<span class="built_in">string</span> s, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="built_in">string</span> res = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=n;i&lt;n+m;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            res+=s[i%m];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -309,16 +310,7 @@
   <div class="popular-posts-header">相关文章推荐</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\19\Hexo-GitHub-Pages-搭建个人博客\" rel="bookmark">Hexo + GitHub Pages 搭建个人博客</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\利用Github分支备份Hexo博客源文件\" rel="bookmark">利用Github分支备份Hexo博客源文件</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\20\将Hexo博客主题更换为NexT主题\" rel="bookmark">将Hexo博客主题更换为NexT主题</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2020\03\21\在Hexo博客中发布文章\" rel="bookmark">在Hexo博客中发布文章</a></div>
+      <div class="popular-posts-title"><a href="\2020\04\10\58-翻转单词顺序\" rel="bookmark">翻转单词顺序</a></div>
     </li>
   </ul>
 
@@ -346,7 +338,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://bryceustc.github.io/2020/03/21/Hexo-NexT%E4%B8%BB%E9%A2%98%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/" title="Hexo + NexT主题博客相关设置">https://bryceustc.github.io/2020/03/21/Hexo-NexT主题博客相关设置/</a>
+    <a href="https://bryceustc.github.io/2020/04/10/58-%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="58_左旋转字符串">https://bryceustc.github.io/2020/04/10/58-左旋转字符串/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -357,7 +349,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
           </div>
 
         
@@ -366,13 +358,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/21/%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/" rel="prev" title="在Hexo博客中发布文章">
-      <i class="fa fa-chevron-left"></i> 在Hexo博客中发布文章
+    <a href="/2020/04/10/58-%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F/" rel="prev" title="翻转单词顺序">
+      <i class="fa fa-chevron-left"></i> 翻转单词顺序
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/03/21/%E5%88%A9%E7%94%A8Github%E5%88%86%E6%94%AF%E5%A4%87%E4%BB%BDHexo%E5%8D%9A%E5%AE%A2%E6%BA%90%E6%96%87%E4%BB%B6/" rel="next" title="利用Github分支备份Hexo博客源文件">
-      利用Github分支备份Hexo博客源文件 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -432,7 +421,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、添加文章版权声明功能"><span class="nav-number">1.</span> <span class="nav-text">一、添加文章版权声明功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、设置favicon图标"><span class="nav-number">2.</span> <span class="nav-text">二、设置favicon图标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、添加友情链接"><span class="nav-number"></span> <span class="nav-text">三、添加友情链接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#四、调整hexo页面宽度"><span class="nav-number">1.</span> <span class="nav-text">四、调整hexo页面宽度</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解题思路"><span class="nav-number">1.</span> <span class="nav-text">解题思路:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间复杂度"><span class="nav-number">2.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#空间复杂度"><span class="nav-number">3.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法一：直接左移-超时"><span class="nav-number">4.1.</span> <span class="nav-text">方法一：直接左移(超时)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法二：YX-XT-YT-T"><span class="nav-number">4.2.</span> <span class="nav-text">方法二：YX&#x3D;(XT YT)^T</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法三：s-s"><span class="nav-number">4.3.</span> <span class="nav-text">方法三：s+&#x3D;s</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
