@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="书写是对思维的缓存">
+  <meta name="description" content="概述容器是储存其他对象的对象。被储存的对象必须是同一类型。 分类： 与java的集合不同!STL容器主要被分为两个部分： 一是序列容器（是一种各元素之间有顺序关系的线性表，是一种线性结构的可序群集。顺序性容器中的每个元素均有固定的位置，除非用删除或插入的操作改变这个位置。顺序容器的元素排列次序与元素值无关，而是由元素添加到容器里的次序决定）（forword_list,list,queue,prio">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STL常见容器整理">
+<meta property="og:title" content="C++STL容器整理">
 <meta property="og:url" content="https://bryceustc.github.io/2020/04/18/STL%E5%B8%B8%E8%A7%81%E5%AE%B9%E5%99%A8%E6%95%B4%E7%90%86/index.html">
 <meta property="og:site_name" content="Bryce&#39;s Blog">
-<meta property="og:description" content="书写是对思维的缓存">
+<meta property="og:description" content="概述容器是储存其他对象的对象。被储存的对象必须是同一类型。 分类： 与java的集合不同!STL容器主要被分为两个部分： 一是序列容器（是一种各元素之间有顺序关系的线性表，是一种线性结构的可序群集。顺序性容器中的每个元素均有固定的位置，除非用删除或插入的操作改变这个位置。顺序容器的元素排列次序与元素值无关，而是由元素添加到容器里的次序决定）（forword_list,list,queue,prio">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-18T04:01:54.000Z">
-<meta property="article:modified_time" content="2020-04-20T09:33:30.614Z">
+<meta property="article:modified_time" content="2020-04-23T14:56:22.843Z">
 <meta property="article:author" content="Bryce">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>STL常见容器整理 | Bryce's Blog</title>
+  <title>C++STL容器整理 | Bryce's Blog</title>
   
 
 
@@ -218,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          STL常见容器整理
+          C++STL容器整理
         </h1>
 
         <div class="post-meta">
@@ -235,7 +235,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-20 17:33:30" itemprop="dateModified" datetime="2020-04-20T17:33:30+08:00">2020-04-20</time>
+                <time title="修改时间：2020-04-23 22:56:22" itemprop="dateModified" datetime="2020-04-23T22:56:22+08:00">2020-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,14 +260,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>5.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -279,7 +279,77 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>容器是储存其他对象的对象。被储存的对象必须是同一类型。</p>
+<p>分类：</p>
+<p>与java的集合不同!STL容器主要被分为两个部分：</p>
+<p>一是序列容器（是一种各元素之间有顺序关系的线性表，是一种线性结构的可序群集。顺序性容器中的每个元素均有固定的位置，除非用删除或插入的操作改变这个位置。顺序容器的元素排列次序与元素值无关，而是由元素添加到容器里的次序决定）（<code>forword_list,list,queue,priority_queue,stack,deque,vector,array</code>）。</p>
+<a id="more"></a>
+<p>另一个是关联容器（关联式容器是非线性的树结构，更准确的说是二叉树结构。各元素之间没有严格的物理上的顺序关系，也就是说元素在容器中并没有保存元素置入容器时的逻辑顺序。但是关联式容器提供了另一种根据元素特点排序的功能，这样迭代器就能根据元素的特点“顺序地”获取元素。元素是有序的集合，默认在插入的时候按升序排列（<code>set,multiset,map,multimap</code>）！</p>
+<p>C++11之后还有一种无序关联容器！(<code>unordered_map, unordered_set, unordered_multiset, unordered_multimap</code>)</p>
+<h3 id="序列容器"><a href="#序列容器" class="headerlink" title="序列容器"></a>序列容器</h3><p>序列的要求：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">X <span class="title">a</span><span class="params">(n,t)</span>  <span class="comment">//声明一个名为a的有n个t组成的序列</span></span></span><br><span class="line"><span class="function"><span class="title">X</span><span class="params">(n,t)</span>     <span class="comment">//匿名序列（这里不做过多的解释）</span></span></span><br><span class="line"><span class="function">X <span class="title">a</span><span class="params">(i,j)</span>   <span class="comment">//声明一个名为a的序列，并且初始化[i,j）的内容</span></span></span><br><span class="line"><span class="function"><span class="title">X</span><span class="params">(i,j)</span>      <span class="comment">//匿名序列</span></span></span><br><span class="line">v.insert()   //由于insert重载方法比较多</span><br><span class="line">   <span class="number">1.</span>v.insert(p,t)<span class="comment">//将t插到p的前面</span></span><br><span class="line">   <span class="number">2.</span>v.insert(p,n,t)<span class="comment">//将n个t插入p之前</span></span><br><span class="line">   <span class="number">3.</span>v.insert(p,i.j)<span class="comment">//将区间[i,j)的元素插入到p之前</span></span><br><span class="line">v.erase(t,k)</span><br><span class="line">   <span class="number">1.</span>v.erase(t,k)<span class="comment">//删除他们之间的元素</span></span><br><span class="line">   <span class="number">2.</span>v.erase(p)<span class="comment">//删除p指向的元素</span></span><br><span class="line">v.<span class="built_in">clear</span>===v.erase(<span class="built_in">begin</span>(),<span class="built_in">end</span>());</span><br></pre></td></tr></table></figure>
+
+<p>下面我们来看一下这些容器的特点！</p>
+<h4 id="1-vector"><a href="#1-vector" class="headerlink" title="1. vector"></a>1. vector</h4><p>vector是数组的一种类表示，vector表示一段连续的内存，基于数组实现，他有自动的内存管理功能!可以动态的改变vector的长度，并随着元素的增加与减小来自动改变数组大小，它提供了直接添加尾部元素或者删除元素的方法！所以它的时间是固定的！然而他要在头部与中间插入或者删除元素是线性的时间复杂度！</p>
+<p>特点：<br>他可以反转序列，所以它可以反向遍历可反转序列！（基于他的rbegin,rend）</p>
+<p>调用头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>定义与初始化：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;<span class="comment">//默认初始化</span></span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">v</span><span class="params">(v1)</span></span>;<span class="comment">//用v1初始化v</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;v(v1.<span class="built_in">begin</span>(),v1.<span class="built_in">end</span>());<span class="comment">//用v1初始化v</span></span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">v</span><span class="params">(<span class="number">10</span>)</span></span>;<span class="comment">//定义一个大小为10的数组！</span></span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">v</span><span class="params">(<span class="number">10</span>,<span class="number">1</span>)</span><span class="comment">//定义个全为1而且长度为10的数组</span></span></span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">a</span><span class="params">(b.<span class="built_in">begin</span>(),b.<span class="built_in">begin</span>+<span class="number">3</span>)</span></span>; <span class="comment">//定义了a值为b中第0个到第2个（共3个）元素</span></span><br><span class="line"><span class="keyword">int</span> b[<span class="number">7</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">9</span>,<span class="number">8</span>&#125;;</span><br><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">a</span><span class="params">(b,b+<span class="number">7</span>)</span></span>; <span class="comment">//从数组中获得初值</span></span><br></pre></td></tr></table></figure>
+
+<p>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">（<span class="number">1</span>）a.assign(b.<span class="built_in">begin</span>(), b.<span class="built_in">begin</span>()+<span class="number">3</span>); <span class="comment">//b为向量，将b的0~2个元素构成的向量赋给a</span></span><br><span class="line">（<span class="number">2</span>）a.assign(<span class="number">4</span>,<span class="number">2</span>); <span class="comment">//是a只含4个元素，且每个元素为2</span></span><br><span class="line">（<span class="number">3</span>）a.back(); <span class="comment">//返回a的最后一个元素</span></span><br><span class="line">（<span class="number">4</span>）a.front(); <span class="comment">//返回a的第一个元素</span></span><br><span class="line">（<span class="number">5</span>）a[i]; <span class="comment">//返回a的第i个元素，当且仅当a[i]存在2013-12-07</span></span><br><span class="line">（<span class="number">6</span>）a.<span class="built_in">clear</span>(); <span class="comment">//清空a中的元素</span></span><br><span class="line">（<span class="number">7</span>）a.empty(); <span class="comment">//判断a是否为空，空则返回ture,不空则返回false</span></span><br><span class="line">（<span class="number">8</span>）a.pop_back(); <span class="comment">//删除a向量的最后一个元素</span></span><br><span class="line">（<span class="number">9</span>）a.erase(a.<span class="built_in">begin</span>()+<span class="number">1</span>,a.<span class="built_in">begin</span>()+<span class="number">3</span>); <span class="comment">//删除a中第1个（从第0个算起）到第2个元素，也就是说删除的元素从a.begin()+1算起（包括它）一直到a.begin()+3（不包括它）</span></span><br><span class="line">（<span class="number">10</span>）a.push_back(<span class="number">5</span>); <span class="comment">//在a的最后一个向量后插入一个元素，其值为5</span></span><br><span class="line">（<span class="number">11</span>）a.insert(a.<span class="built_in">begin</span>()+<span class="number">1</span>,<span class="number">5</span>); <span class="comment">//在a的第1个元素（从第0个算起）的位置插入数值5，如a为1,2,3,4，插入元素后为1,5,2,3,4</span></span><br><span class="line">（<span class="number">12</span>）a.insert(a.<span class="built_in">begin</span>()+<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>); <span class="comment">//在a的第1个元素（从第0个算起）的位置插入3个数，其值都为5</span></span><br><span class="line">（<span class="number">13</span>）a.insert(a.<span class="built_in">begin</span>()+<span class="number">1</span>,b+<span class="number">3</span>,b+<span class="number">6</span>); <span class="comment">//b为数组，在a的第1个元素（从第0个算起）的位置插入b的第3个元素到第5个元素（不包括b+6），如b为1,2,3,4,5,9,8 ，插入元素后为1,4,5,9,2,3,4,5,9,8</span></span><br><span class="line">（<span class="number">14</span>）a.<span class="built_in">size</span>(); <span class="comment">//返回a中元素的个数；</span></span><br><span class="line">（<span class="number">15</span>）a.capacity(); <span class="comment">//返回a在内存中总共可以容纳的元素个数</span></span><br><span class="line">（<span class="number">16</span>）a.resize(<span class="number">10</span>); <span class="comment">//将a的现有元素个数调至10个，多则删，少则补，其值随机</span></span><br><span class="line">（<span class="number">17</span>）a.resize(<span class="number">10</span>,<span class="number">2</span>); <span class="comment">//将a的现有元素个数调至10个，多则删，少则补，其值为2</span></span><br><span class="line">（<span class="number">18</span>）a.reserve(<span class="number">100</span>); <span class="comment">//将a的容量（capacity）扩充至100，也就是说现在测试a.capacity();的时候返回值是100.这种操作只有在需要给a添加大量数据的时候才  显得有意义，因为这将避免内存多次容量扩充操作（当a的容量不足时电脑会自动扩容，当然这必然降低性能） </span></span><br><span class="line">（<span class="number">19</span>）a.swap(b); <span class="comment">//b为向量，将a中的元素和b中的元素进行整体性交换</span></span><br><span class="line">（<span class="number">20</span>）a==b; <span class="comment">//b为向量，向量的比较操作还有!=,&gt;=,&lt;=,&gt;,&lt;</span></span><br></pre></td></tr></table></figure>
+
+<p>遍历：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//下标法</span></span><br><span class="line"><span class="keyword">int</span> length = v.<span class="built_in">size</span>();</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;v[i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"><span class="comment">//迭代器法</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_iterator iterator = v.<span class="built_in">begin</span>();</span><br><span class="line"><span class="keyword">for</span>(;iterator != v.<span class="built_in">end</span>();iterator++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;*iterator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>几种常用重要的算法，使用时需要包含头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line">（<span class="number">1</span>）sort(a.<span class="built_in">begin</span>(),a.<span class="built_in">end</span>()); <span class="comment">//对a中的从a.begin()（包括它）到a.end()（不包括它）的元素进行从小到大排列</span></span><br><span class="line">（<span class="number">2</span>）reverse(a.<span class="built_in">begin</span>(),a.<span class="built_in">end</span>()); <span class="comment">//对a中的从a.begin()（包括它）到a.end()（不包括它）的元素倒置，但不排列，如a中元素为1,3,2,4,倒置后为4,2,3,1</span></span><br><span class="line">（<span class="number">3</span>）copy(a.<span class="built_in">begin</span>(),a.<span class="built_in">end</span>(),b.<span class="built_in">begin</span>()+<span class="number">1</span>); <span class="comment">//把a中的从a.begin()（包括它）到a.end()（不包括它）的元素复制到b中，从b.begin()+1的位置（包括它）开始复制，覆盖掉原有元素</span></span><br><span class="line">（<span class="number">4</span>）<span class="built_in">find</span>(a.<span class="built_in">begin</span>(),a.<span class="built_in">end</span>(),<span class="number">10</span>); <span class="comment">//在a中的从a.begin()（包括它）到a.end()（不包括它）的元素中查找10，若存在返回其在向量中的位置</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-deque"><a href="#2-deque" class="headerlink" title="2. deque"></a>2. deque</h4><p>双端队列，他的实现类似与vector,支持随机访问，但是它访问首元素的插入（push_front()）与删除（pop_front()）的时间是固定的！而且他的执行速度要比vector快很多！所以需要有大量的操作发生在序列的起始位置与结尾处，我们就要考虑用deque!</p>
+<p>调用头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;deque&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>初始化与定义已经在序列要求里面，而且方法与vector类似，只是多了push_front(),pop_front(),不做过多的阐述</p>
+<h4 id="3-list"><a href="#3-list" class="headerlink" title="3. list"></a>3. list</h4><p>双向链表，list在链表中的任意一个位置插入与删除一个元素时间是固定的！但是他不能随机访问，优点是元素的快速插入与删除！从容器中插入与删除元素之后i，迭代器指向元素将不变，不会移动已有元素，只是修改链表信息。</p>
+<p>调用头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;list&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>链表独有成员函数:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">()</span>   <span class="comment">//使用&lt;运算符对链表进行排序，时间复杂度O（NlogN）</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="built_in">list</span>&lt;T,Alloc&gt;&amp;x)</span>  <span class="comment">//将x与调用链表合并，要求：两个链表必须要已经排好序！元素将保存在调用链表中，x为空，这个时间复杂度为线性！</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(<span class="keyword">const</span> T &amp;val)</span><span class="comment">//删除val的所有实例</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">splice</span><span class="params">(iterator pos,<span class="built_in">list</span>&lt;T,Alloc&gt;x)</span><span class="comment">//将链表x的内容加到pos的前面，时间复杂度为固定时间</span></span></span><br><span class="line">void unique（） //去重，线性时间</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong><br>algorithm头文件中有sort函数，这个list也有自己的sort函数，排序时都可以用，不过使用自带的效率会更高一点。</p>
+<h4 id="4-forword-list"><a href="#4-forword-list" class="headerlink" title="4. forword_list"></a>4. forword_list</h4><p>主要实现单向链表，与list类似，只需要正向迭代器，他是不可逆转容器，他功能比较少，比较简单</p>
+<h4 id="5-queue"><a href="#5-queue" class="headerlink" title="5. queue"></a>5. queue</h4><p>他是一个适配器类，可以用数组也可以用链表实现队列，它不允许随机访问元素，而且不能遍历队列！元素只能先进先出（FIFO）.</p>
+<p>调用头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>queue的定义，queue<typename> q;其中typename可以为任何类型或容器。</typename></p>
+<p>queue的访问，由于队列是一种先进先出的限制性数据结构，因此在STL中只能通过front()来访问队首元素，或是通过back()来访问队尾元素。</p>
+<p>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span><span class="comment">//判断是否为空</span></span></span><br><span class="line"><span class="function"><span class="title">front</span><span class="params">()</span><span class="comment">//队首元素的访问</span></span></span><br><span class="line"><span class="function"><span class="title">back</span><span class="params">()</span><span class="comment">//队尾元素的访问</span></span></span><br><span class="line"><span class="function"><span class="title">push</span><span class="params">(x)</span><span class="comment">//队尾插入x</span></span></span><br><span class="line"><span class="function"><span class="title">pop</span><span class="params">()</span><span class="comment">//删除队首元素</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="6-priority-queue"><a href="#6-priority-queue" class="headerlink" title="6. priority_queue"></a>6. priority_queue</h4><p>优先队列，其底层是用堆来进行实现的。在优先队列中，队首的元素一定是当前队列中优先级最高的那一个。C++中的堆默认是大顶堆。</p>
+<p>调用头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>priority_queue的定义，priority_queue<typename> q,typename可以为任意类型的元素。</typename></p>
+<p>priority_queue只能通过top()函数来访问队首元素(堆顶元素)，也就是优先级最高的元素。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">priority_queue&lt;<span class="keyword">int</span>&gt; X <span class="comment">//大根堆,默认初始化</span></span><br><span class="line"></span><br><span class="line">priority_queue&lt;<span class="keyword">int</span>, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;, greater&lt;<span class="keyword">int</span>&gt;&gt; x  <span class="comment">//小根堆,运用了预定义函数greater&lt;int&gt;！</span></span><br></pre></td></tr></table></figure>
+
+<p>以下内容摘自C++API：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">包含priority_queue 的头文件是 &lt;<span class="built_in">queue</span>&gt;</span><br><span class="line">priority_queue类的主要成员：</span><br><span class="line">priority_queue();    <span class="comment">//默认构造函数，生成一个空的排序队列</span></span><br><span class="line">priority_queue(<span class="keyword">const</span> <span class="built_in">queue</span>&amp;);    <span class="comment">//拷贝构造函数</span></span><br><span class="line">priority_queue&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> priority_queue &amp;);    <span class="comment">//赋值运算符重载</span></span><br><span class="line">priority_queue 的私有成员：</span><br><span class="line">value_type;   <span class="comment">//priority_queue中存放的对象类型，它和priority_queue中的T类型相同</span></span><br><span class="line">priority_queue(<span class="keyword">const</span> Compare&amp; comp);    <span class="comment">//构造生成一个空的priority_queue对象，使用comp作为priority_queue的comparison</span></span><br><span class="line">priority_queue(<span class="keyword">const</span> value_type* first, <span class="keyword">const</span> value_type* last);    <span class="comment">//带有两个参数的构造 函数，使用默认的Comparison作为第三个参数</span></span><br><span class="line">size_type;    <span class="comment">//正整数类型，和Sequence::size_type类型一样。</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span> <span class="keyword">const</span></span>;    <span class="comment">//判断优先级队列是否为空，为空返回true，否则返回false</span></span><br><span class="line"><span class="function">size_type <span class="title">size</span><span class="params">()</span> <span class="keyword">const</span></span>;    <span class="comment">//返回优先级队列中的元素个数</span></span><br><span class="line"><span class="function"><span class="keyword">const</span> value_type&amp; <span class="title">top</span><span class="params">()</span> <span class="title">const</span><span class="params">()</span></span>;    <span class="comment">//返回优先级队列中第一个元素的参考值。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">const</span> value_type&amp; x)</span></span>;    <span class="comment">//把元素x插入到优先级队列的尾部，队列的长度加1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pop</span><span class="params">()</span></span>;    <span class="comment">//删除优先级队列的第一个值，前提是队列非空，删除后队列长度减1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-stack"><a href="#7-stack" class="headerlink" title="7. stack"></a>7. stack</h4><p>栈，是STL中实现一个后进先出的容器.</p>
+<p>调用头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;queue&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>stack的定义，stack<typename> name要使用stack需要加上头文件#include<stack>。</stack></typename></p>
+<p>stack容器内元素的访问，由于栈本身就是一种后进先出的数据结构，在STL的stack中只能通过top()来访问栈顶元素</p>
+<p>方法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">（<span class="number">1</span>） push(x)<span class="comment">//将x压入栈中，时间复杂度O(1)</span></span><br><span class="line">（<span class="number">2</span>） top()<span class="comment">//获得栈顶元素，时间复杂度O(1)</span></span><br><span class="line">（<span class="number">3</span>） pop()<span class="comment">//将栈顶元素弹出，时间复杂度O(1)</span></span><br><span class="line">（<span class="number">4</span>） empty()<span class="comment">//判断栈是否为空，若为空，返回true，否则返回false，时间复杂度O(1)</span></span><br><span class="line">（<span class="number">5</span>） <span class="built_in">size</span>()<span class="comment">//返回栈中元素的个数，时间复杂度O(1)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关联容器"><a href="#关联容器" class="headerlink" title="关联容器"></a>关联容器</h3>
     </div>
 
     
@@ -329,7 +399,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://bryceustc.github.io/2020/04/18/STL%E5%B8%B8%E8%A7%81%E5%AE%B9%E5%99%A8%E6%95%B4%E7%90%86/" title="STL常见容器整理">https://bryceustc.github.io/2020/04/18/STL常见容器整理/</a>
+    <a href="https://bryceustc.github.io/2020/04/18/STL%E5%B8%B8%E8%A7%81%E5%AE%B9%E5%99%A8%E6%95%B4%E7%90%86/" title="C++STL容器整理">https://bryceustc.github.io/2020/04/18/STL常见容器整理/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -415,6 +485,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列容器"><span class="nav-number">2.</span> <span class="nav-text">序列容器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-vector"><span class="nav-number">2.1.</span> <span class="nav-text">1. vector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-deque"><span class="nav-number">2.2.</span> <span class="nav-text">2. deque</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-list"><span class="nav-number">2.3.</span> <span class="nav-text">3. list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-forword-list"><span class="nav-number">2.4.</span> <span class="nav-text">4. forword_list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-queue"><span class="nav-number">2.5.</span> <span class="nav-text">5. queue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-priority-queue"><span class="nav-number">2.6.</span> <span class="nav-text">6. priority_queue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-stack"><span class="nav-number">2.7.</span> <span class="nav-text">7. stack</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联容器"><span class="nav-number">3.</span> <span class="nav-text">关联容器</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -488,13 +559,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">123k</span>
+    <span title="站点总字数">129k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:52</span>
+    <span title="站点阅读时长">1:57</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
