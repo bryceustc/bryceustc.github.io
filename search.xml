@@ -1,6 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>双指针滑动窗口算法总结</title>
+    <url>/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>滑动窗口算法，这个算法技巧的思路非常简单，就是利用双指针维护一个窗口，不断滑动，然后更新答案。LeetCode上有差不多10道运用滑动窗口算法的题目，难度都是中等和困难。该算法的大致逻辑如下：</p>
+<a id="more"></a>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (right &lt; s.<span class="built_in">size</span>()) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 增大窗口</span></span><br><span class="line">    window.add(s[right]);</span><br><span class="line">    right++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (window needs shrink) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 缩小窗口</span></span><br><span class="line">        window.<span class="built_in">remove</span>(s[left]);</span><br><span class="line">        left++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个算法技巧的时间复杂度是 O(N)，比一般的字符串暴力算法要高效。</p>
+<p>要注意各种细节问题。比如说如何向窗口中添加新元素，如何缩小窗口，在窗口滑动的哪个阶段更新结果等。算法基本框架如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 滑动窗口算法框架 */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">slidingWindow</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> t)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; need, window;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : t) need[c]++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> valid = <span class="number">0</span>; </span><br><span class="line">    <span class="keyword">while</span> (right &lt; s.<span class="built_in">size</span>()) &#123;</span><br><span class="line">        <span class="comment">// c 是将移入窗口的字符</span></span><br><span class="line">        <span class="keyword">char</span> c = s[right];</span><br><span class="line">        <span class="comment">// 右移窗口</span></span><br><span class="line">        right++;</span><br><span class="line">        <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*** debug 输出的位置 ***/</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"window: [%d, %d)\n"</span>, left, right);</span><br><span class="line">        <span class="comment">/********************/</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 判断左侧窗口是否要收缩</span></span><br><span class="line">        <span class="keyword">while</span> (window needs shrink) </span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// d 是将移出窗口的字符</span></span><br><span class="line">            <span class="keyword">char</span> d = s[left];</span><br><span class="line">            <span class="comment">// 左移窗口</span></span><br><span class="line">            left++;</span><br><span class="line">            <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两个…处的操作分别是右移和左移窗口更新操作，它们操作是完全对称的。</p>
+<p>下面以四道 LeetCode 原题为例来套这个框架</p>
+<h3 id="1、最小覆盖子串"><a href="#1、最小覆盖子串" class="headerlink" title="1、最小覆盖子串"></a>1、最小覆盖子串</h3><p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/1.png" alt></p>
+<p>使用暴力解法，代码大概是这样的：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; s.<span class="built_in">size</span>(); j++)</span><br><span class="line">        <span class="keyword">if</span> s[i:j] 包含 t 的所有字母:</span><br><span class="line">            更新答案</span><br></pre></td></tr></table></figure>
+
+<p><strong>滑动窗口算法思路：</strong></p>
+<p>1、在字符串S中使用双指针中的左右指针技巧，初始化left = right = 0，<strong>把索引左闭右开区间[left, right)称为一个「窗口」。</strong> </p>
+<p>2、先不断地增加right指针扩大窗口[left, right)，直到窗口中的字符串符合要求（包含了T中的所有字符）。</p>
+<p>3、此时，停止增加right，转而不断增加left指针缩小窗口[left, right)，直到窗口中的字符串不再符合要求（不包含T中的所有字符了）。同时，每次增加left，我们都要更新一轮结果。</p>
+<p>4、重复第 2 和第 3 步，直到right到达字符串S的尽头。</p>
+<p><strong>第 2 步相当于在寻找一个「可行解」，然后第 3 步在优化这个「可行解」，最终找到最优解</strong>，也就是最短的覆盖子串。左右指针轮流前进，窗口大小增增减减，窗口不断向右滑动。</p>
+<p>下面画图理解一下，needs和window相当于计数器，分别记录T中字符出现次数和「窗口」中的相应字符的出现次数。</p>
+<p>初始状态：</p>
+<p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/2.webp" alt></p>
+<p>增加right，直到窗口[left, right)包含了T中所有字符：</p>
+<p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/3.webp" alt></p>
+<p>现在开始增加left，缩小窗口[left, right)。</p>
+<p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/4.webp" alt></p>
+<p>直到窗口中的字符串不再符合要求，left不再继续移动。</p>
+<p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/5.webp" alt></p>
+<p>之后重复上述过程，先移动right，再移动left…… 直到right指针到达字符串S的末端，算法结束。</p>
+<p>首先，初始化window和need两个哈希表，记录窗口中的字符和需要凑齐的字符：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; need, window;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">char</span> c : t) need[c]++;</span><br></pre></td></tr></table></figure>
+
+<p>然后，使用left和right变量初始化窗口的两端，不要忘了，区间[left, right)是左闭右开的，所以初始情况下窗口没有包含任何元素：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> valid = <span class="number">0</span>; </span><br><span class="line"><span class="keyword">while</span> (right &lt; s.<span class="built_in">size</span>()) &#123;</span><br><span class="line">    <span class="comment">// 开始滑动</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>其中valid变量表示窗口中满足need条件的字符个数</strong>，如果valid和need.size()的大小相同，则说明窗口已满足条件，已经完全覆盖了串T。</p>
+<p>现在开始套模板，只需要思考以下四个问题：</p>
+<p>1、当移动right扩大窗口，即加入字符时，应该更新哪些数据？</p>
+<p>2、什么条件下，窗口应该暂停扩大，开始移动left缩小窗口？</p>
+<p>3、当移动left缩小窗口，即移出字符时，应该更新哪些数据？</p>
+<p>4、我们要的结果应该在扩大窗口时还是缩小窗口时进行更新？</p>
+<p>如果一个字符进入窗口，应该增加window计数器；如果一个字符将移出窗口的时候，应该减少window计数器；当valid满足need时应该收缩窗口；应该在收缩窗口的时候更新最终结果。</p>
+<p>下面是完整代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">minWindow</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> t)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; need, window;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : t) need[c]++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> valid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">// 记录最小覆盖子串的起始索引及长度</span></span><br><span class="line">    <span class="keyword">int</span> start = <span class="number">0</span>, len = n+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (right &lt; n) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// c 是将移入窗口的字符</span></span><br><span class="line">        <span class="keyword">char</span> c = s[right];</span><br><span class="line">        <span class="comment">// 右移窗口</span></span><br><span class="line">        right++;</span><br><span class="line">        <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">        <span class="keyword">if</span> (need.count(c)) </span><br><span class="line">        &#123;</span><br><span class="line">            window[c]++;</span><br><span class="line">            <span class="keyword">if</span> (window[c] == need[c])</span><br><span class="line">                valid++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 判断左侧窗口是否要收缩</span></span><br><span class="line">        <span class="keyword">while</span> (valid == need.<span class="built_in">size</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 在这里更新最小覆盖子串</span></span><br><span class="line">            <span class="keyword">if</span> (right - left &lt; len)</span><br><span class="line">            &#123;</span><br><span class="line">                start = left;</span><br><span class="line">                len = right - left;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// d 是将移出窗口的字符</span></span><br><span class="line">            <span class="keyword">char</span> d = s[left];</span><br><span class="line">            <span class="comment">// 左移窗口</span></span><br><span class="line">            left++;</span><br><span class="line">            <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">            <span class="keyword">if</span> (need.count(d))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (window[d] == need[d])</span><br><span class="line">                    valid--;</span><br><span class="line">                window[d]--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回最小覆盖子串</span></span><br><span class="line">    <span class="keyword">return</span> len == n+<span class="number">1</span> ? <span class="string">""</span> : s.substr(start, len);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、字符串排列"><a href="#2、字符串排列" class="headerlink" title="2、字符串排列"></a>2、字符串排列</h3><p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/2.png" alt> </p>
+<p>注意哦，输入的s1是可以包含重复字符的，所以这个题难度不小。</p>
+<p>这种题目，是明显的滑动窗口算法，相当给你一个S和一个T，请问你S中是否存在一个子串，包含T中所有字符且不包含其他字符？</p>
+<p>首先，先套用滑动窗口算法框架代码，然后明确刚才提出的 4 个问题，写出如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 判断 s 中是否存在 t 的排列</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">checkInclusion</span><span class="params">(<span class="built_in">string</span> t, <span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; need, window;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : t) need[c]++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> valid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (right &lt; s.<span class="built_in">size</span>()) &#123;</span><br><span class="line">        <span class="keyword">char</span> c = s[right];</span><br><span class="line">        right++;</span><br><span class="line">        <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">        <span class="keyword">if</span> (need.count(c)) &#123;</span><br><span class="line">            window[c]++;</span><br><span class="line">            <span class="keyword">if</span> (window[c] == need[c])</span><br><span class="line">                valid++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 判断左侧窗口是否要收缩</span></span><br><span class="line">        <span class="keyword">while</span> (right - left &gt;= t.<span class="built_in">size</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 在这里判断是否找到了合法的子串</span></span><br><span class="line">            <span class="keyword">if</span> (valid == need.<span class="built_in">size</span>())</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">char</span> d = s[left];</span><br><span class="line">            left++;</span><br><span class="line">            <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">            <span class="keyword">if</span> (need.count(d))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (window[d] == need[d])</span><br><span class="line">                    valid--;</span><br><span class="line">                window[d]--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 未找到符合条件的子串</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3、找到字符串中所有字母异位词"><a href="#3、找到字符串中所有字母异位词" class="headerlink" title="3、找到字符串中所有字母异位词"></a>3、找到字符串中所有字母异位词</h3><p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/3.png" alt></p>
+<p>相当于，输入一个串S，一个串T，找到S中所有T的排列，并返回它们的起始索引。直接套用刚才的框架。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">findAnagrams</span><span class="params">(<span class="built_in">string</span> s, <span class="built_in">string</span> t)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; needs, window;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : t) need[c]++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> valid = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res; <span class="comment">// 记录结果</span></span><br><span class="line">    <span class="keyword">while</span> (right &lt; s.<span class="built_in">size</span>()) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">char</span> c = s[right];</span><br><span class="line">        right++;</span><br><span class="line">        <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">        <span class="keyword">if</span> (needs.count(c)) &#123;</span><br><span class="line">            window[c]++;</span><br><span class="line">            <span class="keyword">if</span> (window[c] == needs[c]) </span><br><span class="line">                valid++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 判断左侧窗口是否要收缩</span></span><br><span class="line">        <span class="keyword">while</span> (right - left == t.<span class="built_in">size</span>()) </span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 当窗口符合条件时，把起始索引加入 res</span></span><br><span class="line">            <span class="keyword">if</span> (valid == needs.<span class="built_in">size</span>())</span><br><span class="line">                res.push_back(left);</span><br><span class="line">            <span class="keyword">char</span> d = s[left];</span><br><span class="line">            left++;</span><br><span class="line">            <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">            <span class="keyword">if</span> (need.count(d))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (window[d] == need[d])</span><br><span class="line">                    valid--;</span><br><span class="line">                window[d]--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>跟寻找字符串的排列一样，只是找到一个合法异位词（排列）之后将起始索引加入res即可。</p>
+<h3 id="4、最长无重复子串"><a href="#4、最长无重复子串" class="headerlink" title="4、最长无重复子串"></a>4、最长无重复子串</h3><p><img src="/2020/04/22/%E5%8F%8C%E6%8C%87%E9%92%88%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/4.png" alt></p>
+<p>根据提出的四个问题，依次根据具体情况填入框架即可，</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(<span class="built_in">string</span> s)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>, <span class="keyword">int</span>&gt; m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>; <span class="comment">// 记录结果</span></span><br><span class="line">    <span class="keyword">while</span> (right &lt; s.<span class="built_in">size</span>()) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">char</span> c = s[right++];</span><br><span class="line">        <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">        m[c]++;</span><br><span class="line">        <span class="comment">// 判断左侧窗口是否要收缩</span></span><br><span class="line">        <span class="keyword">while</span> (m[c] &gt; <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">char</span> d = s[left++];</span><br><span class="line">            <span class="comment">// 进行窗口内数据的一系列更新</span></span><br><span class="line">            m[d]--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 在这里更新答案</span></span><br><span class="line">        res = <span class="built_in">max</span>(res, right - left);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当m[c]值大于 1 时，说明窗口中存在重复字符，不符合条件，就该移动left缩小窗口。</p>
+<p>要在收缩窗口完成后更新res，因为窗口收缩的 while 条件是存在重复元素，换句话说收缩完成后一定保证窗口中没有重复元素了。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247485141&idx=1&sn=0e4583ad935e76e9a3f6793792e60734&chksm=9bd7f8ddaca071cbb7570b2433290e5e2628d20473022a5517271de6d6e50783961bebc3dd3b&scene=126&sessionid=1587516905&key=90f15a20186b1d46c2992f11e82b01a0cda6178792cdef35f4436e8185c7cc6e973a629da69bafba62e0b6551c49abdf6c71bd261ba3c3acf9539e3ecf9390d5761103a4d3a3c3eb9f0c41aadad3a4c5&ascene=1&uin=MjE1ODMxOTYzOA%3D%3D&devicetype=Windows+10&version=62080079&lang=zh_CN&exportkey=A4FXMMlE%2Bef9sSA4mIuJSO0%3D&pass_ticket=ppDnFMJpc9c%2Bn6RJFcuQ6KqAmN5hl%2BcvIiSNRu3bA2J3Np0Zr%2Fv7M6xJCQYQC60l" target="_blank" rel="noopener external nofollow noreferrer"> labuladong公众号</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>STL常见容器整理</title>
+    <url>/2020/04/18/STL%E5%B8%B8%E8%A7%81%E5%AE%B9%E5%99%A8%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++内存管理</title>
+    <url>/2020/04/16/C-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[<h2 id="内存分配方式"><a href="#内存分配方式" class="headerlink" title="内存分配方式"></a>内存分配方式</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在C++中，内存分成5个区，他们分别是堆、栈、自由存储区、全局/静态存储区和常量存储区。
+　　</p>
+<ul>
+<li><p><strong>栈：</strong>在执行函数时，函数内局部变量的存储单元都可以在栈上创建，函数执行结束时这些存储单元自动被释放。栈内存分配运算内置于处理器的指令集中，效率很高，但是分配的内存容量有限。</p>
+</li>
+<li><p><strong>堆：</strong>是操作系统所维护的一块特殊内存，用于程序的内存动态分配，C语言使用malloc从堆上分配内存，使用free释放已分配的对应内存。。</p>
+</li>
+<li><p><strong>自由存储区：</strong>是C++基于new操作符的一个抽象概念，凡是通过new操作符进行内存申请，该内存即为自由存储区。</p>
+</li>
+<li><p><strong>全局/静态存储区：</strong>全局变量和静态变量被分配到同一块内存中，在以前的C语言中，全局变量又分为初始化的和未初始化的，在C++里面没有这个区分了，他们共同占用同一块内存区。</p>
+</li>
+<li><p><strong>常量存储区：</strong>这是一块比较特殊的存储区，他们里面存放的是常量，不允许修改。</p>
+<a id="more"></a>
+<p>PS：</p>
+<p>  自由存储区是否能够是堆（问题等价于new是否能在堆上动态分配内存），这取决于operator new 的实现细节。自由存储区不仅可以是堆，还可以是静态存储区，这都看operator new在哪里为对象分配内存。</p>
+</li>
+</ul>
+<h3 id="堆和栈的区别"><a href="#堆和栈的区别" class="headerlink" title="堆和栈的区别"></a>堆和栈的区别</h3><p>栈（操作系统）：由操作系统自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。<br>如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> b;				<span class="comment">//栈</span></span><br><span class="line">	<span class="keyword">char</span> s[] = <span class="string">"abc"</span>; 	<span class="comment">//栈</span></span><br><span class="line">	<span class="keyword">char</span> *p2;			<span class="comment">//栈</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>堆（操作系统）： 一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收，分配方式类似于链表。<br>如下代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// C 中用 malloc() 函数申请</span></span><br><span class="line">	<span class="keyword">char</span>* p1 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line">	<span class="built_in">cout</span>&lt;&lt;(<span class="keyword">int</span>*)p1&lt;&lt;<span class="built_in">endl</span>;		<span class="comment">//输出：00000000003BA0C0</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 用 free() 函数释放</span></span><br><span class="line">	<span class="built_in">free</span>(p1);</span><br><span class="line">   </span><br><span class="line">	<span class="comment">// C++ 中用 new 运算符申请</span></span><br><span class="line">	<span class="keyword">char</span>* p2 = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">10</span>];</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; (<span class="keyword">int</span>*)p2 &lt;&lt; <span class="built_in">endl</span>;		<span class="comment">//输出：00000000003BA0C0</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 用 delete 运算符释放</span></span><br><span class="line">	<span class="keyword">delete</span>[] p2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>堆和栈的具体区别：</p>
+<p>（1）管理方式不同。栈由操作系统自动分配释放，无需我们手动控制；堆的申请和释放工作由程序员控制，容易产生内存泄漏。</p>
+<p>（2）空间大小不同。每个进程拥有的栈的大小要远远小于堆的大小。理论上，程序员可申请的堆大小为虚拟内存的大小，<br>进程栈的大小 64bits 的 Windows 默认 1MB，64bits 的 Linux 默认 10MB；</p>
+<p>（3）生长方向不同。堆的生长方向向上，内存地址由低到高；栈的生长方向向下，内存地址由高到低。</p>
+<p>（4）分配方式不同。堆都是动态分配的，没有静态分配的堆。栈有2种分配方式：静态分配和动态分配。<br>静态分配是由操作系统完成的，比如局部变量的分配。动态分配由alloca函数进行分配，<br>但是栈的动态分配和堆是不同的，他的动态分配是由操作系统进行释放，无需我们手工实现。</p>
+<p>（5）分配效率不同。堆的效率比栈要低得多</p>
+<p>（6）存放内容不同。栈存放的内容，函数返回地址、相关参数、局部变量和寄存器内容等。而堆中具体存放内容是由程序员来填充的。</p>
+<h3 id="常见的内存错误及其对策"><a href="#常见的内存错误及其对策" class="headerlink" title="常见的内存错误及其对策"></a>常见的内存错误及其对策</h3>]]></content>
+      <categories>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>C++优先队列的使用方法（自定义排序）</title>
     <url>/2020/04/13/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%EF%BC%88%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%92%E5%BA%8F%EF%BC%89/</url>
     <content><![CDATA[<p>priority_queue本质是一个堆。</p>
@@ -54,6 +183,7 @@
     <url>/2020/04/10/%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB%E5%8F%8A%E5%85%B6%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/</url>
     <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>线程：是操作系统能够进行运算调度的最小单位。是进程中的一个执行流程，一个进程中可以运行多个线程。</p>
 <p>进程：是操作系统中资源分配的基本单元，一个执行中的程序的实例。</p>
+<a id="more"></a>
 <h2 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h2><ul>
 <li>进程是操作系统中资源分配的基本单元，是运行中的程序，线程是是操作系统能够进行运算调度的最小单位，是进程的一个执行流程</li>
 <li><strong>地址空间和其它资源：</strong> 进程间相互独立，同一进程的各线程间共享。某进程内的线程在其它进程不可见。</li>
