@@ -940,21 +940,21 @@ chrome://net-internals/#dns 来进行查看</code></pre></li>
 <li>假定有 n 个元素,倍增因子为 m；</li>
 <li>完成这 n 个元素往一个 vector 中的 push_back​操作，需要重新分配内存的次数大约为 logm(n)；</li>
 <li>第 i 次重新分配将会导致复制 m^(i) (也就是当前的vector.size() 大小)个旧空间中元素;</li>
-<li>n 次 push_back 操作所花费的时间复制度为O(n):<br>$$<br>\sum_{i=1}^{\log _{n}^{n}} m^{i} \approx \frac{n m}{m-1}<br>$$</li>
-<li>m / (m - 1)，这是一个常量，均摊分析的方法可知，vector 中 push_back 操作的时间复杂度为常量时间.​</li>
+<li>n 次 push_back 操作所花费的时间复制度为O(n):<br>$$<br>\sum_{i=1}^{\log _{m}^{n}} m^{i} \approx \frac{n m}{m-1}<br>$$</li>
+<li>m / (m - 1)，这是一个常量，均摊下来vector中push_back操作的时间复杂度为常量时间.​</li>
 </ol>
 </li>
 <li><p>一次增加固定值大小</p>
 <ol>
 <li>假定有 n 个元素,每次增加k个；</li>
-<li>第i次增加复制的数量为为：100i</li>
+<li>第i次增加复制的数量为：k*i</li>
 <li>n 次 push_back 操作所花费的时间复杂度为O(n^2):<br>$$\sum_{i=1}^{n / k} k i$$</li>
 <li>均摊下来每次push_back 操作的时间复杂度为O(n)；</li>
 </ol>
 </li>
 </ul>
 </li>
-<li><p>总结：对比可以发现采用采用成倍方式扩容，可以保证常数的时间复杂度，而增加指定大小的容量只能达到O(n)的时间复杂度，因此，使用成倍的方式扩容。</p>
+<li><p>总结：对比可以发现采用成倍方式扩容，可以保证常数的时间复杂度，而增加指定大小的容量只能达到O(n)的时间复杂度，因此，使用成倍的方式扩容。</p>
 </li>
 <li><p>第二个问题：</p>
 <ol>
@@ -962,9 +962,16 @@ chrome://net-internals/#dns 来进行查看</code></pre></li>
 </li>
 <li><p>以2倍的方式扩容，导致下一次申请的内存必然大于之前分配内存的总和，导致之前分配的内存不能再被使用，所以最好倍增长因子设置为(1,2)之间:</p>
 <p>$$k \sum_{i=0}^{n} 2^{i}=k\left(2^{n+1}-1\right)&lt;k 2^{n+1}$$</p>
-<p><a href="https://www.zhihu.com/question/36538542/answer/67929747" target="_blank" rel="noopener external nofollow noreferrer">知乎上看到一个很好的解释</a></p>
 </li>
 </ol>
+<ul>
+<li><p>知乎上看到一个很好的解释：</p>
+<p>  <a href="https://www.zhihu.com/question/36538542/answer/67929747" target="_blank" rel="noopener external nofollow noreferrer">C++ STL中vector内存用尽后，为啥每次是两倍的增长，而不是3倍或其他数值</a></p>
+</li>
+<li><p>借用他的一张图来说明2倍与1.5倍的区别：</p>
+<p><img src="/2020/04/02/vector%E6%89%A9%E5%AE%B9%E5%8E%9F%E7%90%86%E8%AF%B4%E6%98%8E/3.png" alt></p>
+</li>
+</ul>
 </li>
 </ul>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
