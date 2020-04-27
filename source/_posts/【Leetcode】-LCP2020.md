@@ -163,13 +163,18 @@ public:
         dp[0][0] = 1;
         // 建立图，统计能传递给编号y玩家的所有玩家编号x
         unordered_map<int,vector<int>> graph;
-        for(auto v : relation){
+        for(auto v : relation)
+        {
             graph[v[1]].push_back(v[0]);
         }
-        for(int i = 1; i <= k; ++i){
-            for(int j = 0; j < n; ++j){
-                for(auto v : graph[j]){
-                    if(dp[i-1][v] > 0){
+        for(int i = 1; i <= k; ++i)
+        {
+            for(int j = 0; j < n; ++j)
+            {
+                for(auto v : graph[j])
+                {
+                    if(dp[i-1][v] > 0)
+                    {
                         dp[i][j] += dp[i-1][v];
                     }
                 }
@@ -229,3 +234,5 @@ public:
 - 0 <= requirements[i] <= 100000
 
 ### 思路
+
+1. 
