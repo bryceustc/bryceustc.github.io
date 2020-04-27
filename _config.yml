@@ -5,10 +5,9 @@
 # Site
 title: Bryce's Blog
 subtitle: Learn Everything.
-description: 好记性不如烂笔头
+description: 书写是对思维的缓存
 author: Bryce
-avatar: /images/touxiang.jfif
-language: zh-Hans
+language: zh-CN
 timezone: Asia/Shanghai
 
 # URL 博客地址
@@ -30,6 +29,22 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+
+symbols_count_time:
+ #文章内是否显示
+  symbols: true
+  time: true
+ # 网页底部是否显示
+  total_symbols: true
+  total_time: true
+
+# 外部链接优化
+nofollow:
+  enable: true
+  field: site
+  exclude:
+    - 'exclude1.com'
+    - 'exclude2.com'
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -91,28 +106,39 @@ exclude:
 ignore:
 
 
-### Algolia Search
-algolia:
-  appId: "1FF5WGC9I5" ## 剛剛複製的 API Keys，也就是 applicationID
-  applicationID: "1FF5WGC9I5" ## 剛剛複製的 API Keys，也就是 applicationID
-  apiKey: "4336b84290b1523c45d0f9223be0d415" ## 剛剛複製的 API Keys
-  adminApiKey: "f89679ccaf53e12c3afd93f3b0bf0dc6" ## 剛剛複製的 API Keys
-  chunkSize: 5000
-  indexName: "indexName"
-  fields:
-    - content:strip:truncate,0,500
-    - excerpt:strip
-    - gallery
-    - permalink
-    - photos
-    - slug
-    - tags
-    - title
+# ### Algolia Search
+# algolia:
+#   appId: "1FF5WGC9I5" ## 剛剛複製的 API Keys，也就是 applicationID
+#   applicationID: "1FF5WGC9I5" ## 剛剛複製的 API Keys，也就是 applicationID
+#   apiKey: "4336b84290b1523c45d0f9223be0d415" ## 剛剛複製的 API Keys
+#   adminApiKey: "f89679ccaf53e12c3afd93f3b0bf0dc6" ## 剛剛複製的 API Keys
+#   chunkSize: 5000
+#   indexName: "indexName"
+#   fields:
+#     - content:strip:truncate,0,500
+#     - excerpt:strip
+#     - gallery
+#     - permalink
+#     - photos
+#     - slug
+#     - tags
+#     - title
 
+# 本地搜索
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 100
+
+server:
+  port: 4001
+  compress: true
+  header: true
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: next-reloaded
 plugins: hexo-generate-feed
 
 # Deployment
