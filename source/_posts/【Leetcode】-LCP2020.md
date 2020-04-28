@@ -87,6 +87,9 @@ public:
 - 1 <= relation.length <= 90, 且 relation[i].length == 2
 - 0 <= relation[i][0],relation[i][1] < n 且 relation[i][0] != relation[i][1]
 
+### 题意概述
+已知编号 0 ~ n-1 玩家的所有单向信息传递路径，初始信息位于编号 0，求信息经过 k 条路径之后到达编号 n-1 玩家的方案总数
+
 ### 思路
 
 1. DFS
@@ -103,7 +106,7 @@ public:
 
 - 定义状态：
     
-    dp[i][j]表示经过 i-1 轮传递给编号 j 的人的方案数。
+    dp[i][j]表示经过 i轮传递给编号 j 的人的方案数。
 
 - 状态转移方程：
 
@@ -116,7 +119,7 @@ public:
 
 - 返回结果：
 
-    dp[k+1][n-1]
+    dp[k][n-1]
 
 ### 代码
 
@@ -159,6 +162,7 @@ public:
 class Solution {
 public:
     int numWays(int n, vector<vector<int>>& relation, int k) {
+        // dp[i][j]表示经过 i轮传递给编号 j 的人的方案数。
         vector<vector<int>> dp(k+1,vector<int>(n,0));
         dp[0][0] = 1;
         // 建立图，统计能传递给编号y玩家的所有玩家编号x
@@ -233,6 +237,271 @@ public:
 - 0 <= increase[i] <= 10
 - 0 <= requirements[i] <= 100000
 
+
+### 题意概述
+题目大意是有一个游戏，随着时间的增加我们的属性会不断提升。当属性大于某个临界点时会触发相应剧情，最后问每个剧情触发的时间。
+
 ### 思路
 
-1. 
+1. 当时直接暴力模拟，超时了
+
+2. 利用二分查找来求解
+
+    - 维护一个递增的Increse数组，其每个元素都是严格递增的，对requirements里的每个元素 在Increse数组里二分查找到第一个比它大的，则为首先满足条件的天数。
+3. 二分查找的应用，要学会变通
+
+### 代码
+```c++
+class Solution {
+public:
+    vector<int> getTriggerTime(vector<vector<int>>& increase, vector<vector<int>>& requirements) {
+        vector<int> res;
+        int n = increase.size();
+        vector<vector<int>> s (n+1, vector<int>(3,0));
+        for (int i=0;i<n;++i)
+        {
+            for (int j=0;j<3;++j)
+            {
+                s[i+1][j] = s[i][j] + increase[i][j];
+            }
+        }
+        for (auto& v : requirements)
+        {
+            int start = 0;
+            int end = n;
+            while(end>start)
+            {
+                int mid = start + (end-start)/2;
+                if (s[mid][0]>=v[0]&&s[mid][1]>=v[1]&&s[mid][2]>=v[2])
+                {
+                    end = mid;
+                }
+                else
+                {
+                    start = mid+1;
+                }
+            }
+            if (s[start][0]>=v[0]&&s[start][1]>=v[1]&&s[start][2]>=v[2])
+            {
+                res.push_back(start);
+            }
+            else
+            {
+                res.push_back(-1);
+            }
+        }
+        return res;
+    }
+};
+```
+
+##  [LCP 09. 最小跳跃次数](https://leetcode-cn.com/problems/zui-xiao-tiao-yue-ci-shu/)
+
+### 题目
+为了给刷题的同学一些奖励，力扣团队引入了一个弹簧游戏机。游戏机由 N 个特殊弹簧排成一排，编号为 0 到 N-1。初始有一个小球在编号 0 的弹簧处。若小球在编号为 i 的弹簧处，通过按动弹簧，可以选择把小球向右弹射jump[i]的距离，或者向左弹射到任意左侧弹簧的位置。也就是说，在编号为 i 弹簧处按动弹簧，小球可以弹向 0 到 i-1 中任意弹簧或者 i+jump[i] 的弹簧（若 i+jump[i]>=N ，则表示小球弹出了机器）。小球位于编号 0 处的弹簧时不能再向左弹。
+
+为了获得奖励，你需要将小球弹出机器。请求出最少需要按动多少次弹簧，可以将小球从编号 0 弹簧弹出整个机器，即向右越过编号 N-1 的弹簧。
+
+示例 ：
+```
+输入：jump = [2, 5, 1, 1, 1, 1]
+
+输出：3
+
+解释：小 Z 最少需要按动 3 次弹簧，小球依次到达的顺序为 0 -> 2 -> 1 -> 6，最终小球弹出了机器。
+
+```
+
+限制：
+- 1 <= jump.length <= 10^6
+- 1 <= jump[i] <= 10000
+
+### 题意概述：
+给定一个数组 jump，长度为 N，在第 i 个位置可以选择跳到 0..i-1 和 i + jump[i]，问从 0 跳过 n-1 的最小跳跃次数是多少。
+
+### 思路
+
+1.dp
+
+此题从后向前进行动态规划计算。
+
+- 定义状态：dp[i]表示第i个弹簧到弹出所需的最小次数
+- 状态转移方程：
+
+$$
+i< j <n && j< i+ jump[i]
+
+dp[j] = min(dp[j],dp[i]+1); 
+$$
+- 初始化：
+dp[n-1] = 1
+-返回值：dp[0]
+- 压缩剪枝：dp[j]>=dp[i]+1时，dp = dp[i]+1
+
+
+2.bfs
+
+求最少跳跃次数
+
+假设jump数组的长度为6
+当走到下标为3的位置，我们需要访问下标为0,1,2的位置
+当走到下边为4的位置，我们需要访问下标为0,1,2,3的位置
+0,1,2这些位置会在之后的位置被不断地访问，这就是bfs算法超时的原因
+时间复杂度大概是O(n*n)
+
+- 每次往前跳的时候或者往后跳的时候如果发现部分元素已经访问过时，需要将其剔除掉。因为之后再访问这个位置的步数肯定大于之前访问的步数
+- 记录当前步数下所能够跳的最远距离，这时下一布如果选择往回跳时，直接从上一次的最大值开始常识，而不必要从0开始跳起。算法的时间复杂度为O(n).
+
+
+### 代码
+
+1.dp(易理解，但超时) 
+```c++
+class Solution {
+public:
+    int minJump(vector<int>& jump) {
+        int n = jump.size();
+        // 定义状态：dp[i]表示第i个弹簧到弹出所需的最小次数
+        vector<int> dp(n, 0);
+        // 初始化
+        dp[n-1] = 1;
+        for(int i =n - 2; i >= 0; --i)
+        {
+            if(i + jump[i] >= n)  // 能够直接弹出
+                dp[i] = 1;  
+            else // 不能直接弹出，先跳到i+jump[i]，再从i+jump[i]跳出
+                dp[i] = dp[i + jump[i]] + 1; 
+            //状态转移方程
+            // 遍历当前位置更新后影响到的后面的位置
+            for(int j = i + 1; j < n; ++j)
+                dp[j] =min(dp[j], dp[i] + 1);
+        }
+        return  dp[0];
+    }
+};
+```
+
+dp[j]>=dp[i]+1  剪枝
+```c++
+class Solution {
+public:
+    int minJump(vector<int>& jump) {
+        int n = jump.size();
+        // 定义状态：dp数组的含义为第i个弹簧到弹出所需的最小次数
+        vector<int> dp(n, 0);
+        // 初始化
+        dp[n-1] = 1;
+        for(int i =n - 2; i >= 0; --i)
+        {
+            if(i + jump[i] >= n)
+                dp[i] = 1;
+            else
+                dp[i] = dp[i + jump[i]] + 1;
+            //遍历当前位置更新后影响到的后面的位置，若dp[j] < dp[i]+1 时大于j的元素可以跳到j，然后再跳出,所以不用继续往后遍历
+            for(int j = i + 1; j < n && dp[j] >= dp[i]+1; ++j)
+                dp[j] = dp[i] + 1;
+        }
+        return  dp[0];
+    }
+};
+```
+
+2.bfs
+```c++
+class Solution {
+public:
+    int minJump(vector<int>& jump) {
+        int n=jump.size();
+        vector<int> vis(n,0);
+        queue<int> q;
+        queue<int> num;
+        //把0~n-1放入num
+        for(int i=0;i<n;i++)
+        {
+            num.push(i);
+        }
+        //从0开始
+        q.push(0);
+        vis[0]=1;
+        
+        int step=0;
+        //bfs
+        while(!q.empty())
+        {
+            int size=q.size();
+            while(size>0)
+            {
+                int tmp=q.front();
+                q.pop();
+                //是否结束
+                if(tmp+jump[tmp]>=n)
+                    return step+1;
+                //向右找
+                if(vis[tmp+jump[tmp]]==0)
+                {
+                    vis[tmp+jump[tmp]]=1;
+                    q.push(tmp+jump[tmp]);
+                }
+                //向左找
+                while(!num.empty() && num.front()<tmp)
+                {
+                    int top=num.front();
+                    num.pop();
+                    if(vis[top]==0)
+                    {
+                        vis[top]=1;
+                        q.push(top);
+                    }
+                }
+                size--;
+            }
+            ++step;
+        }
+        return -1;
+    }
+};
+```
+
+### [LCP 10. 二叉树任务调度](https://leetcode-cn.com/problems/er-cha-shu-ren-wu-diao-du/)
+
+任务调度优化是计算机性能优化的关键任务之一。在任务众多时，不同的调度策略可能会得到不同的总体执行时间，因此寻求一个最优的调度方案是非常有必要的。
+
+通常任务之间是存在依赖关系的，即对于某个任务，你需要先完成他的前导任务（如果非空），才能开始执行该任务。我们保证任务的依赖关系是一棵二叉树，其中 root 为根任务，root.left 和 root.right 为他的两个前导任务（可能为空），root.val 为其自身的执行时间。
+
+在一个 CPU 核执行某个任务时，我们可以在任何时刻暂停当前任务的执行，并保留当前执行进度。在下次继续执行该任务时，会从之前停留的进度开始继续执行。暂停的时间可以不是整数。
+
+现在，系统有两个 CPU 核，即我们可以同时执行两个任务，但是同一个任务不能同时在两个核上执行。给定这颗任务树，请求出所有任务执行完毕的最小时间。
+
+示例1：
+
+![](https://pic.leetcode-cn.com/3522fbf8ce4ebb20b79019124eb9870109fdfe97fe9da99f6c20c07ceb1c60b3-image.png)
+
+```
+输入：root = [47, 74, 31]
+
+输出：121
+
+解释：根节点的左右节点可以并行执行31分钟，剩下的43+47分钟只能串行执行，因此总体执行时间是121分钟。
+```
+
+示例2：
+
+![](https://pic.leetcode-cn.com/13accf172ee4a660d241e25901595d55b759380b090890a17e6e7bd51a143e3f-image.png)
+```
+输入：root = [15, 21, null, 24, null, 27, 26]
+
+输出：87
+```
+
+示例3：
+
+![](https://pic.leetcode-cn.com/bef743a12591aafb9047dd95d335b8083dfa66e8fdedc63f50fd406b4a9d163a-image.png)
+```
+输入：root = [1,3,2,null,null,4,4]
+
+输出：7.5
+```
+
+### 思路
+解题思路主要是参考lee215的微信公众号[2020力扣杯](https://mp.weixin.qq.com/s/rmwVuDpbQlhoK7DcD715bg)
+
