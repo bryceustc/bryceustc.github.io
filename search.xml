@@ -2178,6 +2178,7 @@ chrome://net-internals/#dns 来进行查看</code></pre></li>
     <title>2020招商银行Fintech训练营研发赛道题目总结</title>
     <url>/2020/04/29/2020%E6%8B%9B%E5%95%86%E9%93%B6%E8%A1%8CFintech%E8%AE%AD%E7%BB%83%E8%90%A5%E7%A0%94%E5%8F%91%E8%B5%9B%E9%81%93%E9%A2%98%E7%9B%AE%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h1 id="2020Fintech"><a href="#2020Fintech" class="headerlink" title="2020Fintech"></a>2020Fintech</h1><p>记录一下参加2020招商银行Fintech训练营的初赛题目，三道通过了两道，感觉还是不够熟练，不能快速想出思路，还是要多总结多刷题，不断提升代码能力。</p>
+<a id="more"></a>
 <h2 id="金币"><a href="#金币" class="headerlink" title="金币"></a><a href="https://ac.nowcoder.com/acm/contest/5246/A" target="_blank" rel="noopener external nofollow noreferrer">金币</a></h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>小招在玩一款游戏：在一个N层高的金字塔上，以金字塔顶为第一层，第i层有i个落点，每个落点有若干枚金币，在落点可以跳向左斜向下或向右斜向下的落点。</p>
 <p>若知道金字塔的层数N及每层的金币数量分布，请计算小招在本次游戏中可以获得的最多金币数量。</p>
 <p><strong>输入描述:</strong></p>
