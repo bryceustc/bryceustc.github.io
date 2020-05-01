@@ -462,7 +462,9 @@ public:
 };
 ```
 
-### [LCP 10. 二叉树任务调度](https://leetcode-cn.com/problems/er-cha-shu-ren-wu-diao-du/)
+##  [LCP 10. 二叉树任务调度](https://leetcode-cn.com/problems/er-cha-shu-ren-wu-diao-du/)
+
+### 题目
 
 任务调度优化是计算机性能优化的关键任务之一。在任务众多时，不同的调度策略可能会得到不同的总体执行时间，因此寻求一个最优的调度方案是非常有必要的。
 
@@ -502,6 +504,49 @@ public:
 输出：7.5
 ```
 
+### 题意概述
+有一个二叉树形式的任务依赖结构，我们有两个 CPU 核，这两个核可以同时执行不同的任务，问执行完所有任务的最小时间，也即是希望两个 CPU 核的并行时间尽可能大。
+
+
 ### 思路
 解题思路主要是参考lee215的微信公众号[2020力扣杯](https://mp.weixin.qq.com/s/rmwVuDpbQlhoK7DcD715bg)
 
+### 代码
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    pair<double,double> dfs(TreeNode * root){
+        if(root == NULL) return {0,0};
+        pair<double,double> l = dfs(root->left);
+        pair<double,double> r = dfs(root->right);
+        double s = 0.0;
+        double d = 0.0;
+        double delta = 0.0;
+
+       if(l.first >= r.first){
+            delta = min((l.first-r.first)/2,r.second);
+            d = l.second + r.second + r.first + delta;
+            s = l.first - r.first - 2*delta;
+            return {s + root->val,d};
+        }else{
+            delta = min((r.first-l.first)/2,l.second);
+            d = l.second + r.second + l.first + delta;
+            s = r.first - l.first - 2*delta;
+            return {s + root->val,d};
+        }
+    }
+    double minimalExecTime(TreeNode* root) {
+        pair<double,double> t = dfs(root);
+        return t.first + t.second;
+    }
+};
+```

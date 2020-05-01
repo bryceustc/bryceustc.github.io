@@ -145,5 +145,6 @@ plugins: hexo-generate-feed
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/bryceustc/bryceustc.github.io
+  ## repository: https://github.com/bryceustc/bryceustc.github.io
+  repository: git@github.com:bryceustc/bryceustc.github.io.git
   branch: master
