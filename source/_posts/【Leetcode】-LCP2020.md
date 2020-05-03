@@ -1,17 +1,17 @@
 ---
-title: 【Leetcode】 LCP2020
+title: 【LeetCode】 LCP2020
 date: 2020-04-25 17:04:22
-tags: Leetcode
-categories: Leetcode
+tags: LeetCode
+categories: LeetCode
 ---
 # LCP2020
 记录一下第一次参加力扣编程赛LCP，可惜做出来题目不多，还需要不断提升自己，以后参加的周赛也记录一下，好好总结提升代码能力。
-<!--more-->
+
 ## [LCP 06. 拿硬币](https://leetcode-cn.com/problems/na-ying-bi/)
 
 ### 题目
 桌上有 `n` 堆力扣币，每堆的数量保存在数组`coins`中。我们每次可以选择任意一堆，拿走其中的一枚或者两枚，求拿完所有力扣币的最少次数。
-
+<!--more-->
 示例 1：
 ```
 输入：[4,2,1]

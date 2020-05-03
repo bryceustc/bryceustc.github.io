@@ -2,7 +2,7 @@
 title: 学习Git总结
 date: 2020-05-01 17:40:52
 tags: Git
-categories: 工具
+categories: Git
 ---
 针对学习Git的操作命令进行了一个总结。具体如下面这张思维导图，记录一下提纲，方便自己建立完整的Git知识体系。
 
@@ -152,7 +152,7 @@ categories: 工具
         ```
 	- 你也可以不用git rm
 
-        直接在操作系统下鼠标操作删除但是这样的话你得重新git add 然后git commit 以后还要把原来版本库中对应的那个文件删除掉git rm 而用了git mv 的话只要git commit就可以了 
+        直接在操作系统下鼠标操作删除但是这样的话你得重新git add 然后git commit 而用了git rm 的话只要git commit就可以了 
 
 ### 3. 日志
 
@@ -248,12 +248,133 @@ categories: 工具
     
         当mybranch添加内容会添加到当前分支上  在mybranch中删除的内容在当前分支也会删除 但是当两个分支在同一个文件的同一行发生差异时 合并时就会发生冲突 从而也就不能自动合并得人工处理
 
+        ![](27.jpg)
+
         分支冲突处理:Git不能自动合并时，称之为冲突(conflict）。冲突总是发生在对不同分支上的同一文件的同一文本块以不同的方式修改，并试图合并的时候,它就会停下来等待人工处理。
+
         比如在master 分支下commit了一个readme.md文件 
         在new1分支下也commit了一个readme.md文件 
         这两个文件在第2行是不同的
-        这个时候你跳到master分支上用git merge new 就会发生冲突
+        这个时候你跳到master分支上用git merge new1 就会发生冲突
         而且在本地生成一个需要你修改的临时文件 
-        你需要对他进行修改
-        改成你觉得合适的结果
-        然后git add ,git commit 就完成了合并
+        你需要对他进行修改，改成你觉得合适的结果
+        然后git add ,git commit -m就完成了合并
+
+        [参考Git 合并冲突处理](https://www.jianshu.com/p/7b2d2cd0f308)
+
+    - git merge --squash mybranch   略
+
+- git rebase [变基](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA)
+
+- git cherry-pick
+
+### 5. 协作
+
+- git clone
+
+	- git clone https://github.com/bryceustc/bryceustc.github.io.git
+
+        从远程库克隆到本地工作区
+
+	- git clone --recursive  https://github.com/bryceustc/bryceustc.github.io.git
+
+        若需要克隆含有子模块的仓库，直接 进行克隆是无法拉取之模块的代码，可加上 --recursive 参数
+
+	- git submodule update --init --recursive
+    
+        如果不确定子模块是否已经下载完全了 执行这个命令确认一下
+
+	-  git clone -b dev_jk http://10.1.1.11/service/tmall-service.git 
+    克隆指定分支
+
+-  git remote 
+
+	- 给指定的远程库地址设置一个别名，不然的话每次push/pull都得把完整的一大串地址写下来
+        ```
+        git remote add origin https://github.com/bryceustc/bryceustc.github.io.git
+        ```
+        把远程库地址指定一个别名为origin
+        
+        关于远程分支名前面的前缀origin/表示远程版本库上的分支名称，
+        用于区别本地分支名称。
+        而origin是默认的远程版本库别名，即克隆时指定的远程版本库
+	- 使用不带任何参数的git remote命令，可以查看本地创建的全部远程版本库别名
+
+	- 使用git remote show <name>命令可以查看某个远程版本库的详细信息
+    ![](28.jpg)
+
+	- 如果不再需要某个远程版本库的别名，或者想用这个别名称呼其他远程版本
+库，则可以使用git remote rm命令先删除该别名。
+
+- git fetch
+
+	- git fetch 相当于是从远程获取最新到本地，不会自动merge，如下指令：
+        ```
+        git fetch origin master:tmp //从远程仓库master分支获取最新，在本地建立tmp分支
+        git diff tmp //將當前分支和tmp進行對比
+        git merge tmp //合并tmp分支到当前分支
+        ```
+
+	- 基于rebase的合并方式，与merge的主要区别在于git log上：是否保留分支的commit提交节点 。rebase其实就是寻找公共祖先，具体理解可参考[这里](https://www.jianshu.com/p/f23f72251abc)
+
+- git pull
+
+	- git pull是相当于从远程仓库获取最新版本，然后再与本地分支合并。
+    
+        git pull = git fetch + git merge(默认是用merge 加-r参数变可以合并方式改成rebase)
+    - git pull origin master 把远程的master分支拉取并用merge的方式合并到本地分支上
+    - git pull origin master:new 把远程的master分支拉取并用merge合并到本地的new分支上
+    - git pull  -r origin master:new 把远程的master分支拉取并用rebase的方式合并到本地的new分支上
+
+
+- git push
+
+	- git push origin  master 把本地master分支推到对应的远程库(origin)的master分支  如果远程库分支不存在 将会新建
+    - git push origin new把本地new分支推到对应的远程库(origin)的new分支  如果远程库分支不存在 将会新建
+    - git push origin new:远端分支 把本地的new分支推到对应远程库(origin)的指定名字的远端分支 如果不存在将会新建
+    - git push origin :远端分支    删除远程库的指定远端分支 因为这样相当与推送一个空的分支到指定的远端分支 
+    - git push origin --delete 远端分支名 等同于上面那条命令
+    - git push -u origin new 把本地分支new推到远端主机的对应new分支 同时把origin设定为new分支对应的默认主机 这样的话就下次就可以不用加参数直接用git push 就可以把当前分支推送到默认主机的对应分支
+    - git push --set-upstream origin new   把origin设定为new分支对应的默认主机 这样的话就下次就可以不用加参数直接用git push 就可以把当前分支推送到默认主机的对应分支
+    - git push origin 把当前分支推送到origin主机的对应分支
+    - git push -all origin 将本地所有分支都推送到远程分支
+    - git push  --force origin   当本地分支的版本小于远端分支的时候 push会出错会提示你将远程的的分支拉下来先处理矛冲突载push  这个时候可以强行push也就是加--force命令 也可以简写为git push -f
+    - git push origin --tags 加上--tags选项可以推送标签
+- push冲突处理
+
+	- 当你git push 的时候在可能会发生冲突 导致push失败  
+
+        冲突发生的原因
+
+        情况一:在你提交之前 别人已经在同一个文件的同一个地方进行了修改 
+
+        情况二:你提交的本地库的版本号落后于远程版本库
+	- 冲突处理的方法:
+
+        方法一:在用git pull  把远程库的文件拉下来 如果不能进行自动合并 则在本地手动合并发生发生冲突的文件 合并完成以后再进行git push就行了
+
+        方法二: 直接用git  push -f 直接用本地库强制覆盖远程库
+
+## 三、 实战
+
+- git clone
+
+- git init
+
+- git remote add
+
+- git pull
+
+- git branch 创建自己的开发分支
+
+- 开始编码
+
+- git add
+
+- git  commit
+
+- git push
+
+- 在github界面执行合并
+
+    把你更改的分支和目标分支合并等待管理员通过
