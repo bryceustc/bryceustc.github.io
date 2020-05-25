@@ -1,7 +1,7 @@
 ---
 title: C++ string.find函数用法
 date: 2020-05-20 23:23:15
-tags:C++
+tags: C++
 categories: C++
 ---
 整理一些find函数的用法，方便以后使用查看。
