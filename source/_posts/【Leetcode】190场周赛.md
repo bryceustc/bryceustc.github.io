@@ -1,5 +1,5 @@
 ---
-title: 【Leetcode】190场周赛
+title: 【Leetcode】第190场周赛
 date: 2020-05-24 15:31:07
 tags: LeetCode
 categories: LeetCode
