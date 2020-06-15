@@ -143,10 +143,6 @@ public:
 输入：bloomDay = [1,10,3,10,2], m = 3, k = 2
 输出：-1
 解释：要制作 3 束花，每束需要 2 朵花，也就是一共需要 6 朵花。而花园中只有 5 朵花，无法满足制作要求，返回 -1 。
-
-来源：力扣（LeetCode）
-链接：https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets
-著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 ```
 示例 3：
 ```
