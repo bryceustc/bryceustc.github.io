@@ -223,6 +223,7 @@ public:
 记录每次下雨之后，同一个湖下一次下雨是什么时候，然后每次抽水抽"当前有雨的湖里面，下一次下雨最早的湖"
 ### 代码
 ```c++
+// 比赛超时解法
 class Solution {
 public:
     vector<int> avoidFlood(vector<int>& rains) {
@@ -262,8 +263,8 @@ public:
 };
 ```
 
-
 ```c++
+// 最优解法
 class Solution {
 public:
     vector<int> avoidFlood(vector<int>& rains) {
