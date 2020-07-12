@@ -228,6 +228,10 @@ public:
                     // 找最小的数作为宽
                     w = min(w, dp[h][j]);
                     // 宽为w的有多少个就不断相加
+                    /*
+                        0 0 1 1  w=2, 宽为1，2有两组，所以加w就是表示以ij为右下角的矩形个数了
+                        1 1 1 1  w=4
+                    */
                     res += w;
                 }
             }
@@ -237,90 +241,52 @@ public:
 };
 ```
 
+### [5455. 最多 K 次交换相邻数位后得到的最小整数](https://leetcode-cn.com/problems/minimum-possible-integer-after-at-most-k-adjacent-swaps-on-digits/)
 
-```c++
-class Solution {
-public:
-    vector<int> avoidFlood(vector<int>& rains) {
-        int n = rains.size();
-        vector<int> res;
-        unordered_map<int,int> m;
-        // next记录某一个湖泊下一次下雨的时间，注意要倒着遍历
-        vector<int> next(n,n+1);
-        for (int i=n-1;i>=0;i--) {
-            if (m.count(rains[i])) {
-                next[i] = m[rains[i]];
-            }
-            else {
-                m[rains[i]] = i;
-            }
-        }
-        typedef pair<int,int> P;
-        priority_queue<P, vector<P>, greater<P>> heap;
-        unordered_set<int> s;
-        for (int i=0;i<n;i++) {
-            int r = rains[i];
-            // r>0 下雨
-            if (r) {
-                // 湖泊r是满的，再下雨就return{}
-                if (s.count(r)) return {};
-                // 不是满的， 就用哈希表存储一下
-                s.insert(r);
-                heap.push({next[i], r}); // 将该湖泊下次下雨的时间以及湖泊编号存入小顶堆
-                res.push_back(-1);
-            }
-            // rains[i] = 0 需要抽干一个湖泊
-            else {
-                // 没有湖泊是满的，就随机抽取一个湖泊，这里设置为1
-                if (heap.empty()) {
-                    res.push_back(1);
-                }
-                // 需要抽取之后最先下雨的湖泊，就从小顶堆里选取
-                else {
-                    auto t = heap.top();
-                    heap.pop();
-                    s.erase(t.second);
-                    res.push_back(t.second);
-                }
-            }
-        }
-        return res;
-    }
-};
-```
+给你一个字符串 num 和一个整数 k 。其中，num 表示一个很大的整数，字符串中的每个字符依次对应整数上的各个 数位 。
 
-### [5443. 找到最小生成树里的关键边和伪关键边](https://leetcode-cn.com/contest/weekly-contest-194/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/)
+你可以交换这个整数相邻数位的数字 最多 k 次。
 
-给你一个 n 个点的带权无向连通图，节点编号为 0 到 n-1 ，同时还有一个数组 edges ，其中 edges[i] = [fromi, toi, weighti] 表示在 fromi 和 toi 节点之间有一条带权无向边。最小生成树 (MST) 是给定图中边的一个子集，它连接了所有节点且没有环，而且这些边的权值和最小。
-
-请你找到给定图中最小生成树的所有关键边和伪关键边。如果最小生成树中删去某条边，会导致最小生成树的权值和增加，那么我们就说它是一条关键边。伪关键边则是可能会出现在某些最小生成树中但不会出现在所有最小生成树中的边。
-
-请注意，你可以分别以任意顺序返回关键边的下标和伪关键边的下标。
+请你返回你能得到的最小整数，并以字符串形式返回。
 
 示例 ：
-![](1.png)
+![](https://assets.leetcode.com/uploads/2020/06/17/q4_1.jpg)
 ```
-输入：
-["TreeAncestor","getKthAncestor","getKthAncestor","getKthAncestor"]
-[[7,[-1,0,0,1,1,2,2]],[3,1],[5,2],[6,3]]
+输入：num = "4321", k = 4
+输出："1342"
+解释：4321 通过 4 次交换相邻数位得到最小整数的步骤如上图所示。
+```
 
-输出：
-[null,1,0,-1]
+示例2：
+```
+输入：num = "100", k = 1
+输出："010"
+解释：输出可以包含前导 0 ，但输入保证不会有前导 0 。
+```
 
-解释：
-TreeAncestor treeAncestor = new TreeAncestor(7, [-1, 0, 0, 1, 1, 2, 2]);
+示例3：
+```
+输入：num = "36789", k = 1000
+输出："36789"
+解释：不需要做任何交换。
+```
 
-treeAncestor.getKthAncestor(3, 1);  // 返回 1 ，它是 3 的父节点
-treeAncestor.getKthAncestor(5, 2);  // 返回 0 ，它是 5 的祖父节点
-treeAncestor.getKthAncestor(6, 3);  // 返回 -1 因为不存在满足要求的祖先节点
+示例4：
+```
+输入：num = "22", k = 22
+输出："22"
+```
+
+示例5：
+```
+输入：num = "9438957234785635408", k = 23
+输出："0345989723478563548"
 ```
 
 提示：
-- 1 <= k <= n <= 5*10^4
-- parent[0] == -1 表示编号为 0 的节点是根节点。
-- 对于所有的 0 < i < n ，0 <= parent[i] < n 总成立
-- 0 <= node < n
-- 至多查询 5*10^4 次
+- 1 <= num.length <= 30000
+- num 只包含 数字 且不含有 前导 0 。
+- 1 <= k <= 10^9
 
 ### 思路
 
