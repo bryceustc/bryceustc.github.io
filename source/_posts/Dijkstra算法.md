@@ -18,7 +18,7 @@ categories: 算法
 稀疏图：m远远小于n^2，用邻接表来表示，比邻接矩阵更节省空间
 
 具体邻接矩阵和邻接表可以参考这篇文章[图的邻接矩阵和邻接表的比较](https://blog.csdn.net/qq_29134495/article/details/51376580)
-
+<!--more-->
 #### 朴素Dijkstra算法
 
 给定一个n个点m条边的有向图，图中可能存在重边和自环，所有边权均为正值。
@@ -201,12 +201,10 @@ int main() {
 struct DIJ {
     int n;
     vector <vector <pair <int, int> > > g;
-    vector <int> visited;
     void Init(int n) {
         this->n = n;
         g.clear();
         g.resize(n);
-        visited(n,0);
         for (int i = 0; i < n; i++) {
             g[i].clear();
         }
@@ -219,14 +217,12 @@ struct DIJ {
     }
 
     void GetDist(int start, vector <int> &dist) {
-        dist.resize(n);
-        priority_queue <pair <int, int> > q;
+        vector <int> visited(n,0);
+        priority_queue <pair <int, int> ,vector<pair<int, int>>,greater<pair<int, int>>> q;
         for (int i = 0; i < n; i++) {
-            dist[i] = 2e9; // 初始化为最远距离
+            dist[i] = (i == start ? 0 : 2e9);; // 初始化为最远距离
         }
-        // 
-        dist[start] = 0;
-        q.push(make_pair(0, start));
+        q.push(make_pair(dist[start], start));// first存储距离，second存储节点编号
         while (q.size() > 0) {
             int now = q.top().second;
             q.pop();
@@ -234,10 +230,10 @@ struct DIJ {
                 continue;
             }
             visited[now] = 1;
-            for (auto p : g[now]) {
-                int next = p.first;
-                int distance = p.second;
-                if (dist[now] + distance > dist[next]) {
+            for (int i = 0; i < (int) g[now].size(); i++) {
+                int next = g[now][i].first;
+                int distance = g[now][i].second;
+                if (!visited[next] && dist[now] + distance < dist[next]) {
                     dist[next] = dist[now] + distance;
                     q.push(make_pair(dist[next], next));
                 }
@@ -260,33 +256,28 @@ using namespace std;
 struct DIJ {
     int n;
     vector <vector <pair <int, int> > > g;
-    vector <int> visited;
     void Init(int n) {
         this->n = n;
         g.clear();
         g.resize(n);
-        visited.resize(n);
         for (int i = 0; i < n; i++) {
             g[i].clear();
-            visited[i]=0;
         }
     }
 
     void Add(int a, int b, int c) {
         g[a].push_back(make_pair(b, c));
         // 无向边需修改push两次
-        g[b].push_back(make_pair(a, c));
+        // g[b].push_back(make_pair(a, c));
     }
 
     void GetDist(int start, vector <int> &dist) {
-        dist.resize(n+1);
-        priority_queue <pair <int, int> > q;
+        vector <int> visited(n,0);
+        priority_queue <pair <int, int> ,vector<pair<int, int>>,greater<pair<int, int>>> q;
         for (int i = 0; i < n; i++) {
-            dist[i] = 1e9; // 初始化为最远距离
+            dist[i] = (i == start ? 0 : 2e9);; // 初始化为最远距离
         }
-        // 
-        dist[start] = 0;
-        q.push(make_pair(0, start));
+        q.push(make_pair(dist[start], start));// first存储距离，second存储节点编号
         while (q.size() > 0) {
             int now = q.top().second;
             q.pop();
@@ -294,10 +285,10 @@ struct DIJ {
                 continue;
             }
             visited[now] = 1;
-            for (auto p : g[now]) {
-                int next = p.first;
-                int distance = p.second;
-                if (dist[now] + distance > dist[next]) {
+            for (int i = 0; i < (int) g[now].size(); i++) {
+                int next = g[now][i].first;
+                int distance = g[now][i].second;
+                if (!visited[next] && dist[now] + distance < dist[next]) {
                     dist[next] = dist[now] + distance;
                     q.push(make_pair(dist[next], next));
                 }
@@ -308,18 +299,12 @@ struct DIJ {
 };
 
 int main() {
-    int n = 3, m=3;
-    // cin >> n >> m;
+    int n = 3, m=3; // n是节点数，m是边数
     DIJ dij;
-    dij.Init(n);
+    dij.Init(n+1);
     dij.Add(1,2,2);
     dij.Add(2,3,1);
     dij.Add(1,3,4);
-    // while(m--) {
-    //     int a, b, c;
-    //     cin >> a >> b >> c;
-    //     dij.Add(a,b,c);
-    // }
     vector<int> dist(n+1);
     dij.GetDist(1,dist);
     cout << dist[n] << endl;
