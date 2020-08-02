@@ -132,7 +132,7 @@ search:
   limit: 100
 
 server:
-  port: 4001
+  port: 4000
   compress: true
   header: true
 # Extensions
