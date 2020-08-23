@@ -245,11 +245,7 @@ struct DIJ {
 ```
 
 ```c++
-#include <iostream>
-#include <cstring>
-#include <algorithm>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -274,8 +270,8 @@ struct DIJ {
     void GetDist(int start, vector <int> &dist) {
         vector <int> visited(n,0);
         priority_queue <pair <int, int> ,vector<pair<int, int>>,greater<pair<int, int>>> q;
-        for (int i = 0; i < n; i++) {
-            dist[i] = (i == start ? 0 : 2e9);; // 初始化为最远距离
+        for (int i = 1; i < n; i++) {
+            dist[i] = (i == start ? 0 : 2e9); // 初始化为最远距离
         }
         q.push(make_pair(dist[start], start));// first存储距离，second存储节点编号
         while (q.size() > 0) {
@@ -294,18 +290,23 @@ struct DIJ {
                 }
             }
         }
+        if(dist[n-1] == 2e9)
+            dist[n-1] = -1;
         return;
     }
 };
 
 int main() {
-    int n = 3, m=3; // n是节点数，m是边数
+    int n, m;  // n是节点数，m是边数
+    cin >> n >> m;
     DIJ dij;
     dij.Init(n+1);
-    dij.Add(1,2,2);
-    dij.Add(2,3,1);
-    dij.Add(1,3,4);
-    vector<int> dist(n+1);
+    while(m--) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        dij.Add(a,b,c);
+    }
+    vector<int> dist(n+10);
     dij.GetDist(1,dist);
     cout << dist[n] << endl;
     return 0;
