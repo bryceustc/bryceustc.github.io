@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-atom.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="整个语音识别系统主要构成有四个部分：语音信号处理和特征的提取模块；语音识别的声学模型；语音识别的语言模型；语音识别的解码和搜索部分。系统流程图如下图所示：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语音识别">
+<meta property="og:url" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/index.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="整个语音识别系统主要构成有四个部分：语音信号处理和特征的提取模块；语音识别的声学模型；语音识别的语言模型；语音识别的解码和搜索部分。系统流程图如下图所示：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/1.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/2.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/3.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/4.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/5.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/6.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/7.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/8.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/9.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/10.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/11.png">
+<meta property="article:published_time" content="2020-04-01T01:53:42.000Z">
+<meta property="article:modified_time" content="2020-08-24T06:29:13.512Z">
+<meta property="article:author" content="Bryce">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/1.png">
+
+<link rel="canonical" href="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>语音识别 | Bryce's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/bryceustc" target="_blank" rel="noopener external nofollow noreferrer" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          语音识别
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-01 09:53:42" itemprop="dateCreated datePublished" datetime="2020-04-01T09:53:42+08:00">2020-04-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-24 14:29:13" itemprop="dateModified" datetime="2020-08-24T14:29:13+08:00">2020-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">项目</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>整个语音识别系统主要构成有四个部分：语音信号处理和特征的提取模块；语音识别的声学模型；语音识别的语言模型；语音识别的解码和搜索部分。系统流程图如下图所示：</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/1.png" alt></p>
+<a id="more"></a>
+<p>整个语音识别的过程可以用贝叶斯理论来描述，假设输入的音频序列为$O={o_{1}, o_{2}, \cdots, o_{n}}$，输出为文本序列为$W={w_{1}, w_{2}, \cdots, w_{n}}$。目的是构建一个模型，使得$\prod_{n} P\left(W_{n} | O_{n}\right)$最大，也就是训练集中n个样本的后验概率最大。单独拿出一个样本的后验概率使用贝叶斯公式可以得到：</p>
+<p>$$P(W | O)=\frac{P(O | W) * P(W)}{P(O)}$$</p>
+<p>进一步可得:</p>
+<p>$$W^{*}=\operatorname{argmax}_{W} P(O | W) * P(W)$$</p>
+<p>这里$P(W)$是输出词序列的概率，用语言模型来刻画，$P(O | W)$为似然概率，使用声学模型来表达。</p>
+<h3 id="数据集构建"><a href="#数据集构建" class="headerlink" title="数据集构建"></a>数据集构建</h3><p>语音数据构建主要分为两种，一是公开数据集—&gt;日常对话，二是特定数据集—&gt;控制命令。</p>
+<p>所搜集的公开语音数据集是<a href="http://www.openslr.org/18/" target="_blank" rel="noopener external nofollow noreferrer">THCHS30</a>、<a href="http://cn-mirror.openslr.org/resources/38/ST-CMDS-20170001_1-OS.tar.gz" target="_blank" rel="noopener external nofollow noreferrer">ST-CMDS</a>、<a href="http://cn-mirror.openslr.org/resources/33/data_aishell.tgz" target="_blank" rel="noopener external nofollow noreferrer">AIShell</a>等数据集，这几个数据集是中文语音数据集，基本数据格式如下图所示:</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/2.png" alt></p>
+<p>基本信息如下：</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/3.png" alt></p>
+<p>针对实际的工业控制命令，我们进行专门的语音采集和录制。环境是和实际的泵站控制室一致，安静、近场。这里使用单粒麦克风进行录制，录制的格式与上边格式一致。</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/4.png" alt></p>
+<h3 id="语音信号预处理"><a href="#语音信号预处理" class="headerlink" title="语音信号预处理"></a>语音信号预处理</h3><p>语音信号预处理是为了将原始语音信号转换成CNN网络输入的语谱图。CNN的输入层是200维的特征值序列。输出拼音的表示大小是1422，即1421个拼音+1个空白块。预测结果是返回语音识别后的拼音符号列表。</p>
+<p>语音信号的预处理过程用到的技术是：预加重（pre-emphasis）、<br>分帧（enframing）、加窗（windowing)</p>
+<h4 id="预加重"><a href="#预加重" class="headerlink" title="预加重"></a>预加重</h4><p>预加重可以使得语音信号的频谱信号分布更加均衡。预加重一般是用<br>60db/octave数字滤波器频率特性完成的。过滤器公式给出：</p>
+<p>$$H(z)=1-u z^{-1}$$</p>
+<p>其中$u$是预加重系数。</p>
+<h4 id="分帧"><a href="#分帧" class="headerlink" title="分帧"></a>分帧</h4><p>使用预先设计好的窗函数处理被分帧分成的多个小片段。通过这种方法在一定程度上解决语音信号帧信号之间的不连续性问题。每一个小段作为语音信的单位，称为帧（frame）。以帧为单位可以分析语音信号的短时特性，从而进一步进行频谱等处理。分帧一般相邻帧之间有交叉重叠，交叉部分叫做帧移，帧移一般定为帧长度的一半。</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/5.png" alt></p>
+<h4 id="加窗"><a href="#加窗" class="headerlink" title="加窗"></a>加窗</h4><p>对语音信号增加一个窗函数（Window Function），在语音信号的给定区间内限定为一个实数，其它部分为0。使用的是汉明窗（Hamming Window）汉明窗的时间域表达给出:</p>
+<p>$$w(n)=0.54-0.46 \cos \left(\frac{2 \pi n}{N-1}\right)$$</p>
+<p>其中$𝑛$是时间，$w(n)$是窗函数。</p>
+<h4 id="语谱图特征提取"><a href="#语谱图特征提取" class="headerlink" title="语谱图特征提取"></a>语谱图特征提取</h4><p>语谱图（Spectrogram）是语音处理的一个重要特征，是一种描述语音信号的各个频率成分随着时间变换的热力图。</p>
+<p>语谱图包含着语音信号的重要信息，用一个二维矩阵表示。其中一个轴表示时间，另外一个轴表示频率。不同的点或者颜色代表对应语音信号能量的大小。</p>
+<p>语谱图的提取过程一般包括：采样、傅立叶变换、连续拼接。如下图所示：</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/6.jpg" alt></p>
+<p>原始语音信号是符合数据格式的后缀是.wav 的原始语音数据。这里定义一个函数，读取该原始语音数据，返回声音信号的时域谱矩阵和帧速率。具体函数如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">一些通用函数，如wav文件读取、信号出来和测试代码</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> wave</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt  </span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> python_speech_features <span class="keyword">import</span> mfcc</span><br><span class="line"><span class="keyword">from</span> python_speech_features <span class="keyword">import</span> delta</span><br><span class="line"><span class="keyword">from</span> python_speech_features <span class="keyword">import</span> logfbank</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> scipy.fftpack <span class="keyword">import</span> fft</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_wav_data</span><span class="params">(filename)</span>:</span></span><br><span class="line">	<span class="string">'''</span></span><br><span class="line"><span class="string">	读取一个wav文件，返回声音信号的时域谱矩阵和播放时间</span></span><br><span class="line"><span class="string">	'''</span></span><br><span class="line">	wav = wave.open(filename,<span class="string">"rb"</span>) <span class="comment"># 打开一个wav格式的声音文件流</span></span><br><span class="line">	num_frame = wav.getnframes() <span class="comment"># 获取帧数</span></span><br><span class="line">	num_channel=wav.getnchannels() <span class="comment"># 获取声道数</span></span><br><span class="line">	framerate=wav.getframerate() <span class="comment"># 获取帧速率</span></span><br><span class="line">	num_sample_width=wav.getsampwidth() <span class="comment"># 获取实例的比特宽度，即每一帧的字节数</span></span><br><span class="line">	str_data = wav.readframes(num_frame) <span class="comment"># 读取全部的帧</span></span><br><span class="line">	wav.close() <span class="comment"># 关闭流</span></span><br><span class="line">	wave_data = np.fromstring(str_data, dtype = np.short) <span class="comment"># 将声音文件数据转换为数组矩阵形式</span></span><br><span class="line">	wave_data.shape = <span class="number">-1</span>, num_channel <span class="comment"># 按照声道数将数组整形，单声道时候是一列数组，双声道时候是两列的矩阵</span></span><br><span class="line">	wave_data = wave_data.T <span class="comment"># 将矩阵转置</span></span><br><span class="line">	<span class="keyword">return</span> wave_data, framerate  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GetMfccFeature</span><span class="params">(wavsignal, fs)</span>:</span></span><br><span class="line">	<span class="comment"># 获取输入特征</span></span><br><span class="line">	feat_mfcc=mfcc(wavsignal[<span class="number">0</span>],fs)</span><br><span class="line">	feat_mfcc_d=delta(feat_mfcc,<span class="number">2</span>)</span><br><span class="line">	feat_mfcc_dd=delta(feat_mfcc_d,<span class="number">2</span>)</span><br><span class="line">	<span class="comment"># 返回值分别是mfcc特征向量的矩阵及其一阶差分和二阶差分矩阵</span></span><br><span class="line">	wav_feature = np.column_stack((feat_mfcc, feat_mfcc_d, feat_mfcc_dd))</span><br><span class="line">	<span class="keyword">return</span> wav_feature</span><br><span class="line"></span><br><span class="line">x=np.linspace(<span class="number">0</span>, <span class="number">400</span> - <span class="number">1</span>, <span class="number">400</span>, dtype = np.int64)</span><br><span class="line">w = <span class="number">0.54</span> - <span class="number">0.46</span> * np.cos(<span class="number">2</span> * np.pi * (x) / (<span class="number">400</span> - <span class="number">1</span>) ) <span class="comment"># 汉明窗</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GetFrequencyFeature3</span><span class="params">(wavsignal, fs)</span>:</span></span><br><span class="line">	<span class="comment"># wav波形 加时间窗以及时移10ms</span></span><br><span class="line">	time_window = <span class="number">25</span> <span class="comment"># 单位ms</span></span><br><span class="line">	window_length = fs / <span class="number">1000</span> * time_window <span class="comment"># 计算窗长度的公式，目前全部为400固定值</span></span><br><span class="line">	</span><br><span class="line">	wav_arr = np.array(wavsignal)</span><br><span class="line">	<span class="comment">#wav_length = len(wavsignal[0])</span></span><br><span class="line">	wav_length = wav_arr.shape[<span class="number">1</span>]</span><br><span class="line">	</span><br><span class="line">	range0_end = int(len(wavsignal[<span class="number">0</span>])/fs*<span class="number">1000</span> - time_window) // <span class="number">10</span> <span class="comment"># 计算循环终止的位置，也就是最终生成的窗数</span></span><br><span class="line">	data_input = np.zeros((range0_end, <span class="number">200</span>), dtype = np.float) <span class="comment"># 用于存放最终的频率特征数据</span></span><br><span class="line">	data_line = np.zeros((<span class="number">1</span>, <span class="number">400</span>), dtype = np.float)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, range0_end):</span><br><span class="line">		p_start = i * <span class="number">160</span></span><br><span class="line">		p_end = p_start + <span class="number">400</span></span><br><span class="line">		</span><br><span class="line">		data_line = wav_arr[<span class="number">0</span>, p_start:p_end]</span><br><span class="line">		</span><br><span class="line">		data_line = data_line * w <span class="comment"># 加窗</span></span><br><span class="line">		</span><br><span class="line">		data_line = np.abs(fft(data_line)) / wav_length</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		data_input[i]=data_line[<span class="number">0</span>:<span class="number">200</span>] <span class="comment"># 设置为400除以2的值（即200）是取一半数据，因为是对称的</span></span><br><span class="line">		</span><br><span class="line">	<span class="comment">#print(data_input.shape)</span></span><br><span class="line">	data_input = np.log(data_input + <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">return</span> data_input</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">wav_scale</span><span class="params">(energy)</span>:</span></span><br><span class="line">	<span class="string">'''</span></span><br><span class="line"><span class="string">	语音信号能量归一化</span></span><br><span class="line"><span class="string">	'''</span></span><br><span class="line">	means = energy.mean() <span class="comment"># 均值</span></span><br><span class="line">	var=energy.var() <span class="comment"># 方差</span></span><br><span class="line">	e=(energy-means)/math.sqrt(var) <span class="comment"># 归一化能量</span></span><br><span class="line">	<span class="keyword">return</span> e</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">wav_show</span><span class="params">(wave_data, fs)</span>:</span> <span class="comment"># 显示出来声音波形</span></span><br><span class="line">	time = np.arange(<span class="number">0</span>, len(wave_data)) * (<span class="number">1.0</span>/fs)  <span class="comment"># 计算声音的播放时间，单位为秒</span></span><br><span class="line">	<span class="comment"># 画声音波形</span></span><br><span class="line">	<span class="comment">#plt.subplot(211)  </span></span><br><span class="line">	plt.plot(time, wave_data)  </span><br><span class="line">	<span class="comment">#plt.subplot(212)  </span></span><br><span class="line">	<span class="comment">#plt.plot(time, wave_data[1], c = "g")  </span></span><br><span class="line">	plt.show()  </span><br><span class="line"></span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_wav_list</span><span class="params">(filename)</span>:</span></span><br><span class="line">	<span class="string">'''</span></span><br><span class="line"><span class="string">	读取一个wav文件列表，返回一个存储该列表的字典类型值</span></span><br><span class="line"><span class="string">	'''</span></span><br><span class="line">	txt_obj=open(filename,<span class="string">'r'</span>) <span class="comment"># 打开文件并读入</span></span><br><span class="line">	txt_text=txt_obj.read()</span><br><span class="line">	txt_lines=txt_text.split(<span class="string">'\n'</span>) <span class="comment"># 文本分割</span></span><br><span class="line">	dic_filelist=&#123;&#125; <span class="comment"># 初始化字典</span></span><br><span class="line">	list_wavmark=[] <span class="comment"># 初始化wav列表</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> txt_lines:</span><br><span class="line">		<span class="keyword">if</span>(i!=<span class="string">''</span>):</span><br><span class="line">			txt_l=i.split(<span class="string">' '</span>)</span><br><span class="line">			dic_filelist[txt_l[<span class="number">0</span>]] = txt_l[<span class="number">1</span>]</span><br><span class="line">			list_wavmark.append(txt_l[<span class="number">0</span>])</span><br><span class="line">	txt_obj.close()</span><br><span class="line">	<span class="keyword">return</span> dic_filelist,list_wavmark</span><br><span class="line">	</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_wav_symbol</span><span class="params">(filename)</span>:</span></span><br><span class="line">	<span class="string">'''</span></span><br><span class="line"><span class="string">	读取指定数据集中，所有wav文件对应的语音符号</span></span><br><span class="line"><span class="string">	返回一个存储符号集的字典类型值</span></span><br><span class="line"><span class="string">	'''</span></span><br><span class="line">	txt_obj=open(filename,<span class="string">'r'</span>) <span class="comment"># 打开文件并读入</span></span><br><span class="line">	txt_text=txt_obj.read()</span><br><span class="line">	txt_lines=txt_text.split(<span class="string">'\n'</span>) <span class="comment"># 文本分割</span></span><br><span class="line">	dic_symbol_list=&#123;&#125; <span class="comment"># 初始化字典</span></span><br><span class="line">	list_symbolmark=[] <span class="comment"># 初始化symbol列表</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> txt_lines:</span><br><span class="line">		<span class="keyword">if</span>(i!=<span class="string">''</span>):</span><br><span class="line">			txt_l=i.split(<span class="string">' '</span>)</span><br><span class="line">			dic_symbol_list[txt_l[<span class="number">0</span>]]=txt_l[<span class="number">1</span>:]</span><br><span class="line">			list_symbolmark.append(txt_l[<span class="number">0</span>])</span><br><span class="line">	txt_obj.close()</span><br><span class="line">	<span class="keyword">return</span> dic_symbol_list,list_symbolmark</span><br><span class="line">	</span><br><span class="line"><span class="keyword">if</span>(__name__==<span class="string">'__main__'</span>):</span><br><span class="line">	</span><br><span class="line">	wave_data, fs = read_wav_data(<span class="string">"A2_0.wav"</span>)  </span><br><span class="line">	</span><br><span class="line">	wav_show(wave_data[<span class="number">0</span>],fs)</span><br><span class="line">	t0=time.time()</span><br><span class="line">	freimg = GetFrequencyFeature(wave_data,fs)</span><br><span class="line">	t1=time.time()</span><br><span class="line">	print(<span class="string">'time cost:'</span>,t1-t0)</span><br><span class="line">	</span><br><span class="line">	freimg = freimg.T</span><br><span class="line">	plt.subplot(<span class="number">111</span>)</span><br><span class="line">	</span><br><span class="line">	plt.imshow(freimg)</span><br><span class="line">	plt.colorbar(cax=<span class="literal">None</span>,ax=<span class="literal">None</span>,shrink=<span class="number">0.5</span>)  </span><br><span class="line">	 </span><br><span class="line">	plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>原始语音信号经过处理后得到帧数、声道数、帧速率。然后读取全部帧数，再经过变换后转换成数组矩阵格式，该数组按照声道数进行数组整形，整形后数组转置得到时域谱矩阵，得到帧速率和时域谱矩阵。在得到帧速率和时域谱矩阵后，经过加窗、采样后、傅里叶变换，以及最后的连续拼接。流程图如下：</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/7.png" alt></p>
+<p>下图是采用上述代码对中文语音数据提取的波形图和语谱图的结果。波形图的横轴是时间，纵轴可以理解为位移或者压强。语谱图的横轴是拼接的时间，纵轴是频率。</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/8.png" alt></p>
+<h3 id="声学模型设计训练"><a href="#声学模型设计训练" class="headerlink" title="声学模型设计训练"></a>声学模型设计训练</h3><p>声学模型输⼊入是语谱图，输出是拼音。如下图所示：</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/9.png" alt></p>
+<p>声学模型设计主要基于DFCNN网络进行训练，主要设计的结构和相应的参数设置如下：</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/10.png" alt></p>
+<p>参数设置：</p>
+<p>Adam 的参数:<br>(lr = 0.01, beta_1 = 0.9,beta_2 = 0.999, decay = 0.0, epsilon = 10e-8)</p>
+<p><img src="/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/11.png" alt></p>
+<p>CTC是一种针对序列列深度模型的损失函数。相⽐比传统交叉熵损失函数能⾃自动对⻬齐序列列标签，端到端训练模型。具体参考<a href="https://blog.ailemon.me/2019/07/18/sequence-modeling-with-ctc/" target="_blank" rel="noopener external nofollow noreferrer">这里</a></p>
+<p>使用Keras搭建序贯(Sequential)模型，部分代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">声学模型</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> platform <span class="keyword">as</span> plat</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> general_function.file_wav <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> general_function.file_dict <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> general_function.gen_func <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> general_function.muti_gpu <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> keras.utils <span class="keyword">import</span> multi_gpu_model,plot_model</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> keras <span class="keyword">as</span> kr</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential, Model</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dense, Dropout, Input, Reshape, BatchNormalization <span class="comment"># , Flatten</span></span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Lambda, TimeDistributed, Activation,Conv2D, MaxPooling2D <span class="comment">#, Merge</span></span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> SGD, Adadelta, Adam, RMSprop</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ReadData <span class="keyword">import</span> DataSpeech</span><br><span class="line"></span><br><span class="line">abspath = <span class="string">''</span></span><br><span class="line">ModelName=<span class="string">'_dfcnn'</span></span><br><span class="line"><span class="comment">#NUM_GPU = 2</span></span><br><span class="line">base_count=<span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelSpeech</span><span class="params">()</span>:</span> <span class="comment"># 语音模型类</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, datapath)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		初始化</span></span><br><span class="line"><span class="string">		默认输出的拼音的表示大小是1434，即1433个拼音+1个空白块</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		MS_OUTPUT_SIZE = <span class="number">1434</span></span><br><span class="line">		self.MS_OUTPUT_SIZE = MS_OUTPUT_SIZE <span class="comment"># 神经网络最终输出的每一个字符向量维度的大小</span></span><br><span class="line">		<span class="comment">#self.BATCH_SIZE = BATCH_SIZE # 一次训练的batch</span></span><br><span class="line">		self.label_max_string_length = <span class="number">64</span></span><br><span class="line">		self.AUDIO_LENGTH = <span class="number">1600</span>  <span class="comment">## 16s</span></span><br><span class="line">		self.AUDIO_FEATURE_LENGTH = <span class="number">200</span></span><br><span class="line">		self._model, self.base_model = self.CreateModel() </span><br><span class="line">		</span><br><span class="line">		self.datapath = datapath</span><br><span class="line">		self.slash = <span class="string">''</span></span><br><span class="line">		system_type = plat.system() <span class="comment"># 由于不同的系统的文件路径表示不一样，需要进行判断</span></span><br><span class="line">		<span class="keyword">if</span>(system_type == <span class="string">'Windows'</span>):</span><br><span class="line">			self.slash=<span class="string">'\\'</span> <span class="comment"># 反斜杠</span></span><br><span class="line">		<span class="keyword">elif</span>(system_type == <span class="string">'Linux'</span>):</span><br><span class="line">			self.slash=<span class="string">'/'</span> <span class="comment"># 正斜杠</span></span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			print(<span class="string">'*[Message] Unknown System\n'</span>)</span><br><span class="line">			self.slash=<span class="string">'/'</span> <span class="comment"># 正斜杠</span></span><br><span class="line">		<span class="keyword">if</span>(self.slash != self.datapath[<span class="number">-1</span>]): <span class="comment"># 在目录路径末尾增加斜杠</span></span><br><span class="line">			self.datapath = self.datapath + self.slash</span><br><span class="line">	</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">CreateModel</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		定义DFCNN模型，使用函数式模型  </span></span><br><span class="line"><span class="string">		输入层：200维的特征值序列，一条语音数据的最大长度设为1600（大约16s）</span></span><br><span class="line"><span class="string">		隐藏层：卷积池化层，卷积核大小为3x3，池化窗口大小为2</span></span><br><span class="line"><span class="string">		隐藏层：全连接层</span></span><br><span class="line"><span class="string">		输出层：全连接层，神经元数量为self.MS_OUTPUT_SIZE，使用softmax作为激活函数，</span></span><br><span class="line"><span class="string">		CTC层：使用CTC的loss作为损失函数，实现连接性时序多输出</span></span><br><span class="line"><span class="string">		</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		</span><br><span class="line">		input_data = Input(name=<span class="string">'the_input'</span>, shape=(self.AUDIO_LENGTH, self.AUDIO_FEATURE_LENGTH, <span class="number">1</span>))</span><br><span class="line">		</span><br><span class="line">		layer_h1 = Conv2D(<span class="number">32</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">False</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(input_data) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h1 = BatchNormalization(mode=<span class="number">0</span>,axis=<span class="number">-1</span>)(layer_h1)</span><br><span class="line">		layer_h2 = Conv2D(<span class="number">32</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h1) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h2 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h2)</span><br><span class="line">		layer_h3 = MaxPooling2D(pool_size=<span class="number">2</span>, strides=<span class="literal">None</span>, padding=<span class="string">"valid"</span>)(layer_h2) <span class="comment"># 池化层 800*100</span></span><br><span class="line">		layer_h4 = Conv2D(<span class="number">64</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h3) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h4 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h4)</span><br><span class="line">		layer_h5 = Conv2D(<span class="number">64</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h4) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h5 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h5)</span><br><span class="line">		layer_h6 = MaxPooling2D(pool_size=<span class="number">2</span>, strides=<span class="literal">None</span>, padding=<span class="string">"valid"</span>)(layer_h5) <span class="comment"># 池化层 400*50</span></span><br><span class="line">		layer_h7 = Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h6) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h7 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h7)</span><br><span class="line">		layer_h8 = Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h7) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h8 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h8)</span><br><span class="line">		layer_h9 = MaxPooling2D(pool_size=<span class="number">2</span>, strides=<span class="literal">None</span>, padding=<span class="string">"valid"</span>)(layer_h8) <span class="comment"># 池化层 200*25</span></span><br><span class="line">		layer_h10 = Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h9) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h10 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h10)</span><br><span class="line">		layer_h11 = Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h10) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h11 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h11)</span><br><span class="line">		layer_h12 = MaxPooling2D(pool_size=<span class="number">1</span>, strides=<span class="literal">None</span>, padding=<span class="string">"valid"</span>)(layer_h11) <span class="comment"># 池化层 200*25</span></span><br><span class="line">		</span><br><span class="line">		layer_h13 = Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h12) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h13 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h13)</span><br><span class="line">		layer_h14 = Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), use_bias=<span class="literal">True</span>, activation=<span class="string">'relu'</span>, padding=<span class="string">'same'</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h13) <span class="comment"># 卷积层</span></span><br><span class="line">		layer_h14 = BatchNormalization(axis=<span class="number">-1</span>)(layer_h14)</span><br><span class="line">		layer_h15 = MaxPooling2D(pool_size=<span class="number">1</span>, strides=<span class="literal">None</span>, padding=<span class="string">"valid"</span>)(layer_h14) <span class="comment"># 池化层 None*200*25*128</span></span><br><span class="line">		</span><br><span class="line">		layer_h16 = Reshape((<span class="number">200</span>, <span class="number">3200</span>))(layer_h15)</span><br><span class="line">		layer_h17 = Dense(<span class="number">128</span>, activation=<span class="string">"relu"</span>, use_bias=<span class="literal">True</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h16) <span class="comment"># 全连接层</span></span><br><span class="line">		layer_h17 = BatchNormalization(axis=<span class="number">1</span>)(layer_h17)</span><br><span class="line">		layer_h18 = Dense(self.MS_OUTPUT_SIZE, use_bias=<span class="literal">True</span>, kernel_initializer=<span class="string">'he_normal'</span>)(layer_h17) <span class="comment"># 全连接层</span></span><br><span class="line">		layer_h18 = BatchNormalization(axis=<span class="number">1</span>)(layer_h18)</span><br><span class="line">		y_pred = Activation(<span class="string">'softmax'</span>, name=<span class="string">'Activation0'</span>)(layer_h18)</span><br><span class="line">		model_data = Model(inputs = input_data, outputs = y_pred)</span><br><span class="line">		model_data.summary()</span><br><span class="line">		</span><br><span class="line">		labels = Input(name=<span class="string">'the_labels'</span>, shape=[self.label_max_string_length], dtype=<span class="string">'float32'</span>)</span><br><span class="line">		input_length = Input(name=<span class="string">'input_length'</span>, shape=[<span class="number">1</span>], dtype=<span class="string">'int64'</span>)</span><br><span class="line">		label_length = Input(name=<span class="string">'label_length'</span>, shape=[<span class="number">1</span>], dtype=<span class="string">'int64'</span>)</span><br><span class="line">		<span class="comment"># Keras doesn't currently support loss funcs with extra parameters</span></span><br><span class="line">		<span class="comment"># so CTC loss is implemented in a lambda layer</span></span><br><span class="line">		</span><br><span class="line">        <span class="comment"># CTC</span></span><br><span class="line">		loss_out = Lambda(self.ctc_lambda_func, output_shape=(<span class="number">1</span>,), name=<span class="string">'ctc'</span>)([y_pred, labels, input_length, label_length])</span><br><span class="line">		</span><br><span class="line">		model = Model(inputs=[input_data, labels, input_length, label_length], outputs=loss_out)</span><br><span class="line">		</span><br><span class="line">		opt = Adam(lr = <span class="number">0.001</span>, beta_1 = <span class="number">0.9</span>, beta_2 = <span class="number">0.999</span>, decay = <span class="number">0.0</span>, epsilon = <span class="number">10e-8</span>)</span><br><span class="line">		<span class="comment">#model.compile(loss=&#123;'ctc': lambda y_true, y_pred: y_pred&#125;, optimizer=sgd)</span></span><br><span class="line">		model.compile(loss=&#123;<span class="string">'ctc'</span>: <span class="keyword">lambda</span> y_true, y_pred: y_pred&#125;, optimizer = opt)</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		<span class="comment"># captures output of softmax so we can decode the output during visualization</span></span><br><span class="line">		test_func = K.function([input_data], [y_pred])</span><br><span class="line">		</span><br><span class="line">		print(<span class="string">'[*提示] 创建模型成功，模型编译成功'</span>)</span><br><span class="line">		<span class="keyword">return</span> model, model_data</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">ctc_lambda_func</span><span class="params">(self, args)</span>:</span></span><br><span class="line">		y_pred, labels, input_length, label_length = args</span><br><span class="line">		</span><br><span class="line">		y_pred = y_pred[:, :, :]</span><br><span class="line">		<span class="comment">#y_pred = y_pred[:, 2:, :]</span></span><br><span class="line">		<span class="keyword">return</span> K.ctc_batch_cost(labels, y_pred, input_length, label_length)</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">TrainModel</span><span class="params">(self, datapath, epoch = <span class="number">2</span>, save_step = <span class="number">1000</span>, batch_size = <span class="number">32</span>, filename = abspath + <span class="string">'model_speech/m'</span> + ModelName + <span class="string">'/speech_model'</span>+ModelName)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		训练模型</span></span><br><span class="line"><span class="string">		参数：</span></span><br><span class="line"><span class="string">			datapath: 数据保存的路径</span></span><br><span class="line"><span class="string">			epoch: 迭代轮数</span></span><br><span class="line"><span class="string">			save_step: 每多少步保存一次模型</span></span><br><span class="line"><span class="string">			filename: 默认保存文件名，不含文件后缀名</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		data=DataSpeech(datapath, <span class="string">'train'</span>)</span><br><span class="line">		</span><br><span class="line">		num_data = data.GetDataNum() <span class="comment"># 获取数据的数量</span></span><br><span class="line">		</span><br><span class="line">		yielddatas = data.data_genetator(batch_size, self.AUDIO_LENGTH)</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span> epoch <span class="keyword">in</span> range(epoch): <span class="comment"># 迭代轮数</span></span><br><span class="line">			print(<span class="string">'[running] train epoch %d .'</span> % epoch)</span><br><span class="line">			n_step = <span class="number">0</span> <span class="comment"># 迭代数据数</span></span><br><span class="line">			<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">				<span class="keyword">try</span>:</span><br><span class="line">					print(<span class="string">'[message] epoch %d . Have train datas %d+'</span>%(epoch, n_step*save_step))</span><br><span class="line">					<span class="comment"># data_genetator是一个生成器函数</span></span><br><span class="line">					</span><br><span class="line">					<span class="comment">#self._model.fit_generator(yielddatas, save_step, nb_worker=2)</span></span><br><span class="line">					self._model.fit_generator(yielddatas, save_step)</span><br><span class="line">					n_step += <span class="number">1</span></span><br><span class="line">				<span class="keyword">except</span> StopIteration:</span><br><span class="line">					print(<span class="string">'[error] generator error. please check data format.'</span>)</span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line">				</span><br><span class="line">				self.SaveModel(comment=<span class="string">'_e_'</span>+str(epoch)+<span class="string">'_step_'</span>+str(n_step * save_step))</span><br><span class="line">				self.TestModel(self.datapath, str_dataset=<span class="string">'train'</span>, data_count = <span class="number">4</span>)</span><br><span class="line">				self.TestModel(self.datapath, str_dataset=<span class="string">'dev'</span>, data_count = <span class="number">4</span>)</span><br><span class="line">				</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">LoadModel</span><span class="params">(self,filename = abspath + <span class="string">'model_speech/m'</span>+ModelName+<span class="string">'/speech_model'</span>+ModelName+<span class="string">'.model'</span>)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		加载模型参数</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		self._model.load_weights(filename)</span><br><span class="line">		self.base_model.load_weights(filename + <span class="string">'.base'</span>)</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">SaveModel</span><span class="params">(self,filename = abspath + <span class="string">'model_speech/m'</span>+ModelName+<span class="string">'/speech_model'</span>+ModelName,comment=<span class="string">''</span>)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		保存模型参数</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		self._model.save_weights(filename + comment + <span class="string">'.model'</span>)</span><br><span class="line">		self.base_model.save_weights(filename + comment + <span class="string">'.model.base'</span>)</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">TestModel</span><span class="params">(self, datapath=<span class="string">''</span>, str_dataset=<span class="string">'dev'</span>, data_count = <span class="number">32</span>,comment = <span class="string">''</span>, out_report = False, show_ratio = True, io_step_print = <span class="number">10</span>, io_step_file = <span class="number">10</span>)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		测试检验模型效果</span></span><br><span class="line"><span class="string">		</span></span><br><span class="line"><span class="string">		io_step_print</span></span><br><span class="line"><span class="string">			为了减少测试时标准输出的io开销，可以通过调整这个参数来实现</span></span><br><span class="line"><span class="string">		</span></span><br><span class="line"><span class="string">		io_step_file</span></span><br><span class="line"><span class="string">			为了减少测试时文件读写的io开销，可以通过调整这个参数来实现</span></span><br><span class="line"><span class="string">		</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		data=DataSpeech(self.datapath, str_dataset)</span><br><span class="line">		<span class="comment">#data.LoadDataList(str_dataset) </span></span><br><span class="line">		num_data = data.GetDataNum() <span class="comment"># 获取数据的数量</span></span><br><span class="line">		<span class="keyword">if</span>(data_count &lt;= <span class="number">0</span> <span class="keyword">or</span> data_count &gt; num_data): <span class="comment"># 当data_count为小于等于0或者大于测试数据量的值时，则使用全部数据来测试</span></span><br><span class="line">			data_count = num_data</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			ran_num = random.randint(<span class="number">0</span>,num_data - <span class="number">1</span>) <span class="comment"># 获取一个随机数</span></span><br><span class="line">			</span><br><span class="line">			words_num = <span class="number">0</span></span><br><span class="line">			word_error_num = <span class="number">0</span></span><br><span class="line">			</span><br><span class="line">			nowtime = time.strftime(<span class="string">'%Y%m%d_%H%M%S'</span>,time.localtime(time.time()))</span><br><span class="line">			<span class="keyword">if</span>(out_report == <span class="literal">True</span>):</span><br><span class="line">				txt_obj = open(abspath+<span class="string">'Test_Report_'</span> + str_dataset + <span class="string">'_'</span> + nowtime + <span class="string">'.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'UTF-8'</span>) <span class="comment"># 打开文件并读入</span></span><br><span class="line">			</span><br><span class="line">			txt = <span class="string">'测试报告\n模型编号 '</span> + ModelName + <span class="string">'\n\n'</span></span><br><span class="line">			<span class="keyword">for</span> i <span class="keyword">in</span> range(data_count):</span><br><span class="line">				data_input, data_labels = data.GetData((ran_num + i) % num_data)  <span class="comment"># 从随机数开始连续向后取一定数量数据</span></span><br><span class="line">				</span><br><span class="line">				<span class="comment"># 数据格式出错处理 开始</span></span><br><span class="line">				<span class="comment"># 当输入的wav文件长度过长时自动跳过该文件，转而使用下一个wav文件来运行</span></span><br><span class="line">				num_bias = <span class="number">0</span></span><br><span class="line">				<span class="keyword">while</span>(data_input.shape[<span class="number">0</span>] &gt; self.AUDIO_LENGTH):</span><br><span class="line">					print(<span class="string">'*[Error]'</span>,<span class="string">'wave data lenghth of num'</span>,(ran_num + i) % num_data, <span class="string">'is too long.'</span>,<span class="string">'\n A Exception raise when test Speech Model.'</span>)</span><br><span class="line">					num_bias += <span class="number">1</span></span><br><span class="line">					data_input, data_labels = data.GetData((ran_num + i + num_bias) % num_data)  <span class="comment"># 从随机数开始连续向后取一定数量数据</span></span><br><span class="line">				<span class="comment"># 数据格式出错处理 结束</span></span><br><span class="line">				</span><br><span class="line">				pre = self.Predict(data_input, data_input.shape[<span class="number">0</span>] // <span class="number">8</span>)</span><br><span class="line">				</span><br><span class="line">				words_n = data_labels.shape[<span class="number">0</span>] <span class="comment"># 获取每个句子的字数</span></span><br><span class="line">				words_num += words_n <span class="comment"># 把句子的总字数加上</span></span><br><span class="line">				edit_distance = GetEditDistance(data_labels, pre) <span class="comment"># 获取编辑距离</span></span><br><span class="line">				<span class="keyword">if</span>(edit_distance &lt;= words_n): <span class="comment"># 当编辑距离小于等于句子字数时</span></span><br><span class="line">					word_error_num += edit_distance <span class="comment"># 使用编辑距离作为错误字数</span></span><br><span class="line">				<span class="keyword">else</span>: <span class="comment"># 否则肯定是增加了一堆乱七八糟的奇奇怪怪的字</span></span><br><span class="line">					word_error_num += words_n <span class="comment"># 就直接加句子本来的总字数就好了</span></span><br><span class="line">				</span><br><span class="line">				<span class="keyword">if</span>((i % io_step_print == <span class="number">0</span> <span class="keyword">or</span> i == data_count - <span class="number">1</span>) <span class="keyword">and</span> show_ratio == <span class="literal">True</span>):</span><br><span class="line">					<span class="comment">#print('测试进度：',i,'/',data_count)</span></span><br><span class="line">					print(<span class="string">'Test Count: '</span>,i,<span class="string">'/'</span>,data_count)</span><br><span class="line">				</span><br><span class="line">				txt = <span class="string">''</span></span><br><span class="line">				<span class="keyword">if</span>(out_report == <span class="literal">True</span>):</span><br><span class="line">					<span class="comment"># if(i % io_step_file == 0 or i == data_count - 1):</span></span><br><span class="line">					<span class="comment"># 	txt_obj.write(txt)</span></span><br><span class="line">					<span class="comment"># 	txt = ''</span></span><br><span class="line">					txt += str(i) + <span class="string">'\n'</span></span><br><span class="line">					txt += <span class="string">'True:\t'</span> + str(data_labels) + <span class="string">'\n'</span></span><br><span class="line">					txt += <span class="string">'Pred:\t'</span> + str(pre) + <span class="string">'\n'</span></span><br><span class="line">					txt += <span class="string">'\n'</span></span><br><span class="line">					txt_obj.write(txt)</span><br><span class="line">				</span><br><span class="line">			print(<span class="string">'*[Test Result] Speech Recognition '</span> + str_dataset + <span class="string">' set word error ratio: '</span>, word_error_num / words_num * <span class="number">100</span>, <span class="string">'%'</span>)</span><br><span class="line">			<span class="keyword">if</span>(out_report == <span class="literal">True</span>):</span><br><span class="line">				txt += <span class="string">'*[测试结果] 语音识别 '</span> + str_dataset + <span class="string">' 集语音单字错误率： '</span> + str(word_error_num / words_num * <span class="number">100</span>) + <span class="string">' %'</span></span><br><span class="line">				txt_obj.write(txt)</span><br><span class="line">				txt = <span class="string">''</span></span><br><span class="line">				txt_obj.close()</span><br><span class="line">			</span><br><span class="line">		<span class="keyword">except</span> StopIteration:</span><br><span class="line">			print(<span class="string">'[Error] Model Test Error. please check data format.'</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">Predict</span><span class="params">(self, data_input, input_len)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		预测结果</span></span><br><span class="line"><span class="string">		返回语音识别后的拼音符号列表</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		</span><br><span class="line">		batch_size = <span class="number">1</span> </span><br><span class="line">		in_len = np.zeros((batch_size),dtype = np.int32)</span><br><span class="line">		</span><br><span class="line">		in_len[<span class="number">0</span>] = input_len</span><br><span class="line">		</span><br><span class="line">		x_in = np.zeros((batch_size, <span class="number">1600</span>, self.AUDIO_FEATURE_LENGTH, <span class="number">1</span>), dtype=np.float)</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(batch_size):</span><br><span class="line">			x_in[i,<span class="number">0</span>:len(data_input)] = data_input</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		base_pred = self.base_model.predict(x = x_in)</span><br><span class="line">		</span><br><span class="line">		base_pred =base_pred[:, :, :]</span><br><span class="line">		</span><br><span class="line">		r = K.ctc_decode(base_pred, in_len, greedy = <span class="literal">True</span>, beam_width=<span class="number">100</span>, top_paths=<span class="number">1</span>)</span><br><span class="line">		</span><br><span class="line">		<span class="comment">#print('r', r)</span></span><br><span class="line">		</span><br><span class="line">		r1 = K.get_value(r[<span class="number">0</span>][<span class="number">0</span>])</span><br><span class="line">		<span class="comment">#print('r1', r1)</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">#r2 = K.get_value(r[1])</span></span><br><span class="line">		<span class="comment">#print(r2)</span></span><br><span class="line">		</span><br><span class="line">		r1=r1[<span class="number">0</span>]</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> r1</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">RecognizeSpeech</span><span class="params">(self, wavsignal, fs)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		最终做语音识别用的函数，识别一个wav序列的语音</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">#data = self.data</span></span><br><span class="line">		<span class="comment">#data = DataSpeech('E:\\语音数据集')</span></span><br><span class="line">		<span class="comment">#data.LoadDataList('dev')</span></span><br><span class="line">		<span class="comment"># 获取输入特征</span></span><br><span class="line">		<span class="comment">#data_input = GetMfccFeature(wavsignal, fs)</span></span><br><span class="line">		<span class="comment">#t0=time.time()</span></span><br><span class="line">		data_input = GetFrequencyFeature(wavsignal, fs)</span><br><span class="line">		<span class="comment">#t1=time.time()</span></span><br><span class="line">		<span class="comment">#print('time cost:',t1-t0)</span></span><br><span class="line">		</span><br><span class="line">		input_length = len(data_input)</span><br><span class="line">		input_length = input_length // <span class="number">8</span></span><br><span class="line">		</span><br><span class="line">		data_input = np.array(data_input, dtype = np.float)</span><br><span class="line">		<span class="comment">#print(data_input,data_input.shape)</span></span><br><span class="line">		data_input = data_input.reshape(data_input.shape[<span class="number">0</span>],data_input.shape[<span class="number">1</span>],<span class="number">1</span>)</span><br><span class="line">		<span class="comment">#t2=time.time()</span></span><br><span class="line">		r1 = self.Predict(data_input, input_length)</span><br><span class="line">		<span class="comment">#t3=time.time()</span></span><br><span class="line">		<span class="comment">#print('time cost:',t3-t2)</span></span><br><span class="line">		list_symbol_dic = GetSymbolList(self.datapath) <span class="comment"># 获取拼音列表</span></span><br><span class="line">		</span><br><span class="line">		r_str=[]</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> r1:</span><br><span class="line">			r_str.append(list_symbol_dic[i])</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> r_str</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">RecognizeSpeech_FromFile</span><span class="params">(self, filename)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		最终做语音识别用的函数，识别指定文件名的语音</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		</span><br><span class="line">		wavsignal,fs = read_wav_data(filename)</span><br><span class="line">		</span><br><span class="line">		r = self.RecognizeSpeech(wavsignal, fs)</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> r</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">		</span><br><span class="line">	</span><br><span class="line"><span class="meta">	@property</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="string">'''</span></span><br><span class="line"><span class="string">		返回keras model</span></span><br><span class="line"><span class="string">		'''</span></span><br><span class="line">		<span class="keyword">return</span> self._model</span><br></pre></td></tr></table></figure>
+
+<h3 id="语言模型设计训练"><a href="#语言模型设计训练" class="headerlink" title="语言模型设计训练"></a>语言模型设计训练</h3><h3 id="实验分析和软件设计"><a href="#实验分析和软件设计" class="headerlink" title="实验分析和软件设计"></a>实验分析和软件设计</h3>
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2020\03\30\泵站机组故障诊断\" rel="bookmark">泵站机组故障诊断</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>喜欢你就打赏一下</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Bryce 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Bryce
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bryceustc.github.io/2020/04/01/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/" title="语音识别">https://bryceustc.github.io/2020/04/01/语音识别/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%A1%B9%E7%9B%AE/" rel="tag"><i class="fa fa-tag"></i> 项目</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/31/TPOT%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84Python%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7/" rel="prev" title="TPOT——一个自动化的Python机器学习工具">
+      <i class="fa fa-chevron-left"></i> TPOT——一个自动化的Python机器学习工具
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/01/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" rel="next" title="智能指针详解">
+      智能指针详解 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据集构建"><span class="nav-number">1.</span> <span class="nav-text">数据集构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语音信号预处理"><span class="nav-number">2.</span> <span class="nav-text">语音信号预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#预加重"><span class="nav-number">2.1.</span> <span class="nav-text">预加重</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分帧"><span class="nav-number">2.2.</span> <span class="nav-text">分帧</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加窗"><span class="nav-number">2.3.</span> <span class="nav-text">加窗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语谱图特征提取"><span class="nav-number">2.4.</span> <span class="nav-text">语谱图特征提取</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声学模型设计训练"><span class="nav-number">3.</span> <span class="nav-text">声学模型设计训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语言模型设计训练"><span class="nav-number">4.</span> <span class="nav-text">语言模型设计训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验分析和软件设计"><span class="nav-number">5.</span> <span class="nav-text">实验分析和软件设计</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">书写是对思维的缓存</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">295k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:28</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xl0dCw4B0ewo6hdaDLfUhpQ2-9Nh9j0Va',
+      appKey     : 'To4mX7CgnCwpmrdnshxRlVPm',
+      placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
