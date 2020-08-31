@@ -290,86 +290,10 @@ public:
 
 ### 思路
 
-此题是用dp来求，倍增，树状倍增。
-- 定义状态：dp[node][j] 存储的是 node 节点距离为 2^j 的祖先是谁。
-
-根据定义，dp[node][0] 就是 parent[node]，即 node 的距离为 1 的祖先是 parent[node]。
-- 状态转移方程：
-dp[node][j] = dp[dp[node][j - 1]][j - 1]
-
-意思是：要想找到 node 的距离 2^j 的祖先，先找到 node 的距离 2^(j - 1) 的祖先，然后，再找这个祖先的距离 2^(j - 1) 的祖先。两步得到 node 的距离为 2^j 的祖先。
-
-这样做，状态总数是 O(nlogn)，可以使用 O(nlogn) 的时间做预处理。
-
-之后，根据预处理的结果，可以在 O(logn) 的时间里完成每次查询：对于每一个查询 k，把 k 拆解成二进制表示，然后根据二进制表示中 1 的位置，累计向上查询。
-
-可以参考[题解](https://leetcode-cn.com/problems/kth-ancestor-of-a-tree-node/solution/li-kou-zai-zhu-jian-ba-acm-mo-ban-ti-ban-shang-lai/)
+此题类似
 
 ### 代码
 
 ```c++
-class TreeAncestor {
-public:
-    TreeAncestor(int n, vector<int>& parent) {
-        // 预处理
-        for (int i=0; i<n;i++){
-            dp[i][0] = parent[i];
-        }
-        for (int j=1;j<=20;j++){
-            for (int i=0;i<n;i++){
-                int x = dp[i][j-1];
-                if (x==-1) {
-                    dp[i][j] = -1;
-                }
-                else {
-                    dp[i][j] = dp[x][j-1];
-                }
-            }
-        }
-    }
-    
-    int getKthAncestor(int node, int k) {
-        if (k==0 || node== -1) return node;
-        // 然后二进制去拆解
-        int res = node;
-        // 7 = 4+ 2+ 1 ;
-        int bit = 20;// 20位可以满足数据要求了
-        while(k && res!=-1) {
-            if (res==-1) return -1;
-            if (k>=(1<<bit)){
-                res = dp[res][bit];
-                k-=(1<<bit);
-            }
-            bit--;
-        }
-        return res;
-    }
-    // 减少循环次数的一种写法 比如7：下边只循环3次
 
-    // int getKthAncestor(int node, int k) {
-    //     if (k==0 || node==-1) return node;
-    //     int res = node;
-    //     while(k) {
-    //         int pos = ffs(k) -1;  // C++ 语言中 ffs(k) 求解出 k 的最右侧第一个 1 的位置
-    //         if (dp[res][pos]==-1)return -1;
-    //         if (k>=(1<<pos)) {
-    //             res = dp[res][pos];
-    //             k-=(1<<pos);
-    //         }
-    //     }
-    //     return res;
-    // }
-private:
-
-    // vector做成员变量初始化方式要注意一下
-
-    // dp[i][j] 表示i位置 2^j 的祖宗节点
-    vector<vector<int>> dp = vector<vector<int>>(5e4+10,vector<int>(22,-1)); // 5e4+10是节点数，比数据要求多10个，22是2^22大于数据了，其实设成18也可以
-};
-
-/**
- * Your TreeAncestor object will be instantiated and called as such:
- * TreeAncestor* obj = new TreeAncestor(n, parent);
- * int param_1 = obj->getKthAncestor(node,k);
- */
 ```

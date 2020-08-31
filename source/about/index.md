@@ -18,8 +18,11 @@ type: "about"
 
 ### Unity Drive
 
-- June. 2019 ~ July. 2019  Software Development Engineer Intern
+- June. 2019 ~ July. 2019  Software Engineer Intern
 
+### Kuaishou
+
+- May. 2020 ~ August. 2020  C++ Developer Intern
 # Self-assessment
 
 - Good analytical and problem solving skills.
