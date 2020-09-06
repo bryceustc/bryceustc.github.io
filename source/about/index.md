@@ -23,6 +23,7 @@ type: "about"
 ### Kuaishou
 
 - May. 2020 ~ August. 2020  C++ Developer Intern
+
 # Self-assessment
 
 - Good analytical and problem solving skills.
