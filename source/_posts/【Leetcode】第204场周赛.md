@@ -1,7 +1,7 @@
 ---
 title: 【Leetcode】第204场周赛
 date: 2020-08-30 11:46:32
-vtags: LeetCode
+tags: LeetCode
 categories: LeetCode
 mathjax: true
 ---
