@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://bryceustc.github.io/2020/11/08/%E3%80%90Leetcode%E3%80%91%E7%AC%AC214%E5%9C%BA%E5%91%A8%E8%B5%9B/1.png">
 <meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/11/08/jj.gif">
 <meta property="article:published_time" content="2020-11-08T03:58:12.000Z">
-<meta property="article:modified_time" content="2020-11-08T11:25:27.227Z">
+<meta property="article:modified_time" content="2020-11-09T08:00:53.421Z">
 <meta property="article:author" content="Bryce">
 <meta property="article:tag" content="LeetCode">
 <meta name="twitter:card" content="summary">
@@ -232,10 +232,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-11-08 11:58:12 / 修改时间：19:25:27" itemprop="dateCreated datePublished" datetime="2020-11-08T11:58:12+08:00">2020-11-08</time>
+              <time title="创建时间：2020-11-08 11:58:12" itemprop="dateCreated datePublished" datetime="2020-11-08T11:58:12+08:00">2020-11-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-09 16:00:53" itemprop="dateModified" datetime="2020-11-09T16:00:53+08:00">2020-11-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -273,14 +279,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>7.7k</span>
+              <span>6.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
+              <span>6 分钟</span>
             </span>
 
         </div>
@@ -384,10 +390,6 @@
 <h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p>此题是个模板题。</p>
 <p>这题的关键是找到数组中小于和大于某个数num的数。此题是要利用树状数组。注意这个知识点</p>
 <h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="keyword">const</span> LL MOD = <span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">50</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> sum[N]; <span class="comment">// sum[N] 存放前缀和</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lowbit</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123; <span class="keyword">return</span> x &amp; -x; &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &lt;= N; i += lowbit(i)) sum[i] += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i; i -= lowbit(i)) res += sum[i];</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">createSortedArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; I)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">memset</span>(sum, <span class="number">0</span>, <span class="keyword">sizeof</span>(sum)); </span><br><span class="line">        LL res = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> n = I.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> x = I[i];</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">int</span> low = <span class="built_in">get</span>(x - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">int</span> high = i - <span class="built_in">get</span>(x);</span><br><span class="line">            res += <span class="built_in">min</span>(low, high);</span><br><span class="line">            add(x); </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> res % MOD;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-<p>组合计数</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">kthSmallestPath</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; destination, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">string</span> res;</span><br><span class="line">        <span class="keyword">int</span> m = destination[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> n = destination[<span class="number">1</span>];</span><br><span class="line">        <span class="comment">// 预处理组合数，利用递推公式来求</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> MAXN = <span class="number">35</span>;</span><br><span class="line">        <span class="keyword">long</span> <span class="keyword">long</span> C[MAXN][MAXN];</span><br><span class="line">        C[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; MAXN; ++i) &#123;</span><br><span class="line">            C[i][<span class="number">0</span>] = C[i][i] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; i; ++j) &#123;</span><br><span class="line">                C[i][j] = C[i - <span class="number">1</span>][j - <span class="number">1</span>] + C[i - <span class="number">1</span>][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//根据高位字母进行区间划分</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>, lim = n + m; i &lt;= lim; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (n &gt;= <span class="number">1</span> &amp;&amp; C[n - <span class="number">1</span> + m][m] &gt;= k) &#123;</span><br><span class="line">                res+= <span class="string">"H"</span>;</span><br><span class="line">                n--;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                res += <span class="string">"V"</span>;</span><br><span class="line">                k -= C[n - <span class="number">1</span> + m][m];</span><br><span class="line">                m--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算组合数的公式，乘法再除法，产生了溢出</span></span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">factorial</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> <span class="keyword">long</span> fc=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">long</span> <span class="keyword">long</span> i=<span class="number">1</span>;i&lt;=n;++i) fc *= i;</span><br><span class="line">        <span class="keyword">return</span> fc;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">combo</span><span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> n, <span class="keyword">long</span> <span class="keyword">long</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> <span class="keyword">long</span> com=factorial(n)/(factorial(m)*factorial(n-m));</span><br><span class="line">        <span class="keyword">return</span> com;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -595,13 +597,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">361k</span>
+    <span title="站点总字数">360k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">5:28</span>
+    <span title="站点阅读时长">5:27</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
