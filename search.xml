@@ -6392,4 +6392,108 @@ chrome://net-internals/#dns 来进行查看</code></pre></li>
         <tag>LeetCode</tag>
       </tags>
   </entry>
+  <entry>
+    <title>【Leetcode】第217场周赛</title>
+    <url>/2020/11/29/%E3%80%90Leetcode%E3%80%91%E7%AC%AC217%E5%9C%BA%E5%91%A8%E8%B5%9B/</url>
+    <content><![CDATA[<p>鸽了两周，这次参加周赛有点手生，这次周赛难度也有点大，也是最近也是忙着赶小论文，小论文也准备投出去了，工作也基本定下来了，真的运气是比较好，自己还有很大提升的空间，多撸一撸代码，多点自己的思考，也多看些书和课程提升一下自己的硬实力，冲冲冲！同时也打算开个个人微信公众号记录一下自己的学习生活。Adventure is out there. 做一个终身学习者！加油！</p>
+<h3 id="5613-最富有客户的资产总量"><a href="#5613-最富有客户的资产总量" class="headerlink" title="5613. 最富有客户的资产总量"></a><a href="https://leetcode-cn.com/problems/richest-customer-wealth/" target="_blank" rel="noopener external nofollow noreferrer">5613. 最富有客户的资产总量</a></h3><p>给你一个 m x n 的整数网格 accounts ，其中 accounts[i][j] 是第 i​​​​​​​​​​​​ 位客户在第 j 家银行托管的资产数量。返回最富有客户所拥有的 资产总量 。</p>
+<p>客户的 资产总量 就是他们在各家银行托管的资产数量之和。最富有客户就是 资产总量 最大的客户。</p>
+<a id="more"></a>
+<p>示例1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：accounts &#x3D; [[1,2,3],[3,2,1]]</span><br><span class="line">输出：6</span><br><span class="line">解释：</span><br><span class="line">第 1 位客户的资产总量 &#x3D; 1 + 2 + 3 &#x3D; 6</span><br><span class="line">第 2 位客户的资产总量 &#x3D; 3 + 2 + 1 &#x3D; 6</span><br><span class="line">两位客户都是最富有的，资产总量都是 6 ，所以返回 6 。</span><br></pre></td></tr></table></figure>
+
+<p>示例2:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：accounts &#x3D; [[1,5],[7,3],[3,5]]</span><br><span class="line">输出：10</span><br><span class="line">解释：</span><br><span class="line">第 1 位客户的资产总量 &#x3D; 6</span><br><span class="line">第 2 位客户的资产总量 &#x3D; 10 </span><br><span class="line">第 3 位客户的资产总量 &#x3D; 8</span><br><span class="line">第 2 位客户是最富有的，资产总量是 10</span><br></pre></td></tr></table></figure>
+
+<p>示例3：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：accounts &#x3D; [[2,8,7],[7,1,3],[1,9,5]]</span><br><span class="line">输出：17</span><br></pre></td></tr></table></figure>
+
+<p>提示：</p>
+<ul>
+<li>m == accounts.length</li>
+<li>n == accounts[i].length</li>
+<li>1 &lt;= m, n &lt;= 50</li>
+<li>1 &lt;= accounts[i][j] &lt;= 100</li>
+</ul>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>暴力模拟</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maximumWealth</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; accounts)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> m = accounts.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">int</span> n = accounts[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                sum += accounts[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(res, sum);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5614-找出最具竞争力的子序列"><a href="#5614-找出最具竞争力的子序列" class="headerlink" title="5614. 找出最具竞争力的子序列"></a><a href="https://leetcode-cn.com/problems/find-the-most-competitive-subsequence/" target="_blank" rel="noopener external nofollow noreferrer">5614. 找出最具竞争力的子序列</a></h3><p>给你一个整数数组 nums 和一个正整数 k ，返回长度为 k 且最具 竞争力 的 nums 子序列。</p>
+<p>数组的子序列是从数组中删除一些元素（可能不删除元素）得到的序列。</p>
+<p>在子序列 a 和子序列 b 第一个不相同的位置上，如果 a 中的数字小于 b 中对应的数字，那么我们称子序列 a 比子序列 b（相同长度下）更具 竞争力 。 例如，[1,3,4] 比 [1,3,5] 更具竞争力，在第一个不相同的位置，也就是最后一个位置上， 4 小于 5 。</p>
+<p>示例 1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [3,5,2,6], k &#x3D; 2</span><br><span class="line">输出：[2,6]</span><br><span class="line">解释：在所有可能的子序列集合 &#123;[3,5], [3,2], [3,6], [5,2], [5,6], [2,6]&#125; 中，[2,6] 最具竞争力。</span><br></pre></td></tr></table></figure>
+
+<p>示例 2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [2,4,3,3,5,4,9,6], k &#x3D; 4</span><br><span class="line">输出：[2,3,3,4]</span><br></pre></td></tr></table></figure>
+
+<p>提示：</p>
+<ul>
+<li>1 &lt;= nums.length &lt;= 105</li>
+<li>0 &lt;= nums[i] &lt;= 109</li>
+<li>1 &lt;= k &lt;= nums.length</li>
+</ul>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>此题与<a href="https://leetcode-cn.com/problems/remove-k-digits/" target="_blank" rel="noopener external nofollow noreferrer">移掉K位数字</a>有点类似</p>
+<p>此题后知后觉了，一开始想先dfs枚举出所有符合要求的子序列，然后再从里边找出合适的子序列。但这样时间复杂很高，深搜的话是n！的复杂度，肯定不可以。</p>
+<p>子序列问题考虑到单调栈的使用。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p>单调栈</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">mostCompetitive</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span> (n == k) <span class="keyword">return</span> nums;</span><br><span class="line">        <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">res</span> <span class="params">(k)</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">while</span>(!s.empty() &amp;&amp; k &lt; n - i + s.<span class="built_in">size</span>()  &amp;&amp; nums[i] &lt; s.top()) &#123;</span><br><span class="line">                s.pop();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (s.<span class="built_in">size</span>() &lt; k) &#123;</span><br><span class="line">                s.push(nums[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (!s.empty()) &#123;</span><br><span class="line">            <span class="keyword">int</span> t = s.top();</span><br><span class="line">            s.pop();</span><br><span class="line">            res[--k] = t;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1674-使数组互补的最少操作次数"><a href="#1674-使数组互补的最少操作次数" class="headerlink" title="1674. 使数组互补的最少操作次数"></a><a href="https://leetcode-cn.com/problems/minimum-moves-to-make-array-complementary/" target="_blank" rel="noopener external nofollow noreferrer">1674. 使数组互补的最少操作次数</a></h3><p>给你一个长度为 偶数 n 的整数数组 nums 和一个整数 limit 。每一次操作，你可以将 nums 中的任何整数替换为 1 到 limit 之间的另一个整数。</p>
+<p>如果对于所有下标 i（下标从 0 开始），nums[i] + nums[n - 1 - i] 都等于同一个数，则数组 nums 是 互补的 。例如，数组 [1,2,3,4] 是互补的，因为对于所有下标 i ，nums[i] + nums[n - 1 - i] = 5 。</p>
+<p>返回使数组 互补 的 最少 操作次数。</p>
+<p>示例 1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [1,2,4,3], limit &#x3D; 4</span><br><span class="line">输出：1</span><br><span class="line">解释：经过 1 次操作，你可以将数组 nums 变成 [1,2,2,3]（加粗元素是变更的数字）：</span><br><span class="line">nums[0] + nums[3] &#x3D; 1 + 3 &#x3D; 4.</span><br><span class="line">nums[1] + nums[2] &#x3D; 2 + 2 &#x3D; 4.</span><br><span class="line">nums[2] + nums[1] &#x3D; 2 + 2 &#x3D; 4.</span><br><span class="line">nums[3] + nums[0] &#x3D; 3 + 1 &#x3D; 4.</span><br><span class="line">对于每个 i ，nums[i] + nums[n-1-i] &#x3D; 4 ，所以 nums 是互补的。</span><br></pre></td></tr></table></figure>
+
+<p>示例 2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [1,2,2,1], limit &#x3D; 2</span><br><span class="line">输出：2</span><br><span class="line">解释：经过 2 次操作，你可以将数组 nums 变成 [2,2,2,2] 。你不能将任何数字变更为 3 ，因为 3 &gt; limit 。</span><br></pre></td></tr></table></figure>
+
+<p>示例 3:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [1,2,1,2], limit &#x3D; 2</span><br><span class="line">输出：0</span><br><span class="line">解释：nums 已经是互补的。</span><br></pre></td></tr></table></figure>
+
+<p>提示：</p>
+<ul>
+<li>n == nums.length</li>
+<li>2 &lt;= n &lt;= 105</li>
+<li>1 &lt;= nums[i] &lt;= limit &lt;= 105</li>
+<li>n 是偶数。</li>
+</ul>
+<h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><p>首先我们知道肯定是将数组中所有互补的元素的和最终都变为一个确定的值t.这是建设互补的元素为(a,b),且满足(a≤b),则有以下四种情况：</p>
+<ul>
+<li>a≥t: 此时我们需要将a,b都变为比t小的数，则此时需要替换的步数为2.<br>b&lt;(t−limit) : 则此时我们需要将a,b都需要变换才能保证a + b = t,则此时需要变换的次数为2.</li>
+<li>a+b=t: 此时不需要变换，则变换步数为0.</li>
+<li>a&lt;t,b≥(t−limit),a+b≠t: 则此时我们可以任意变换a或者b均可满足要求，则需要变换一次。<br>知道以上情况后，我们只需要枚举所有的目标值t,t可能的取值范围为[2,2limit]，枚举所有的t然后求出最小的变换步数即可，当然如果直接求的话，时间复杂度为O(2limit*n),显然如果直接求的话，肯定会超时的，必须要转换思路。</li>
+</ul>
+<p>差分数组,具体思路详见代码</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minMoves</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> limit)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// res[x] 表示和是x的时候，需要的调整次数，有效范围是[2, limit * 2]</span></span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">res</span><span class="params">(limit * <span class="number">2</span>+<span class="number">1</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 这里用一个差分数组来算出res，有点像求重叠区间最大值的思路</span></span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">diff</span><span class="params">(limit * <span class="number">2</span>+<span class="number">2</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对于每对数字来说，在有的范围内的x，需要一次调整，有的需要两次调整</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = nums.<span class="built_in">size</span>()<span class="number">-1</span>; i &lt; j; i++, j--) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = nums[i], b = nums[j];</span><br><span class="line">            <span class="keyword">if</span> (a &gt; b) &#123;</span><br><span class="line">                swap(a, b);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// a &lt;= b</span></span><br><span class="line">            <span class="comment">// [2, a]                   对a,b来说，在[2,a]范围内的x都需要进行 2 次变更操作，后面类似</span></span><br><span class="line">            diff[<span class="number">2</span>] += <span class="number">2</span>; diff[a+<span class="number">1</span>] -= <span class="number">2</span>;</span><br><span class="line">            <span class="comment">// [a+1, a+b-1]             需要进行 1 次变更</span></span><br><span class="line">            diff[a+<span class="number">1</span>] += <span class="number">1</span>; diff[a+b] -= <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// a + b，已经满足，不用变更</span></span><br><span class="line">            <span class="comment">// [a+b+1, b+limit]         需要进行 1 次变更</span></span><br><span class="line">            diff[a+b+<span class="number">1</span>] += <span class="number">1</span>; diff[b+limit+<span class="number">1</span>] -= <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// [b+limit+1, 2 * limit]   需要进行 2 次变更，x不会超过 2*limit，所以不用考虑 diff[2*limit+1] -= 2;</span></span><br><span class="line">            diff[b+limit+<span class="number">1</span>] += <span class="number">2</span>; <span class="comment">// diff[2*limit+1] -= 2;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过差分算出每个x需要调整的次数</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; res.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            res[i] = res[i<span class="number">-1</span>] + diff[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> ans = INT_MAX;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= limit * <span class="number">2</span>; i++) &#123;</span><br><span class="line">            ans = <span class="built_in">min</span>(ans, res[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1675-数组的最小偏移量"><a href="#1675-数组的最小偏移量" class="headerlink" title="1675. 数组的最小偏移量"></a><a href="https://leetcode-cn.com/problems/minimize-deviation-in-array/" target="_blank" rel="noopener external nofollow noreferrer">1675. 数组的最小偏移量</a></h3><p>给你一个由 n 个正整数组成的数组 nums 。</p>
+<p>你可以对数组的任意元素执行任意次数的两类操作：</p>
+<p>如果元素是 偶数 ，除以 2<br>例如，如果数组是 [1,2,3,4] ，那么你可以对最后一个元素执行此操作，使其变成 [1,2,3,2]<br>如果元素是 奇数 ，乘上 2<br>例如，如果数组是 [1,2,3,4] ，那么你可以对第一个元素执行此操作，使其变成 [2,2,3,4]<br>数组的 偏移量 是数组中任意两个元素之间的 最大差值 。</p>
+<p>返回数组在执行某些操作之后可以拥有的 最小偏移量 。</p>
+<p>示例 1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [1,2,3,4]</span><br><span class="line">输出：1</span><br><span class="line">解释：你可以将数组转换为 [1,2,3,2]，然后转换成 [2,2,3,2]，偏移量是 3 - 2 &#x3D; 1</span><br></pre></td></tr></table></figure>
+
+<p>示例 2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [4,1,5,20,3]</span><br><span class="line">输出：3</span><br><span class="line">解释：两次操作后，你可以将数组转换为 [4,2,5,5,3]，偏移量是 5 - 2 &#x3D; 3</span><br></pre></td></tr></table></figure>
+
+<p>示例3：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">输入：nums &#x3D; [2,10,8]</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+<p>s<br>提示：</p>
+<ul>
+<li>n == nums.length</li>
+<li>2 &lt;= n &lt;= 10^5</li>
+<li>1 &lt;= nums[i] &lt;= 10^9</li>
+</ul>
+<h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p>此题是个模板题。</p>
+<p>这题的关键是找到数组中小于和大于某个数num的数。此题是要利用树状数组。注意这个知识点</p>
+<p>$$a_b$$</p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="keyword">const</span> LL MOD = <span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">50</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> sum[N]; <span class="comment">// sum[N] 存放前缀和</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lowbit</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123; <span class="keyword">return</span> x &amp; -x; &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i &lt;= N; i += lowbit(i)) sum[i] += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i; i -= lowbit(i)) res += sum[i];</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">createSortedArray</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; I)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">memset</span>(sum, <span class="number">0</span>, <span class="keyword">sizeof</span>(sum)); </span><br><span class="line">        LL res = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> n = I.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> x = I[i];</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">int</span> low = <span class="built_in">get</span>(x - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">int</span> high = i - <span class="built_in">get</span>(x);</span><br><span class="line">            res += <span class="built_in">min</span>(low, high);</span><br><span class="line">            add(x); </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> res % MOD;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
 </search>
