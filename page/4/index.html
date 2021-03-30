@@ -204,6 +204,119 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/10/11/%E3%80%90Leetcode%E3%80%91%E7%AC%AC210%E5%9C%BA%E5%91%A8%E8%B5%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/11/%E3%80%90Leetcode%E3%80%91%E7%AC%AC210%E5%9C%BA%E5%91%A8%E8%B5%9B/" class="post-title-link" itemprop="url">【Leetcode】第210场周赛</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-11 12:32:02" itemprop="dateCreated datePublished" datetime="2020-10-11T12:32:02+08:00">2020-10-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-14 16:42:25" itemprop="dateModified" datetime="2020-10-14T16:42:25+08:00">2020-10-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/11/%E3%80%90Leetcode%E3%80%91%E7%AC%AC210%E5%9C%BA%E5%91%A8%E8%B5%9B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/11/%E3%80%90Leetcode%E3%80%91%E7%AC%AC210%E5%9C%BA%E5%91%A8%E8%B5%9B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这次周赛做的还可以，名次算是创了新高，希望有一天能杀入前200吧。加油！<br><img src="/2020/10/11/%E3%80%90Leetcode%E3%80%91%E7%AC%AC210%E5%9C%BA%E5%91%A8%E8%B5%9B/1.png" alt></p>
+<h3 id="1614-括号的最大嵌套深度"><a href="#1614-括号的最大嵌套深度" class="headerlink" title="1614. 括号的最大嵌套深度"></a><a href="https://leetcode-cn.com/problems/maximum-nesting-depth-of-the-parentheses/" target="_blank" rel="noopener external nofollow noreferrer">1614. 括号的最大嵌套深度</a></h3><p>如果字符串满足一下条件之一，则可以称之为 有效括号字符串（valid parentheses string，可以简写为 VPS）：</p>
+<p>字符串是一个空字符串 “”，或者是一个不为 “(“ 或 “)” 的单字符。<br>字符串可以写为 AB（A 与 B 字符串连接），其中 A 和 B 都是 有效括号字符串 。<br>字符串可以写为 (A)，其中 A 是一个 有效括号字符串 。<br>类似地，可以定义任何有效括号字符串 S 的 嵌套深度 depth(S)：</p>
+<p>depth(“”) = 0<br>depth(A + B) = max(depth(A), depth(B))，其中 A 和 B 都是 有效括号字符串<br>depth(“(“ + A + “)”) = 1 + depth(A)，其中 A 是一个 有效括号字符串<br>例如：””、”()()”、”()(()())” 都是 有效括号字符串（嵌套深度分别为 0、1、2），而 “)(“ 、”(()” 都不是 有效括号字符串 。</p>
+<p>给你一个 有效括号字符串 s，返回该字符串的 s 嵌套深度 。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/11/%E3%80%90Leetcode%E3%80%91%E7%AC%AC210%E5%9C%BA%E5%91%A8%E8%B5%9B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/10/04/%E3%80%90Leetcode%E3%80%91%E7%AC%AC209%E5%9C%BA%E5%91%A8%E8%B5%9B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -621,116 +734,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/09/03/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/touxiang.jfif">
-      <meta itemprop="name" content="Bryce">
-      <meta itemprop="description" content="书写是对思维的缓存">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bryce's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/03/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="post-title-link" itemprop="url">KMP字符串</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-03 10:55:00" itemprop="dateCreated datePublished" datetime="2020-09-03T10:55:00+08:00">2020-09-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-06 14:50:22" itemprop="dateModified" datetime="2020-09-06T14:50:22+08:00">2020-09-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/09/03/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/03/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="KMP是什么，做什么用的"><a href="#KMP是什么，做什么用的" class="headerlink" title="KMP是什么，做什么用的"></a>KMP是什么，做什么用的</h3><p>KMP全称为Knuth Morris Pratt算法，三个单词分别是三个作者的名字。KMP是一种高效的字符串匹配算法，用来在主字符串中查找模式字符串的位置(比如在“hello,world”主串中查找“world”模式串的位置)。</p>
-<h3 id="KMP算法的高效体现在哪"><a href="#KMP算法的高效体现在哪" class="headerlink" title="KMP算法的高效体现在哪"></a>KMP算法的高效体现在哪</h3><p>高效性是通过和其他字符串搜索算法对比得到的，在这里拿BF(Brute Force)算法做一下对比。BF算法是一种最朴素的暴力搜索算法。它的思想是在主串的[0, n-m]区间内依次截取长度为m的子串，看子串是否和模式串一样(n是主串的长度，m是子串的长度)。代码是这样:</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/03/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -803,7 +806,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">108</span>
+          <span class="site-state-item-count">109</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -861,13 +864,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">412k</span>
+    <span title="站点总字数">418k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:14</span>
+    <span title="站点阅读时长">6:20</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
