@@ -204,6 +204,125 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/08/09/%E3%80%90Leetcode%E3%80%91%E7%AC%AC201%E5%9C%BA%E5%91%A8%E8%B5%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/09/%E3%80%90Leetcode%E3%80%91%E7%AC%AC201%E5%9C%BA%E5%91%A8%E8%B5%9B/" class="post-title-link" itemprop="url">【Leetcode】第201场周赛</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-09 15:28:36" itemprop="dateCreated datePublished" datetime="2020-08-09T15:28:36+08:00">2020-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-24 14:29:13" itemprop="dateModified" datetime="2020-08-24T14:29:13+08:00">2020-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/08/09/%E3%80%90Leetcode%E3%80%91%E7%AC%AC201%E5%9C%BA%E5%91%A8%E8%B5%9B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/09/%E3%80%90Leetcode%E3%80%91%E7%AC%AC201%E5%9C%BA%E5%91%A8%E8%B5%9B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本次周赛ac2道，第三题7个测试用例超时，前缀和的思想还是不够熟练，在数组中找到某一连续区间和为target的，首先要想到用前缀和，第三题是想到了思路，但是超时，引用KentBeck的话，慢慢来不要想太多，继续加油呀！</p>
+<p>First make it work, then make it right, and, finally, make it fast.</p>
+<h3 id="5483-整理字符串"><a href="#5483-整理字符串" class="headerlink" title="5483. 整理字符串"></a><a href="https://leetcode-cn.com/problems/count-good-triplets/" target="_blank" rel="noopener external nofollow noreferrer">5483. 整理字符串</a></h3><p>给你一个由大小写英文字母组成的字符串 s 。</p>
+<p>一个整理好的字符串中，两个相邻字符 s[i] 和 s[i + 1] 不会同时满足下述条件：</p>
+<ul>
+<li>0 &lt;= i &lt;= s.length - 2</li>
+<li>s[i] 是小写字符，但 s[i + 1] 是相同的大写字符；反之亦然 。</li>
+</ul>
+<p>请你将字符串整理好，每次你都可以从字符串中选出满足上述条件的 两个相邻 字符并删除，直到字符串整理好为止。</p>
+<p>请返回整理好的 字符串 。题目保证在给出的约束条件下，测试样例对应的答案是唯一的。</p>
+<p>注意：空字符串也属于整理好的字符串，尽管其中没有任何字符。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/09/%E3%80%90Leetcode%E3%80%91%E7%AC%AC201%E5%9C%BA%E5%91%A8%E8%B5%9B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/08/02/%E3%80%90Leetcode%E3%80%91%E7%AC%AC200%E5%9C%BA%E5%91%A8%E8%B5%9B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -661,120 +780,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/07/12/Dijkstra%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/touxiang.jfif">
-      <meta itemprop="name" content="Bryce">
-      <meta itemprop="description" content="书写是对思维的缓存">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bryce's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/12/Dijkstra%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Dijkstra算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-07-12 18:26:12" itemprop="dateCreated datePublished" datetime="2020-07-12T18:26:12+08:00">2020-07-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-24 14:29:13" itemprop="dateModified" datetime="2020-08-24T14:29:13+08:00">2020-08-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/07/12/Dijkstra%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/12/Dijkstra%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Dijkstra算法"><a href="#Dijkstra算法" class="headerlink" title="Dijkstra算法"></a>Dijkstra算法</h2><p>学习了一下关于Dijlstra最短路的算法，做一下总结，梳理一下思路。</p>
-<p>求最短路算法一般分为求单源最短路和多源汇最短路，思维导图如图所示：<br><img src="/2020/07/12/Dijkstra%E7%AE%97%E6%B3%95/1.jpeg" alt></p>
-<p>其中n表示节点数，m表示边数。</p>
-<p>稠密图：m与n^2是一个级别的，用邻接矩阵来表示。</p>
-<p>稀疏图：m远远小于n^2，用邻接表来表示，比邻接矩阵更节省空间</p>
-<p>具体邻接矩阵和邻接表可以参考这篇文章<a href="https://blog.csdn.net/qq_29134495/article/details/51376580" target="_blank" rel="noopener external nofollow noreferrer">图的邻接矩阵和邻接表的比较</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/07/12/Dijkstra%E7%AE%97%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -847,7 +852,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">110</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -905,13 +910,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">418k</span>
+    <span title="站点总字数">420k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:20</span>
+    <span title="站点阅读时长">6:22</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
