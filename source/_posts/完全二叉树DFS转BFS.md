@@ -1,8 +1,8 @@
 ---
 title: 完全二叉树DFS转BFS
 date: 2021-05-09 17:31:34
-tags: LeetCode
-categories: LeetCode
+tags: 笔试
+categories: 笔试
 mathjax: true
 ---
 # 题目描述:完全二叉树DFS转BFS
