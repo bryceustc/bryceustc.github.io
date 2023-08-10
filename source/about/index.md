@@ -16,13 +16,9 @@ type: "about"
 
 # Experience
 
-### Unity Drive
-
-- June. 2019 ~ July. 2019  Software Engineer Intern
-
 ### Kuaishou
 
-- May. 2020 ~ August. 2020  C++ Developer Intern
+- June. 2021 ~ now  C++ Search Developer
 
 # Self-assessment
 
