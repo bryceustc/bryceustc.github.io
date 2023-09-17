@@ -1,6 +1,6 @@
 ---
-title: 面试题3：数组中重复的数字
-date: 2021-03-31 21:11:41
+title: 剑指offer（三）：数组中重复的数字
+date: 2023-09-16 21:11:41
 tags: 剑指Offer
 categories: 剑指Offer
 mathjax: true
@@ -10,10 +10,6 @@ mathjax: true
 ## 题目一：
 在一个长度为n的数组里的所有数字都在0~n-1范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。
 请找出数组中任意一个重复的数字。例如，如果输入长度为7的数组{2，3，1，0，2，5，3}，那么对应的输出是重复的数字2或者3
-
-## 题目二：
-在一个长度为n+1的数组里的所有数字都在1~n范围内。所以数组中至少有一个数是重复的。请找出数组中任意一个重复的数字，但不能修改输入的数组。
-例如，输入长度为8的数组{2，3，5，4，3，2，6，7}，那么对应的输出是重复的数字2或者3。
 <!--more-->
 # 本题考点：
   
@@ -28,20 +24,11 @@ mathjax: true
   
   2). 使用哈希表来解决，时间复杂度为O(n)，但空间复杂度也为O(n)
   
-  3). 交换位置重排法，把每个数字放回对应位置的方法。如果出现一个数字无法放回（所在位置已经是对应数字了），那么说明该数字重复，时间复杂度为O(n)，空间复杂度为O(1)
-  
-  4). 题目二可以依照题目一的思路来，不过由于不能修改输入数组，所以可以构建一个n+1大小的辅助数组，构建了辅助数组之后可以使用hash表也可以使用换位置的思路来做 
-  
-  5). 使用二分的思想来做，二分基数组，但这种方法不能找出所有重复的数字，时间复杂度为O(nlogn)，空间复杂度为O(1)，相当于用时间换取空间
+  3). **交换位置重排法**，把每个数字放回对应位置的方法。如果出现一个数字无法放回（所在位置已经是对应数字了），那么说明该数字重复，**时间复杂度为O(n)，空间复杂度为O(1)**
 
 # 代码
-问题一：
 
 [C++](https://github.com/bryceustc/CodingInterviews/blob/master/DuplicationInArray/DuplicationInArray.cpp)
-
-问题二：
-
-[C++](https://github.com/bryceustc/CodingInterviews/blob/master/DuplicationInArray/DuplicationInArrayNoEdit.cpp.cpp)
 
 
 # C++
@@ -59,7 +46,7 @@ class Solution{
                     return false;
                 }
             }
-            sort(nums.begin(),nums.end());
+            sort(nums.begin(),nums.end());tem
             for (int i = 0; i < n-1; i++)
             {
                 if (nums[i]==nums[i+1])
@@ -109,21 +96,19 @@ class Solution {
 public:
     int findRepeatNumber(vector<int>& nums) {
         int n = nums.size();
-        int res = 0;
         for (int i = 0; i < n; i++) {
             //只要当前数值与索引不等，就要一直替换
             while (nums[i] != i) {
                 //一旦遇到当前的数值与另外一个换位的值相等，就停止，说明找到了重复的数字
                 if (nums[i] == nums[nums[i]]) {
-                    res = nums[i];
-                    return res;
+                    return nums[i];
                 }
                 int temp = nums[i];
-                nums[i] = temp;
+                nums[i] = nums[temp];
                 nums[temp] = temp;
             }
         }
-        return res;
+        return -1;
     }
 };
 ```

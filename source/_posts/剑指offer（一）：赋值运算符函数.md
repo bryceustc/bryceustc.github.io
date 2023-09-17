@@ -1,6 +1,6 @@
 ---
-title: 面试题1：赋值运算符函数
-date: 2021-03-29 20:25:09
+title: 剑指offer（一）：赋值运算符函数
+date: 2023-09-16 14:25:09
 tags: 剑指Offer
 categories: 剑指Offer
 mathjax: true
@@ -36,9 +36,9 @@ private:
 
 **考虑因素：**
 
-  1). 返回值的类型应该声明为该类型的引用，并在函数结束前返回实例自身的引用(*this)；
+  1). 返回值的类型应该声明为该类型的引用，并在函数结束前返回实例自身的引用(*this)，因为只有返回一个引用时才可以允许被连续赋值；
 
-  2). 把传入的参数类型声明为常量引用(注意：拷贝构造函数一定要为常量引用，如果不是引用而是实例，则会从形参到实参再回调用一次拷贝构造函数，造成无限调用)；
+  2). 把传入的参数类型声明为常量引用(注意：拷贝构造函数一定要为**常量引用**，如果不是引用而是实例，则会从形参到实参再回调用一次拷贝构造函数，造成**无限调用**)；
 
   3). 注意释放实例自身已有的内存；
 
@@ -59,10 +59,6 @@ private:
 ## 方法一：
 ```c++
 // CMyString.h文件中
-
-//
-// Created by Bryce on 2021/3/29.
-//
 
 #ifndef INC_1_CMYSTRING_H
 #define INC_1_CMYSTRING_H
@@ -114,9 +110,11 @@ CMyString &CMyString::operator=(const CMyString &str) {
         m_pData = nullptr;
     }
 
+    // 分配新的内存资源
     m_pData = new char[strlen(str.m_pData) + 1];
     strcpy(m_pData, str.m_pData);
 
+    // 返回本对象的引用
     return *this;
 }
 
@@ -131,10 +129,6 @@ char *CMyString::getData() {
 
 ```c++
 // CMyString.cpp文件中
-
-//
-// Created by Bryce on 2021/3/29.
-//
 
 #include "CMyString.h"
 #include <iostream>
@@ -167,10 +161,6 @@ int main()
 ```c++
 //main.cpp中的测试程序
 
-//
-// Created by Bryce on 2021/3/29.
-//
-
 #include "CMyString.h"
 #include <iostream>
 
@@ -183,7 +173,7 @@ int main()
 
     cout << "myStr: " << myStr.getData() << endl;
 
-    CMyString test = myStr;
+    CMyString test = myStr; // 类似 CMyString test(myStr)这种的浅拷贝
 
     cout << "test: " << test.getData() << endl;
 
@@ -209,13 +199,13 @@ myStr2: show the difference.
 myStr2 after operator "=": Hello World
 ```
 
-## 更完善版本：考虑new分配空间是否足够
+## 更完善版本：考虑new分配空间是否足够，内存不足时，直接new会抛出异常，
 ```c++
 CMyString &CMyString::operator=(const CMyString &str) {
     if (this != &str) {
-        //调用拷贝构造函数
+        //调用拷贝构造函数，构造临时变量
         CMyString strTmp(str);
-
+        // 交换当前对象与临时对象的数据。
         char *pTmp = strTmp.m_pData;
         strTmp.m_pData = m_pData;
         m_pData = pTmp;

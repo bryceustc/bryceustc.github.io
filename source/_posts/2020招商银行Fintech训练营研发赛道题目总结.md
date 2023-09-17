@@ -5,7 +5,7 @@ tags: 笔试
 categories: 笔试
 ---
 # 2020Fintech
-记录一下参加2020招商银行Fintech训练营的初赛题目，三道通过了两道，感觉还是不够熟练，不能快速想出思路，还是要多总结多刷题，不断提升代码能力。
+记录一下参加2020招商银行Fintech训练营的初赛题目。
 <!--more-->
 ##  [金币](https://ac.nowcoder.com/acm/contest/5246/A)
 

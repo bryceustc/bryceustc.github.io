@@ -96,6 +96,16 @@ c(continue),表示继续执行
 
 q(quit)，表示退出gdb
 
+
+
+```c++
+i local
+p this
+
+
+p *(string*)(*(GeneralSearchRequest*)search_req).raw_query_->tagged_ptr_->ptr_
+```
+
 ![](5.jpg)
 
 ### 4. coredump的一些原因
