@@ -113,12 +113,12 @@ ssh-keygen -t rsa -C  "Github邮箱"        //自己注册Github的邮箱地址
 ```
 
 如图所示：
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-key.png)
+![](https://raw.githubusercontent.com/winney07/Images/main/winney07.github.io/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-key.png)
 
 （5）生成的SSH KEY会保存到 C:/Users/电脑名用户名/.ssh 目录中（根据你自己电脑用户名，打开对应的目录）
 
 - 打开.ssh 这个目录，打开 id_rsa.pub 文件，复制里面的全部内容（这些内容就是密钥）
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/user-ssh.png)
+![](https://raw.githubusercontent.com/winney07/Images/main/winney07.github.io/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/add-key.png)
 
 （6）在GitHub中添加SSH keys
 
@@ -128,25 +128,22 @@ ssh-keygen -t rsa -C  "Github邮箱"        //自己注册Github的邮箱地址
 ![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/add-key.png)
 
 - 最后点击Add Key，如果显示这样的界面，说明SSH KEY 配置成功：
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-keys.png)
+![](https://raw.githubusercontent.com/winney07/Images/main/winney07.github.io/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-keys.png)
 
 （7）修改全局配置文件
 
 - 在blog文件夹下，找到_config.yml文件；如图所示：
 ![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png)
 
-- 复制仓库地址：如图所示：
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-href.png)
-
 - 修改_config.yml文件里的deploy属性(目的是将本地hexo项目放到Github上)如图所示：
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png)
+![](https://raw.githubusercontent.com/winney07/Images/main/winney07.github.io/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy.png)
 
 **注：**【如果repository中填写的是https协议的，hexo d上传代码到Github时有下面类似错误，可以将repository改为ssh的链接】
 如图所示：
 
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy-error.png)
+![](https://raw.githubusercontent.com/winney07/Images/main/winney07.github.io/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/deploy-error.png)
 
-![](https://winney07.github.io/2018/08/01/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/ssh-link.png)
+![](https://raw.githubusercontent.com/winney07/Images/main/winney07.github.io/Hexo-GitHub-Pages-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-href.png)
 
 （8）安装hexo-deployer-git 插件，目的是将代码快速托管到Github上
 
