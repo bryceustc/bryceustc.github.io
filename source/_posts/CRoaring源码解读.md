@@ -6,7 +6,7 @@ categories: RoaringBitmap
 ---
 
 ## RoaringBitMap原理
-Roaring Bitmap实现的主要思路是将32位无符号整数（0~4294967295）分成高16位和低16位两部分。通过高 16 位找到该数据存储在哪个桶中（高 16 位可以划分 2^16 个桶），把剩余的低 16 位放入该桶对应的 Container 中。
+Roaring Bitmap实现的主要思路是将32位无符号整数（0~4294967295）分成高16位和低16位两部分。通过高 16 位找到该数据存储在哪个桶中（高 16 位可以划分 2<sup>16</sup>个桶），把剩余的低 16 位放入该桶对应的 Container 中。
 每个桶都有对应的 Container，不同的 Container 存储方式不同。依据不同的场景，主要有 2 种不同的 Container，分别是 Array Container 和 Bitmap Container。Array Container 存放稀疏的数据，Bitmap Container 存放稠密的数据。若一个 Container 里面的元素数量小于 4096，使用 Array Container 来存储。当 Array Container 超过最大容量 4096 时，会转换为 Bitmap Container。
 <!--more-->
 简单举2个例子，说明rbm是如何存储数据的。
