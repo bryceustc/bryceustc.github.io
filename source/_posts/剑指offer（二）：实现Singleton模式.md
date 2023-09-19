@@ -5,8 +5,10 @@ tags: 剑指Offer
 categories: 剑指Offer
 mathjax: true
 ---
-# 题目描述：
+# 题目描述:
+
 设计一个类，我们只能生成该类的一个实例
+
 # 本题考点：
   
   1). 考察对单例的(Singleton)模式的理解。
