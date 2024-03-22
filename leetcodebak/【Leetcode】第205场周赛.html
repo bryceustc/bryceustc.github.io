@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-atom.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="第205场周赛，最近忙着找工作，周日的周赛还是按照惯例都参加一下吧，自己非科班，想要找到好工作，真的要更加加油啊，补基础，多刷题，提升coding能力！ 5507. 替换所有的问号给你一个仅包含小写英文字母和 ‘?’ 字符的字符串 s ，请你将所有的 ‘?’ 转换为若干小写字母，使最终的字符串不包含任何 连续重复 的字符。 注意：你 不能 修改非 ‘?’ 字符。 题目测试用例保证 除 ‘?’ 字符">
+<meta property="og:type" content="website">
+<meta property="og:title" content="【Leetcode】第205场周赛">
+<meta property="og:url" content="https://bryceustc.github.io/leetcodebak/%E3%80%90Leetcode%E3%80%91%E7%AC%AC205%E5%9C%BA%E5%91%A8%E8%B5%9B.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="第205场周赛，最近忙着找工作，周日的周赛还是按照惯例都参加一下吧，自己非科班，想要找到好工作，真的要更加加油啊，补基础，多刷题，提升coding能力！ 5507. 替换所有的问号给你一个仅包含小写英文字母和 ‘?’ 字符的字符串 s ，请你将所有的 ‘?’ 转换为若干小写字母，使最终的字符串不包含任何 连续重复 的字符。 注意：你 不能 修改非 ‘?’ 字符。 题目测试用例保证 除 ‘?’ 字符">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex1.png">
+<meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex2.png">
+<meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex3.png">
+<meta property="article:published_time" content="2020-09-06T07:06:46.000Z">
+<meta property="article:modified_time" content="2020-09-06T07:06:46.000Z">
+<meta property="article:author" content="Bryce">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex1.png">
+
+<link rel="canonical" href="https://bryceustc.github.io/leetcodebak/%E3%80%90Leetcode%E3%80%91%E7%AC%AC205%E5%9C%BA%E5%91%A8%E8%B5%9B">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【Leetcode】第205场周赛 | Bryce's Blog
+</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page">
+            
+
+  <div class="posts-expand">
+    
+    
+    
+    <div class="post-block" lang="zh-CN">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">【Leetcode】第205场周赛
+</h1>
+
+<div class="post-meta">
+  
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <p>第205场周赛，最近忙着找工作，周日的周赛还是按照惯例都参加一下吧，自己非科班，想要找到好工作，真的要更加加油啊，补基础，多刷题，提升coding能力！</p>
+<h3 id="5507-替换所有的问号"><a href="#5507-替换所有的问号" class="headerlink" title="5507. 替换所有的问号"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/contest/weekly-contest-205/problems/replace-all-s-to-avoid-consecutive-repeating-characters/">5507. 替换所有的问号</a></h3><p>给你一个仅包含小写英文字母和 ‘?’ 字符的字符串 s<var> </var>，请你将所有的 ‘?’ 转换为若干小写字母，使最终的字符串不包含任何 连续重复 的字符。</p>
+<p>注意：你 不能 修改非 ‘?’ 字符。</p>
+<p>题目测试用例保证 除 ‘?’ 字符 之外，不存在连续重复的字符。</p>
+<p>在完成所有转换（可能无需转换）后返回最终的字符串。如果有多个解决方案，请返回其中任何一个。可以证明，在给定的约束条件下，答案总是存在的。</p>
+<span id="more"></span>
+<p>示例1：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "?zs"</span><br><span class="line">输出："azs"</span><br><span class="line">解释：该示例共有 25 种解决方案，从 "azs" 到 "yzs" 都是符合题目要求的。只有 "z" 是无效的修改，因为字符串 "zzs" 中有连续重复的两个 'z' 。</span><br></pre></td></tr></table></figure></p>
+<p>示例2:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "ubv?w"</span><br><span class="line">输出："ubvaw"</span><br><span class="line">解释：该示例共有 24 种解决方案，只有替换成 "v" 和 "w" 不符合题目要求。因为 "ubvvw" 和 "ubvww" 都包含连续重复的字符。</span><br></pre></td></tr></table></figure></p>
+<p>示例3：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "j?qg??b"</span><br><span class="line">输出："jaqgacb"</span><br></pre></td></tr></table></figure></p>
+<p>示例4：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "??yw?ipkj?"</span><br><span class="line">输出："acywaipkja"</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= s.length &lt;= 100</li>
+<li>s 仅包含小写英文字母和 ‘?’ 字符<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3></li>
+</ul>
+<p>出现问号的地方就直接去判断，枚举字母，与前边和后边相邻的位置判断。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">modifyString</span><span class="params">(string s)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">if</span> (s[i] == <span class="string">'?'</span>) {</span><br><span class="line">                <span class="type">char</span> c = <span class="string">'a'</span>;</span><br><span class="line">                <span class="comment">// 如果左边和右边有一个不满足就继续枚举。</span></span><br><span class="line">                <span class="keyword">while</span> ((i &gt; <span class="number">0</span> &amp;&amp; s[i<span class="number">-1</span>] == c) || (i &lt; n - <span class="number">1</span> &amp;&amp; s[i+<span class="number">1</span>] == c) ) c++;</span><br><span class="line">                s[i] = c;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<h3 id="5508-数的平方等于两数乘积的方法数"><a href="#5508-数的平方等于两数乘积的方法数" class="headerlink" title="5508. 数的平方等于两数乘积的方法数"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/contest/weekly-contest-205/problems/number-of-ways-where-square-of-number-is-equal-to-product-of-two-numbers/">5508. 数的平方等于两数乘积的方法数</a></h3><p>给你两个整数数组 nums1 和 nums2 ，请你返回根据以下规则形成的三元组的数目（类型 1 和类型 2 ）：</p>
+<p>类型 1：三元组 (i, j, k) ，如果 nums1[i]2 == nums2[j] <em> nums2[k] 其中 0 &lt;= i &lt; nums1.length 且 0 &lt;= j &lt; k &lt; nums2.length<br>类型 2：三元组 (i, j, k) ，如果 nums2[i]2 == nums1[j] </em> nums1[k] 其中 0 &lt;= i &lt; nums2.length 且 0 &lt;= j &lt; k &lt; nums1.length</p>
+<p>示例 1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 = [7,4], nums2 = [5,2,8,9]</span><br><span class="line">输出：1</span><br><span class="line">解释：类型 1：(1,1,2), nums1[1]^2 = nums2[1] * nums2[2] (4^2 = 2 * 8)</span><br></pre></td></tr></table></figure>
+<p>示例 2：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 = [1,1], nums2 = [1,1,1]</span><br><span class="line">输出：9</span><br><span class="line">解释：所有三元组都符合题目要求，因为 1^2 = 1 * 1</span><br><span class="line">类型 1：(0,0,1), (0,0,2), (0,1,2), (1,0,1), (1,0,2), (1,1,2), nums1[i]^2 = nums2[j] * nums2[k]</span><br><span class="line">类型 2：(0,0,1), (1,0,1), (2,0,1), nums2[i]^2 = nums1[j] * nums1[k]</span><br></pre></td></tr></table></figure></p>
+<p>示例 3:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 = [7,7,8,3], nums2 = [1,2,9,7]</span><br><span class="line">输出：2</span><br><span class="line">解释：有两个符合题目要求的三元组</span><br><span class="line">类型 1：(3,0,2), nums1[3]^2 = nums2[0] * nums2[2]</span><br><span class="line">类型 2：(3,0,1), nums2[3]^2 = nums1[0] * nums1[1]</span><br></pre></td></tr></table></figure></p>
+<p>示例 4：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums1 = [4,7,9,11,23], nums2 = [3,5,1024,12,18]</span><br><span class="line">输出：0</span><br><span class="line">解释：不存在符合题目要求的三元组</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= nums1.length, nums2.length &lt;= 1000</li>
+<li>1 &lt;= nums1[i], nums2[i] &lt;= 10^5</li>
+</ul>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>比赛时，暴力枚举了，然后超时了3个测试用例。</p>
+<p>首先上来先注意数据范围，1000，一般是n^2或者n^2*logn，可以利用哈希来存储平方结果，然后遍历j，k，达到n^2的时间复杂度。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">helper</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>{</span><br><span class="line">        unordered_map&lt;ll, <span class="type">int</span>&gt; m;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> a : nums1) {</span><br><span class="line">            m[(ll) a * a]++;</span><br><span class="line">        }</span><br><span class="line">        <span class="type">int</span> n = nums2.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = j + <span class="number">1</span>; k &lt; n; k++) {</span><br><span class="line">                res += m[(ll)nums2[j] * nums2[k]];</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numTriplets</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums1, vector&lt;<span class="type">int</span>&gt;&amp; nums2)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">helper</span>(nums1, nums2) + <span class="built_in">helper</span>(nums2, nums1);</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<h3 id="5509-避免重复字母的最小删除成本"><a href="#5509-避免重复字母的最小删除成本" class="headerlink" title="5509. 避免重复字母的最小删除成本"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/contest/weekly-contest-205/problems/minimum-deletion-cost-to-avoid-repeating-letters/">5509. 避免重复字母的最小删除成本</a></h3><p>给你一个字符串 s 和一个整数数组 cost ，其中 cost[i] 是从 s 中删除第 i 个字符的代价。</p>
+<p>返回使字符串任意相邻两个字母不相同的最小删除成本。</p>
+<p>请注意，删除一个字符后，删除其他字符的成本不会改变。</p>
+<p>示例 1：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "abaac", cost = [1,2,3,4,5]</span><br><span class="line">输出：3</span><br><span class="line">解释：删除字母 "a" 的成本为 3，然后得到 "abac"（字符串中相邻两个字母不相同）。</span><br></pre></td></tr></table></figure></p>
+<p>示例 2：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "abc", cost = [1,2,3]</span><br><span class="line">输出：0</span><br><span class="line">解释：无需删除任何字母，因为字符串中不存在相邻两个字母相同的情况。</span><br></pre></td></tr></table></figure></p>
+<p>示例 3:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = "aabaa", cost = [1,2,3,4,1]</span><br><span class="line">输出：2</span><br><span class="line">解释：删除第一个和最后一个字母，得到字符串 ("aba") 。</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>s.length == cost.length</li>
+<li>1 &lt;= s.length, cost.length &lt;= 10^5</li>
+<li>1 &lt;= cost[i] &lt;= 10^4</li>
+<li>s 中只含有小写英文字母</li>
+</ul>
+<h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><ol>
+<li><p>贪心，滑动，一段连续相同字符的区间，就只保留最大的cost，剩下的删掉</p>
+</li>
+<li><p>dp </p>
+</li>
+</ol>
+<p>定义状态：dp[i][k] 考虑了前i个字符（可能删除了一些）满足了题目要求，最后一个字符现在是k的最小代价是多少。</p>
+<p>转移方程：</p>
+<p>对于 s[i] = c</p>
+<p>不删掉: dp[i][c] &lt;- dp[i-1][k] 并且 k != c</p>
+<p>删掉: dp[i][k] &lt;- dp[i-1][k] + cost[i] k为任何字符都可以</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><p>贪心<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minCost</span><span class="params">(string s, vector&lt;<span class="type">int</span>&gt;&amp; cost)</span> </span>{</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">char</span> c =s[<span class="number">0</span>];</span><br><span class="line">        <span class="type">int</span> l = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> r = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="keyword">if</span> (s[i] == c) {</span><br><span class="line">                r++;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                c = s[i];</span><br><span class="line">                res += <span class="built_in">helper</span>(cost, l, r);</span><br><span class="line">                l = i;</span><br><span class="line">                r = i;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        res += <span class="built_in">helper</span>(cost, l, r);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">helper</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;cost, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>{</span><br><span class="line">        <span class="type">int</span>  sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> ( l == r) <span class="keyword">return</span> sum;</span><br><span class="line">        <span class="type">int</span> a = INT_MIN;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = l; i &lt;=r; i++) {</span><br><span class="line">            sum += cost[i];</span><br><span class="line">            a = <span class="built_in">max</span>(cost[i], a);</span><br><span class="line">        }</span><br><span class="line">        sum -= a;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></p>
+<p>dp<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN = <span class="number">1e5</span> + <span class="number">50</span>;</span><br><span class="line"><span class="type">int</span> dp[MAXN][<span class="number">30</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minCost</span><span class="params">(string s, vector&lt;<span class="type">int</span>&gt;&amp; cost)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">length</span>();</span><br><span class="line">        <span class="comment">// 初始化dp数组</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= n; i++) <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; <span class="number">26</span>; k++) dp[i][k] = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; <span class="number">26</span>; k++) dp[<span class="number">0</span>][k] = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++){</span><br><span class="line">            <span class="type">int</span> c = s[i - <span class="number">1</span>] - <span class="string">'a'</span>, v = cost[i - <span class="number">1</span>];</span><br><span class="line">            <span class="comment">// 不删掉的情况</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; <span class="number">26</span>; k++){</span><br><span class="line">                <span class="keyword">if</span> (k == c) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">if</span> (dp[i - <span class="number">1</span>][k] == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">if</span> (dp[i][c] == <span class="number">-1</span> || dp[i][c] &gt; dp[i - <span class="number">1</span>][k]) dp[i][c] = dp[i - <span class="number">1</span>][k];    </span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 删掉的情况</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; <span class="number">26</span>; k++){</span><br><span class="line">                <span class="keyword">if</span> (dp[i - <span class="number">1</span>][k] == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">if</span> (dp[i][k] == <span class="number">-1</span> || dp[i][k] &gt; dp[i - <span class="number">1</span>][k] + v) dp[i][k] = dp[i - <span class="number">1</span>][k] + v;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> ans = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; <span class="number">26</span>; k++){</span><br><span class="line">            <span class="keyword">if</span> (dp[n][k] == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (ans == <span class="number">-1</span> || ans &gt; dp[n][k]) ans = dp[n][k];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></p>
+<h3 id="5510-保证图可完全遍历"><a href="#5510-保证图可完全遍历" class="headerlink" title="5510. 保证图可完全遍历"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/">5510. 保证图可完全遍历</a></h3><p>Alice 和 Bob 共有一个无向图，其中包含 n 个节点和 3  种类型的边：</p>
+<p>类型 1：只能由 Alice 遍历。<br>类型 2：只能由 Bob 遍历。<br>类型 3：Alice 和 Bob 都可以遍历。<br>给你一个数组 edges ，其中 edges[i] = [typei, ui, vi] 表示节点 ui 和 vi 之间存在类型为 typei 的双向边。请你在保证图仍能够被 Alice和 Bob 完全遍历的前提下，找出可以删除的最大边数。如果从任何节点开始，Alice 和 Bob 都可以到达所有其他节点，则认为图是可以完全遍历的。</p>
+<p>返回可以删除的最大边数，如果 Alice 和 Bob 无法完全遍历图，则返回 -1 。</p>
+<p>示例 1：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex1.png" alt><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：n = 4, edges = [[3,1,2],[3,2,3],[1,1,3],[1,2,4],[1,1,2],[2,3,4]]</span><br><span class="line">输出：2</span><br><span class="line">解释：如果删除 [1,1,2] 和 [1,1,3] 这两条边，Alice 和 Bob 仍然可以完全遍历这个图。再删除任何其他的边都无法保证图可以完全遍历。所以可以删除的最大边数是 2 。</span><br></pre></td></tr></table></figure></p>
+<p>示例 2：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex2.png" alt><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：n = 4, edges = [[3,1,2],[3,2,3],[1,1,4],[2,1,4]]</span><br><span class="line">输出：0</span><br><span class="line">解释：注意，删除任何一条边都会使 Alice 和 Bob 无法完全遍历这个图。</span><br></pre></td></tr></table></figure></p>
+<p>示例3：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/09/06/5510ex3.png" alt><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：n = 4, edges = [[3,2,3],[1,1,2],[2,3,4]]</span><br><span class="line">输出：-1</span><br><span class="line">解释：在当前图中，Alice 无法从其他节点到达节点 4 。类似地，Bob 也不能达到节点 1 。因此，图无法完全遍历。</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= n &lt;= 10^5</li>
+<li>1 &lt;= edges.length &lt;= min(10^5, 3 <em> n </em> (n-1) / 2)</li>
+<li>edges[i].length == 3</li>
+<li>1 &lt;= edges[i][0] &lt;= 3</li>
+<li>1 &lt;= edges[i][1] &lt; edges[i][2] &lt;= n</li>
+<li>所有元组 (typei, ui, vi) 互不相同</li>
+</ul>
+<h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p>首先判断Alice和Bob的是不是连通图</p>
+<p>1.考虑单个用户，共有n个结点，产生连通图需要的边数为n-1,假设该用户可以访问的边有m条，那么多余的为m-(n-1)</p>
+<p>2.现在有两个用户，结点为n个，两个用户各自可以访问的边数为p,q（不包含第三种类型的边）,其中第三种类型的边为K1条</p>
+<p>假设最终的连通图用了K2条第三种类型的边（无多余的），有K2&lt;=K1,则有：</p>
+<p>a.对于第一个用户，多余的边为p-(n-1-K2),其中n-1-K2为，对于第一个用户，还需要多少条只有第一个用户可以访问的边才能构成连通图</p>
+<p>b.对于第二个用户，多余的边为q-(n-1-K2)，其中n-1-K2为，对于第二个用户，还需要多少条只有第二个用户可以访问的边才能构成连通图</p>
+<p>那么总的多余边(需删除的)为p-(n-1-K2)+q-(n-1-K2)+(K1-K2) = p+q-2n+2+K1+K2;</p>
+<p>由于K1,p,q,n为定数，所以要想删除的边最多，那么必须要求最终的图中第三种类型的边最多，且无多余</p>
+<p>因此，可以先添加第三条边，先在第三条边中去除多余的，然后再在剩下的各自可以访问的边中去除多余的</p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getRoot</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; par,<span class="type">int</span> x)</span></span>{</span><br><span class="line">        <span class="type">int</span> root = x;</span><br><span class="line">        <span class="keyword">while</span>(par[root]!=root){</span><br><span class="line">            root = par[root];</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">while</span>(par[x]!=root){</span><br><span class="line">            <span class="type">int</span> tmp = par[x];</span><br><span class="line">            par[x] = root;</span><br><span class="line">            x = tmp;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; par,<span class="type">int</span> x,<span class="type">int</span> y)</span></span>{</span><br><span class="line">        <span class="type">int</span> _x = <span class="built_in">getRoot</span>(par,x);</span><br><span class="line">        <span class="type">int</span> _y = <span class="built_in">getRoot</span>(par,y);</span><br><span class="line">        <span class="keyword">if</span>(_x!=_y){</span><br><span class="line">            par[_x]=_y;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxNumEdgesToRemove</span><span class="params">(<span class="type">int</span> n, vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; edges)</span> </span>{</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt;par1 = <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n+<span class="number">1</span>,<span class="number">0</span>);</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt;par2;</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> cnt1 = n,cnt2;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">1</span>;i&lt;=n;i++){</span><br><span class="line">            par1[i] = i;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">//先添加第三种类型的边</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;edges.<span class="built_in">size</span>();i++){</span><br><span class="line">            <span class="keyword">if</span>(edges[i][<span class="number">0</span>]==<span class="number">3</span>){</span><br><span class="line">                <span class="keyword">if</span>(!<span class="built_in">merge</span>(par1,edges[i][<span class="number">1</span>],edges[i][<span class="number">2</span>]))</span><br><span class="line">                    ans++;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    cnt1--;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        par2 = par1;</span><br><span class="line">        cnt2 = cnt1;</span><br><span class="line">        <span class="comment">//再添加其余两种类型的边</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;edges.<span class="built_in">size</span>();i++){</span><br><span class="line">            <span class="keyword">if</span>(edges[i][<span class="number">0</span>]==<span class="number">1</span>){</span><br><span class="line">                <span class="keyword">if</span>(!<span class="built_in">merge</span>(par1,edges[i][<span class="number">1</span>],edges[i][<span class="number">2</span>]))</span><br><span class="line">                    ans++;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    cnt1--;</span><br><span class="line">            }<span class="keyword">else</span> <span class="keyword">if</span>(edges[i][<span class="number">0</span>]==<span class="number">2</span>){</span><br><span class="line">                <span class="keyword">if</span>(!<span class="built_in">merge</span>(par2,edges[i][<span class="number">1</span>],edges[i][<span class="number">2</span>]))</span><br><span class="line">                    ans++;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    cnt2--;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span>(cnt1!=<span class="number">1</span>||cnt2!=<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+      </div>
+      
+      
+      
+    </div>
+    
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#5507-%E6%9B%BF%E6%8D%A2%E6%89%80%E6%9C%89%E7%9A%84%E9%97%AE%E5%8F%B7"><span class="nav-number">1.</span> <span class="nav-text">5507. 替换所有的问号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5508-%E6%95%B0%E7%9A%84%E5%B9%B3%E6%96%B9%E7%AD%89%E4%BA%8E%E4%B8%A4%E6%95%B0%E4%B9%98%E7%A7%AF%E7%9A%84%E6%96%B9%E6%B3%95%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">5508. 数的平方等于两数乘积的方法数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">5.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">6.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5509-%E9%81%BF%E5%85%8D%E9%87%8D%E5%A4%8D%E5%AD%97%E6%AF%8D%E7%9A%84%E6%9C%80%E5%B0%8F%E5%88%A0%E9%99%A4%E6%88%90%E6%9C%AC"><span class="nav-number">7.</span> <span class="nav-text">5509. 避免重复字母的最小删除成本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-2"><span class="nav-number">8.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="nav-number">9.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5510-%E4%BF%9D%E8%AF%81%E5%9B%BE%E5%8F%AF%E5%AE%8C%E5%85%A8%E9%81%8D%E5%8E%86"><span class="nav-number">10.</span> <span class="nav-text">5510. 保证图可完全遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-3"><span class="nav-number">11.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="nav-number">12.</span> <span class="nav-text">代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">书写是对思维的缓存</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">293k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xl0dCw4B0ewo6hdaDLfUhpQ2-9Nh9j0Va',
+      appKey     : 'To4mX7CgnCwpmrdnshxRlVPm',
+      placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

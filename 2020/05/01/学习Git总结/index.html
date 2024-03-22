@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-atom.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="针对学习Git的操作命令进行了一个总结。具体如下面这张思维导图，记录一下提纲，方便自己建立完整的Git知识体系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习Git总结">
+<meta property="og:url" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="针对学习Git的操作命令进行了一个总结。具体如下面这张思维导图，记录一下提纲，方便自己建立完整的Git知识体系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/1.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/2.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/3.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/4.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/5.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/6.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/7.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/8.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/9.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/11.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/10.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/12.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/14.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/13.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/15.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/16.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/17.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/18.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/19.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/20.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/21.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/22.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/23.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/24.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/25.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/26.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/27.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/28.jpg">
+<meta property="article:published_time" content="2020-05-01T09:40:52.000Z">
+<meta property="article:modified_time" content="2020-05-01T09:40:52.000Z">
+<meta property="article:author" content="Bryce">
+<meta property="article:tag" content="Git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/1.png">
+
+<link rel="canonical" href="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>学习Git总结 | Bryce's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          学习Git总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-01 17:40:52" itemprop="dateCreated datePublished" datetime="2020-05-01T17:40:52+08:00">2020-05-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>针对学习Git的操作命令进行了一个总结。具体如下面这张思维导图，记录一下提纲，方便自己建立完整的Git知识体系。</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/1.png" alt></p>
+<span id="more"></span>
+<h2 id="一、-原理"><a href="#一、-原理" class="headerlink" title="一、 原理"></a>一、 原理</h2><h3 id="1-三个工作区"><a href="#1-三个工作区" class="headerlink" title="1. 三个工作区"></a>1. 三个工作区</h3><p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/2.jpg" alt></p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/3.jpg" alt></p>
+<h3 id="2-常用命令"><a href="#2-常用命令" class="headerlink" title="2. 常用命令"></a>2. 常用命令</h3><p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/4.jpg" alt></p>
+<h2 id="二、-操作"><a href="#二、-操作" class="headerlink" title="二、 操作"></a>二、 操作</h2><h3 id="1-设置"><a href="#1-设置" class="headerlink" title="1. 设置"></a>1. 设置</h3><ul>
+<li><p>git init</p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/5.jpg" alt></p>
+<ul>
+<li>在LearnGit目录下创建一个版本库该目录下的所有内容都会被作为版本库的组成，会默认创建一个隐藏的.git目录，用来存放版本库的全部原数据。</li>
+</ul>
+</li>
+<li><p>git config</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;bryceustc&quot;</span><br><span class="line">git config --global user.mail bryce@mail.ustc.edu.cn</span><br></pre></td></tr></table></figure>
+<p>  用来对本地版本库进行一些设置  比如本地版本库的拥有者是谁 联系方式是怎样的<br>  也就是这两个参数 :user.name和user.email </p>
+<ol>
+<li>仅这两个全局变量值是必须设置的。但所有可设置的值超过130个。其中大部分都很少用得上。</li>
+<li><p>命令中global的意思是 把这个设置应用于本地计算机的所有地方，也就是说你在本地所有地方建立的版本库拥有者和联系方式都是这个</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/6.jpg" alt></p>
+<p>可以用命令<code>git config --global --list</code>来看一下上面设置的一些属性</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="2-编辑"><a href="#2-编辑" class="headerlink" title="2. 编辑"></a>2. 编辑</h3><ul>
+<li><p>git add</p>
+<ul>
+<li><p>这个命令的功能是将文件添加到暂存区</p>
+<p>  可以有两种方式去去使用</p>
+<p>  一种是通过直接git add 的方式把要添加的文件跟在后面 也就是通过命令行的方式</p>
+<p>  一种是通过git add -i的方式调出交互式接口来使用 更多子命令功能更丰富<br>  这里只说第一种方式的使用</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/7.jpg" alt></p>
+</li>
+<li><p>在目录下建立文件README.md 内容如上</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/8.jpg" alt></p>
+</li>
+<li><p>输入 git add README.md 即可。如果没有任何提示说明已经添加成功了</p>
+</li>
+</ul>
+</li>
+<li><p>git commit</p>
+<ul>
+<li><p>把修改后的文件从本地暂存区 提交到 本地仓库 (注意不是远程仓库)<br>使用git commit 提交缓冲区文件到本地仓库的时候必须写好备注 也就是说明提交的原因 也就是得加上-m参数  像下面这样<br>这样默认会把暂存区所有的文件都推到本地仓库</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit-m&quot; first commit&quot;</span><br></pre></td></tr></table></figure>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/9.jpg" alt></p>
+</li>
+<li><p>如果只是想把暂存区部分文件推到本地仓库可以在后面加上你要推的指定的文件名</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m&quot;first commit &quot;  test3.txt</span><br></pre></td></tr></table></figure></li>
+<li><p>git commit -C HEAD -a —amend这个命令的功能是在想改进上次提交里面的某些错误</p>
+<p> -C 参数表示就采用和上次提交一样的备注</p>
+<p> HEAD参数表示提交名称</p>
+<p> -a表示提交所有暂存区的文件</p>
+<p> —amend就是表示把改动融合进上次的提交里面</p>
+</li>
+</ul>
+</li>
+<li><p>git status</p>
+<ul>
+<li><p>没有git add</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/11.jpg" alt></p>
+</li>
+<li><p>git add 以后</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/10.jpg" alt></p>
+</li>
+<li><p>git commit 以后</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/12.jpg" alt></p>
+</li>
+<li><p>删除工作区文件之后</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/14.jpg" alt></p>
+</li>
+<li><p>改动工作区文件以后</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/13.jpg" alt><br><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/15.jpg" alt></p>
+</li>
+</ul>
+</li>
+<li><p>git diff</p>
+<ul>
+<li><p>改动工作区文件以后</p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/16.jpg" alt></p>
+</li>
+<li><p>git diff 不加参数 </p>
+<p>  （1）当暂存区中没有文件时，git diff比较的是，工作区中的文件与上次提交到版本库中的文件。</p>
+<p>  （2）当暂存区中有文件时，git diff则比较的是，当前工作区中的文件与暂存区中的文件。</p>
+</li>
+<li>git  diff —cached 比较暂存区和本地仓库文件的区别</li>
+<li>git diff HEAD 比较的是工作区中的文件与版本库中文件的差异(当前分支上)  </li>
+<li>git diff new 将当前分支和指定分支new对比</li>
+</ul>
+</li>
+<li><p>git mv </p>
+<ul>
+<li><p>git mv  把工作区的文件重命名或者移动 </p>
+<p>比如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git  mv  README.md </span><br><span class="line">git mv readme.md</span><br></pre></td></tr></table></figure></li>
+<li><p>你也可以不用git mv </p>
+<p>  直接在操作系统下鼠标操作移动或者重命名但是这样的话你得重新git add 然后git commit 而用了git mv 的话只要git commit就可以了 </p>
+</li>
+</ul>
+</li>
+<li><p>git rm</p>
+<ul>
+<li>git rm  把工作区的文件删除<br>  比如  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git  rm  readme.md</span><br></pre></td></tr></table></figure></li>
+<li><p>你也可以不用git rm</p>
+<p>  直接在操作系统下鼠标操作删除但是这样的话你得重新git add 然后git commit 而用了git rm 的话只要git commit就可以了 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-日志"><a href="#3-日志" class="headerlink" title="3. 日志"></a>3. 日志</h3><ul>
+<li><p>git log</p>
+<ul>
+<li><p>git log 47f9e8e 传递一个指定的版本，并以此作为查看日志的起始点（查看从那时起到现在的全部提交）</p>
+</li>
+<li><p>git log —since=”5 hours”查看最近5小时内的提交</p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/17.jpg" alt></p>
+<p>  git log 可以显示提交的日志项，包括是谁，何时做的提交，以及本次提交的具体代码改动（可选的）等信息 按照时间倒序显示 后面可以通过设置各种各样的参数来过滤日志</p>
+<p>  每个提交有四部分信息：提交名称、提交人、提交日期、提交留言</p>
+</li>
+<li><p>git log —before=”5 hours” -1来查看5小时之前的最后一个</p>
+</li>
+<li><p>git log 47f9e8e..440b963用“最老版本..最新版本”这种格式作为查找范围。最老版本在前，最新版本在后</p>
+</li>
+</ul>
+</li>
+<li><p>git reset</p>
+<p>  git reset —hard HEAD  回退到head之前的那一个版本</p>
+<p>  git reset —hard HEAD^  回退到head之前在之前的一个版本</p>
+<p>  git reset —hard 版本库ID  回退到版本库ID的那个版本</p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/18.jpg" alt></p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/19.jpg" alt></p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/20.jpg" alt></p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/21.jpg" alt></p>
+<p>  Git reset 命令有三个主要选项：git reset —soft; git reset —mixed; git reset —hard;</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --soft</span><br></pre></td></tr></table></figure>
+<p>  将HEAD引用指向给定提交。索引（暂存区）和工作目录的内容是不变的，在三个命令中对现有版本库状态改动最小。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --mixed（git reset默认的模式）</span><br></pre></td></tr></table></figure>
+<p>  HEAD引用指向给定提交，并且索引（暂存区）内容也跟着改变，工作目录内容不变。这个命令会将索引（暂存区）变成你刚刚暂存该提交全部变化时的状态，会显示工作目录中有什么修改。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard</span><br></pre></td></tr></table></figure>
+<p>  HEAD引用指向给定提交，索引（暂存区）内容和工作目录内容都会变给定提交时的状态。也就是在给定提交后所修改的内容都会丢失(新文件会被删除，不在工作目录中的文件恢复，未清除回收站的前提)。</p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/22.jpg" alt></p>
+</li>
+<li><p>git revert</p>
+</li>
+</ul>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/23.jpg" alt></p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/24.png" alt></p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/25.png" alt></p>
+<p><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/26.jpg" alt></p>
+<h3 id="4-分支"><a href="#4-分支" class="headerlink" title="4. 分支"></a>4. 分支</h3><ul>
+<li><p>分支的介绍</p>
+<p>  在项目开发的过程中 有时需要添加新功能 测试新算法  修正新bug 如果只有一条版本演进的轨迹 则很难实现，故需要引入多条分支来开发</p>
+</li>
+<li><p>git branch</p>
+<ul>
+<li><p>git branch -m master mymaster 分支重命名</p>
+</li>
+<li><p>git branch 查看当前分支</p>
+</li>
+<li><p>git branch mybranch 创建一个新分支 mybranch</p>
+</li>
+<li><p>git branch -r 显示远程分支</p>
+</li>
+<li><p>git branch -d mybranch 删除分支mybranch 只有当要删除的分支</p>
+<p>  已经成功合并到当前分支时删除才会成功  可以把小写的d改成大写的D这样就不会检查 强行删除</p>
+</li>
+</ul>
+</li>
+<li><p>git checkout</p>
+<ul>
+<li><p>git checkout mybranch   切换到新分支 mybranch</p>
+</li>
+<li><p>git checkout -b mybranch  创建并切换到新分支mybranch</p>
+</li>
+<li><p>git checkout -b mybranch master   基于主分支上创建并切换到新分支mybranch</p>
+</li>
+</ul>
+</li>
+<li><p>git merge</p>
+<ul>
+<li><p>git merge mybranch  把分支mybranch合并到当前分支上 </p>
+<p>  当mybranch添加内容会添加到当前分支上  在mybranch中删除的内容在当前分支也会删除 但是当两个分支在同一个文件的同一行发生差异时 合并时就会发生冲突 从而也就不能自动合并得人工处理</p>
+<p>  <img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/27.jpg" alt></p>
+<p>  分支冲突处理:Git不能自动合并时，称之为冲突(conflict）。冲突总是发生在对不同分支上的同一文件的同一文本块以不同的方式修改，并试图合并的时候,它就会停下来等待人工处理。</p>
+<p>  比如在master 分支下commit了一个readme.md文件<br>  在new1分支下也commit了一个readme.md文件<br>  这两个文件在第2行是不同的<br>  这个时候你跳到master分支上用git merge new1 就会发生冲突<br>  而且在本地生成一个需要你修改的临时文件<br>  你需要对他进行修改，改成你觉得合适的结果<br>  然后git add ,git commit -m就完成了合并</p>
+<p>  <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.jianshu.com/p/7b2d2cd0f308">参考Git 合并冲突处理</a></p>
+</li>
+<li><p>git merge —squash mybranch   略</p>
+</li>
+</ul>
+</li>
+<li><p>git rebase <a target="_blank" rel="noopener external nofollow noreferrer" href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA">变基</a></p>
+</li>
+<li><p>git cherry-pick</p>
+</li>
+</ul>
+<h3 id="5-协作"><a href="#5-协作" class="headerlink" title="5. 协作"></a>5. 协作</h3><ul>
+<li><p>git clone</p>
+<ul>
+<li><p>git clone <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc/bryceustc.github.io.git">https://github.com/bryceustc/bryceustc.github.io.git</a></p>
+<p>  从远程库克隆到本地工作区</p>
+</li>
+<li><p>git clone —recursive  <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc/bryceustc.github.io.git">https://github.com/bryceustc/bryceustc.github.io.git</a></p>
+<p>  若需要克隆含有子模块的仓库，直接 进行克隆是无法拉取之模块的代码，可加上 —recursive 参数</p>
+</li>
+<li><p>git submodule update —init —recursive</p>
+<p>  如果不确定子模块是否已经下载完全了 执行这个命令确认一下</p>
+</li>
+<li><p>git clone -b dev_jk <a target="_blank" rel="noopener external nofollow noreferrer" href="http://10.1.1.11/service/tmall-service.git">http://10.1.1.11/service/tmall-service.git</a><br>克隆指定分支</p>
+</li>
+</ul>
+</li>
+<li><p>git remote </p>
+<ul>
+<li><p>给指定的远程库地址设置一个别名，不然的话每次push/pull都得把完整的一大串地址写下来</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin https://github.com/bryceustc/bryceustc.github.io.git</span><br></pre></td></tr></table></figure>
+<p>  把远程库地址指定一个别名为origin</p>
+<p>  关于远程分支名前面的前缀origin/表示远程版本库上的分支名称，<br>  用于区别本地分支名称。<br>  而origin是默认的远程版本库别名，即克隆时指定的远程版本库</p>
+</li>
+<li><p>使用不带任何参数的git remote命令，可以查看本地创建的全部远程版本库别名</p>
+</li>
+<li><p>使用git remote show <name>命令可以查看某个远程版本库的详细信息<br><img src="/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/28.jpg" alt></name></p>
+</li>
+<li><p>如果不再需要某个远程版本库的别名，或者想用这个别名称呼其他远程版本<br>库，则可以使用git remote rm命令先删除该别名。</p>
+</li>
+</ul>
+</li>
+<li><p>git fetch</p>
+<ul>
+<li><p>git fetch 相当于是从远程获取最新到本地，不会自动merge，如下指令：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin master:tmp //从远程仓库master分支获取最新，在本地建立tmp分支</span><br><span class="line">git diff tmp //將當前分支和tmp進行對比</span><br><span class="line">git merge tmp //合并tmp分支到当前分支</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基于rebase的合并方式，与merge的主要区别在于git log上：是否保留分支的commit提交节点 。rebase其实就是寻找公共祖先，具体理解可参考<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.jianshu.com/p/f23f72251abc">这里</a></p>
+</li>
+</ul>
+</li>
+<li><p>git pull</p>
+<ul>
+<li><p>git pull是相当于从远程仓库获取最新版本，然后再与本地分支合并。</p>
+<p>  git pull = git fetch + git merge(默认是用merge 加-r参数变可以合并方式改成rebase)</p>
+</li>
+<li>git pull origin master 把远程的master分支拉取并用merge的方式合并到本地分支上</li>
+<li>git pull origin master:new 把远程的master分支拉取并用merge合并到本地的new分支上</li>
+<li>git pull  -r origin master:new 把远程的master分支拉取并用rebase的方式合并到本地的new分支上</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>git push</p>
+<ul>
+<li>git push origin  master 把本地master分支推到对应的远程库(origin)的master分支  如果远程库分支不存在 将会新建</li>
+<li>git push origin new把本地new分支推到对应的远程库(origin)的new分支  如果远程库分支不存在 将会新建</li>
+<li>git push origin new:远端分支 把本地的new分支推到对应远程库(origin)的指定名字的远端分支 如果不存在将会新建</li>
+<li>git push origin :远端分支    删除远程库的指定远端分支 因为这样相当与推送一个空的分支到指定的远端分支 </li>
+<li>git push origin —delete 远端分支名 等同于上面那条命令</li>
+<li>git push -u origin new 把本地分支new推到远端主机的对应new分支 同时把origin设定为new分支对应的默认主机 这样的话就下次就可以不用加参数直接用git push 就可以把当前分支推送到默认主机的对应分支</li>
+<li>git push —set-upstream origin new   把origin设定为new分支对应的默认主机 这样的话就下次就可以不用加参数直接用git push 就可以把当前分支推送到默认主机的对应分支</li>
+<li>git push origin 把当前分支推送到origin主机的对应分支</li>
+<li>git push -all origin 将本地所有分支都推送到远程分支</li>
+<li>git push  —force origin   当本地分支的版本小于远端分支的时候 push会出错会提示你将远程的的分支拉下来先处理矛冲突载push  这个时候可以强行push也就是加—force命令 也可以简写为git push -f</li>
+<li>git push origin —tags 加上—tags选项可以推送标签</li>
+</ul>
+</li>
+<li><p>push冲突处理</p>
+<ul>
+<li><p>当你git push 的时候在可能会发生冲突 导致push失败  </p>
+<p>  冲突发生的原因</p>
+<p>  情况一:在你提交之前 别人已经在同一个文件的同一个地方进行了修改 </p>
+<p>  情况二:你提交的本地库的版本号落后于远程版本库</p>
+</li>
+<li><p>冲突处理的方法:</p>
+<p>  方法一:在用git pull  把远程库的文件拉下来 如果不能进行自动合并 则在本地手动合并发生发生冲突的文件 合并完成以后再进行git push就行了</p>
+<p>  方法二: 直接用git  push -f 直接用本地库强制覆盖远程库</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="三、-实战"><a href="#三、-实战" class="headerlink" title="三、 实战"></a>三、 实战</h2><ul>
+<li><p>git clone</p>
+</li>
+<li><p>git init</p>
+</li>
+<li><p>git remote add</p>
+</li>
+<li><p>git pull</p>
+</li>
+<li><p>git branch 创建自己的开发分支</p>
+</li>
+<li><p>开始编码</p>
+</li>
+<li><p>git add</p>
+</li>
+<li><p>git  commit</p>
+</li>
+<li><p>git push</p>
+</li>
+<li><p>在github界面执行合并</p>
+<p>  把你更改的分支和目标分支合并等待管理员通过</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>喜欢你就打赏一下</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Bryce 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Bryce
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bryceustc.github.io/2020/05/01/%E5%AD%A6%E4%B9%A0Git%E6%80%BB%E7%BB%93/" title="学习Git总结">https://bryceustc.github.io/2020/05/01/学习Git总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Git/" rel="tag"><i class="fa fa-tag"></i> Git</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/29/2020%E6%8B%9B%E5%95%86%E9%93%B6%E8%A1%8CFintech%E8%AE%AD%E7%BB%83%E8%90%A5%E7%A0%94%E5%8F%91%E8%B5%9B%E9%81%93%E9%A2%98%E7%9B%AE%E6%80%BB%E7%BB%93/" rel="prev" title="2020招商银行Fintech训练营研发赛道题目总结">
+      <i class="fa fa-chevron-left"></i> 2020招商银行Fintech训练营研发赛道题目总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/02/%E6%90%AD%E5%BB%BA%E8%BD%BB%E9%87%8F%E7%BA%A7Web%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%B8%80/" rel="next" title="搭建轻量级Web服务器<一>">
+      搭建轻量级Web服务器<一> <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">一、 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%89%E4%B8%AA%E5%B7%A5%E4%BD%9C%E5%8C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">1. 三个工作区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.</span> <span class="nav-text">2. 常用命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">二、 操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">1. 设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%BC%96%E8%BE%91"><span class="nav-number">2.2.</span> <span class="nav-text">2. 编辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%97%A5%E5%BF%97"><span class="nav-number">2.3.</span> <span class="nav-text">3. 日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%86%E6%94%AF"><span class="nav-number">2.4.</span> <span class="nav-text">4. 分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%8D%8F%E4%BD%9C"><span class="nav-number">2.5.</span> <span class="nav-text">5. 协作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81-%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">三、 实战</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">书写是对思维的缓存</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">293k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xl0dCw4B0ewo6hdaDLfUhpQ2-9Nh9j0Va',
+      appKey     : 'To4mX7CgnCwpmrdnshxRlVPm',
+      placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

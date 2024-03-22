@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-atom.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1、Hadoop Pipes简介Hadoop Pipes是Hadoop MapReduce的C++接口代称。不同于使用标准输入和输出来实现的map代码和reduce代码之间的Streaming编程，Pipes使用Socket作为TaskTracker与C++进程之间数据传输的通道，数据传输为字节流。 2、Hadoop Pipes编程初探Hadoop Pipes可供开发者编写RecordReader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop Pipes编程">
+<meta property="og:url" content="https://bryceustc.github.io/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="1、Hadoop Pipes简介Hadoop Pipes是Hadoop MapReduce的C++接口代称。不同于使用标准输入和输出来实现的map代码和reduce代码之间的Streaming编程，Pipes使用Socket作为TaskTracker与C++进程之间数据传输的通道，数据传输为字节流。 2、Hadoop Pipes编程初探Hadoop Pipes可供开发者编写RecordReader">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-10T06:14:05.000Z">
+<meta property="article:modified_time" content="2023-12-10T06:14:05.000Z">
+<meta property="article:author" content="Bryce">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bryceustc.github.io/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hadoop Pipes编程 | Bryce's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hadoop Pipes编程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-12-10 14:14:05" itemprop="dateCreated datePublished" datetime="2023-12-10T14:14:05+08:00">2023-12-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop-Pipes/" itemprop="url" rel="index"><span itemprop="name">Hadoop Pipes</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1、Hadoop-Pipes简介"><a href="#1、Hadoop-Pipes简介" class="headerlink" title="1、Hadoop Pipes简介"></a>1、Hadoop Pipes简介</h1><p>Hadoop Pipes是Hadoop MapReduce的C++接口代称。不同于使用标准输入和输出来实现的map代码和reduce代码之间的Streaming编程，Pipes使用Socket作为TaskTracker与C++进程之间数据传输的通道，数据传输为字节流。</p>
+<h1 id="2、Hadoop-Pipes编程初探"><a href="#2、Hadoop-Pipes编程初探" class="headerlink" title="2、Hadoop Pipes编程初探"></a>2、Hadoop Pipes编程初探</h1><p>Hadoop Pipes可供开发者编写RecordReader、Mapper、Partitioner、Reducer、RecordWriter五个组件，当然，也可以自定义Combiner。</p>
+<p>WordCount.cc 示例，也可以参考该git项目<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/alexanderkoumis/hadoop-wordcount-cpp/tree/master：">https://github.com/alexanderkoumis/hadoop-wordcount-cpp/tree/master：</a></p>
+<span id="more"></span>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;/usr/local/hadoop/include/Pipes.hh&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;/usr/local/hadoop/include/TemplateFactory.hh&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;/usr/local/hadoop/include/StringUtils.hh&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> std::string WORDCOUNT = <span class="string">&quot;WORDCOUNT&quot;</span>;</span><br><span class="line"><span class="type">const</span> std::string INPUT_WORDS = <span class="string">&quot;INPUT_WORDS&quot;</span>;</span><br><span class="line"><span class="type">const</span> std::string OUTPUT_WORDS = <span class="string">&quot;OUTPUT_WORDS&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountMap</span>: <span class="keyword">public</span> HadoopPipes::Mapper &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  HadoopPipes::TaskContext::Counter* inputWords;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">WordCountMap</span>(HadoopPipes::TaskContext&amp; context) &#123;</span><br><span class="line">    inputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, INPUT_WORDS);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">map</span><span class="params">(HadoopPipes::MapContext&amp; context)</span> </span>&#123;</span><br><span class="line">    std::vector&lt;std::string&gt; words = </span><br><span class="line">      HadoopUtils::<span class="built_in">splitString</span>(context.<span class="built_in">getInputValue</span>(), <span class="string">&quot; &quot;</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i=<span class="number">0</span>; i &lt; words.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">      context.<span class="built_in">emit</span>(words[i], <span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(inputWords, words.<span class="built_in">size</span>());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountReduce</span>: <span class="keyword">public</span> HadoopPipes::Reducer &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  HadoopPipes::TaskContext::Counter* outputWords;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountReduce</span>(HadoopPipes::TaskContext&amp; context) &#123;</span><br><span class="line">    outputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, OUTPUT_WORDS);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reduce</span><span class="params">(HadoopPipes::ReduceContext&amp; context)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (context.<span class="built_in">nextValue</span>()) &#123;</span><br><span class="line">      sum += HadoopUtils::<span class="built_in">toInt</span>(context.<span class="built_in">getInputValue</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    context.<span class="built_in">emit</span>(context.<span class="built_in">getInputKey</span>(), HadoopUtils::<span class="built_in">toString</span>(sum));</span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(outputWords, <span class="number">1</span>); </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> HadoopPipes::<span class="built_in">runTask</span>(HadoopPipes::<span class="built_in">TemplateFactory</span>&lt;WordCountMap, WordCountReduce&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意与hadoop pipes 相关的文件放在了目录：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/hadoop/include/</span><br></pre></td></tr></table></figure></p>
+<p>主要的文件为Pipes.hh，该头文件定义了一些抽象类，除去开发者需要编写的五大组件之外，还有JobConf、TaskContext、Closeable、Factory四个。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Task context provides the information about the task and job.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TaskContext</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Counter to keep track of a property and its value.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">class</span> <span class="title class_">Counter</span> &#123;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> id;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Counter</span>(<span class="type">int</span> counterId) : <span class="built_in">id</span>(counterId) &#123;&#125;</span><br><span class="line">    <span class="built_in">Counter</span>(<span class="type">const</span> Counter&amp; counter) : <span class="built_in">id</span>(counter.id) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getId</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> id; &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the JobConf for the current task.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> JobConf* <span class="title">getJobConf</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the current key.</span></span><br><span class="line"><span class="comment">   * @return the current key</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> std::string&amp; <span class="title">getInputKey</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the current value.</span></span><br><span class="line"><span class="comment">   * @return the current value</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> std::string&amp; <span class="title">getInputValue</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Generate an output record</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">emit</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">const</span> std::string&amp; value)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Mark your task as having made progress without changing the status</span></span><br><span class="line"><span class="comment">   * message.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">progress</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Set the status message and call progress.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">setStatus</span><span class="params">(<span class="type">const</span> std::string&amp; status)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Register a counter with the given group and name.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> Counter*</span></span><br><span class="line"><span class="function">    <span class="title">getCounter</span><span class="params">(<span class="type">const</span> std::string&amp; group, <span class="type">const</span> std::string&amp; name)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Increment the value of the counter with the given amount.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">incrementCounter</span><span class="params">(<span class="type">const</span> Counter* counter, <span class="type">uint64_t</span> amount)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">TaskContext</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MapContext</span>: <span class="keyword">public</span> TaskContext &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Access the InputSplit of the mapper.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> std::string&amp; <span class="title">getInputSplit</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the name of the key class of the input to this task.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> std::string&amp; <span class="title">getInputKeyClass</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the name of the value class of the input to this task.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> std::string&amp; <span class="title">getInputValueClass</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ReduceContext</span>: <span class="keyword">public</span> TaskContext &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Advance to the next value.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">nextValue</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>JobConf：开发者可以通过获得任务的属性<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">JobConf</span> &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">hasKey</span><span class="params">(<span class="type">const</span> std::string&amp; key)</span> <span class="type">const</span> </span>= <span class="number">0</span>;  </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">const</span> std::string&amp; <span class="title">get</span><span class="params">(<span class="type">const</span> std::string&amp; key)</span> <span class="type">const</span> </span>= <span class="number">0</span>;  </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">getInt</span><span class="params">(<span class="type">const</span> std::string&amp; key)</span> <span class="type">const</span> </span>= <span class="number">0</span>;  </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">float</span> <span class="title">getFloat</span><span class="params">(<span class="type">const</span> std::string&amp; key)</span> <span class="type">const</span> </span>= <span class="number">0</span>;  </span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">getBoolean</span><span class="params">(<span class="type">const</span> std::string&amp;key)</span> <span class="type">const</span> </span>= <span class="number">0</span>;  </span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">JobConf</span>() &#123;&#125;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>Closeable：这个抽象类Mapper、Reducer、RecordReader、RecordWriter的基类，只有两个方法，一个close()，一个析构函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Closable</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">Closable</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The application&#x27;s mapper class to do map.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Mapper</span>: <span class="keyword">public</span> Closable &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">map</span><span class="params">(MapContext&amp; context)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The application&#x27;s reducer class to do reduce.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Reducer</span>: <span class="keyword">public</span> Closable &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">reduce</span><span class="params">(ReduceContext&amp; context)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * For applications that want to read the input directly for the map function</span></span><br><span class="line"><span class="comment"> * they can define RecordReaders in C++.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RecordReader</span>: <span class="keyword">public</span> Closable &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">next</span><span class="params">(std::string&amp; key, std::string&amp; value)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * The progress of the record reader through the split as a value between</span></span><br><span class="line"><span class="comment">   * 0.0 and 1.0.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">float</span> <span class="title">getProgress</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An object to write key/value pairs as they are emited from the reduce.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RecordWriter</span>: <span class="keyword">public</span> Closable &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">emit</span><span class="params">(<span class="type">const</span> std::string&amp; key,</span></span></span><br><span class="line"><span class="params"><span class="function">                    <span class="type">const</span> std::string&amp; value)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Factory：一个抽象工厂，用来创建各个组件，是模板工厂的基类，具体的可以参见TemplateFactory.hh。开发者在调用runTask时，创建相应的Factory传入即可。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A factory to create the necessary application objects.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> Mapper* <span class="title">createMapper</span><span class="params">(MapContext&amp; context)</span> <span class="type">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> Reducer* <span class="title">createReducer</span><span class="params">(ReduceContext&amp; context)</span> <span class="type">const</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Create a combiner, if this application has one.</span></span><br><span class="line"><span class="comment">   * @return the new combiner or NULL, if one is not needed</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> Reducer* <span class="title">createCombiner</span><span class="params">(MapContext&amp; context)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Create an application partitioner object.</span></span><br><span class="line"><span class="comment">   * @return the new partitioner or NULL, if the default partitioner should be</span></span><br><span class="line"><span class="comment">   *     used.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> Partitioner* <span class="title">createPartitioner</span><span class="params">(MapContext&amp; context)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Create an application record reader.</span></span><br><span class="line"><span class="comment">   * @return the new RecordReader or NULL, if the Java RecordReader should be</span></span><br><span class="line"><span class="comment">   *    used.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> RecordReader* <span class="title">createRecordReader</span><span class="params">(MapContext&amp; context)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Create an application record writer.</span></span><br><span class="line"><span class="comment">   * @return the new RecordWriter or NULL, if the Java RecordWriter should be</span></span><br><span class="line"><span class="comment">   *    used.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> RecordWriter* <span class="title">createRecordWriter</span><span class="params">(ReduceContext&amp; context)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Run the assigned task in the framework.</span></span><br><span class="line"><span class="comment"> * The user&#x27;s main function should set the various functions using the</span></span><br><span class="line"><span class="comment"> * set* functions above and then call this.</span></span><br><span class="line"><span class="comment"> * @return true, if the task succeeded.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">runTask</span><span class="params">(<span class="type">const</span> Factory&amp; factory)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="3、Hadoop-Pipes编程"><a href="#3、Hadoop-Pipes编程" class="headerlink" title="3、Hadoop Pipes编程"></a>3、Hadoop Pipes编程</h1><p>有了以上的基础知识，就可以开始编写MapReduce任务了。我们可以直接从examples着手，先来看看wordcount.cc。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// wordcount-simple.cc -&gt; Mapper &amp; Reducer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountMap</span>: <span class="keyword">public</span> HadoopPipes::Mapper &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* inputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountMap</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    inputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, INPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">map</span><span class="params">(HadoopPipes::MapContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    std::vector&lt;std::string&gt; words =   </span><br><span class="line">      HadoopUtils::<span class="built_in">splitString</span>(context.<span class="built_in">getInputValue</span>(), <span class="string">&quot; &quot;</span>);  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i=<span class="number">0</span>; i &lt; words.<span class="built_in">size</span>(); ++i) &#123;  </span><br><span class="line">      context.<span class="built_in">emit</span>(words[i], <span class="string">&quot;1&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(inputWords, words.<span class="built_in">size</span>());  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountReduce</span>: <span class="keyword">public</span> HadoopPipes::Reducer &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* outputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountReduce</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    outputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, OUTPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reduce</span><span class="params">(HadoopPipes::ReduceContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">while</span> (context.<span class="built_in">nextValue</span>()) &#123;  </span><br><span class="line">      sum += HadoopUtils::<span class="built_in">toInt</span>(context.<span class="built_in">getInputValue</span>());  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">emit</span>(context.<span class="built_in">getInputKey</span>(), HadoopUtils::<span class="built_in">toString</span>(sum));  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(outputWords, <span class="number">1</span>);   </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">该任务编写了两个主要组件，mapper与reducer。要实现这两个组件需要继承相应的基类。基类声明如下：</span><br><span class="line"></span><br><span class="line">```c++</span><br><span class="line"><span class="comment">// wordcount-simple.cc -&gt; Mapper &amp; Reducer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountMap</span>: <span class="keyword">public</span> HadoopPipes::Mapper &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* inputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountMap</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    inputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, INPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">map</span><span class="params">(HadoopPipes::MapContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    std::vector&lt;std::string&gt; words =   </span><br><span class="line">      HadoopUtils::<span class="built_in">splitString</span>(context.<span class="built_in">getInputValue</span>(), <span class="string">&quot; &quot;</span>);  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i=<span class="number">0</span>; i &lt; words.<span class="built_in">size</span>(); ++i) &#123;  </span><br><span class="line">      context.<span class="built_in">emit</span>(words[i], <span class="string">&quot;1&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(inputWords, words.<span class="built_in">size</span>());  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountReduce</span>: <span class="keyword">public</span> HadoopPipes::Reducer &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* outputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountReduce</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    outputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, OUTPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reduce</span><span class="params">(HadoopPipes::ReduceContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">while</span> (context.<span class="built_in">nextValue</span>()) &#123;  </span><br><span class="line">      sum += HadoopUtils::<span class="built_in">toInt</span>(context.<span class="built_in">getInputValue</span>());  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">emit</span>(context.<span class="built_in">getInputKey</span>(), HadoopUtils::<span class="built_in">toString</span>(sum));  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(outputWords, <span class="number">1</span>);   </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">该任务编写了两个主要组件，mapper与reducer。要实现这两个组件需要继承相应的基类。基类声明如下：</span><br><span class="line"></span><br><span class="line">```c++</span><br><span class="line"><span class="comment">// wordcount-simple.cc -&gt; Mapper &amp; Reducer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountMap</span>: <span class="keyword">public</span> HadoopPipes::Mapper &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* inputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountMap</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    inputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, INPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">map</span><span class="params">(HadoopPipes::MapContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    std::vector&lt;std::string&gt; words =   </span><br><span class="line">      HadoopUtils::<span class="built_in">splitString</span>(context.<span class="built_in">getInputValue</span>(), <span class="string">&quot; &quot;</span>);  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i=<span class="number">0</span>; i &lt; words.<span class="built_in">size</span>(); ++i) &#123;  </span><br><span class="line">      context.<span class="built_in">emit</span>(words[i], <span class="string">&quot;1&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(inputWords, words.<span class="built_in">size</span>());  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountReduce</span>: <span class="keyword">public</span> HadoopPipes::Reducer &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* outputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountReduce</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    outputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, OUTPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reduce</span><span class="params">(HadoopPipes::ReduceContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">while</span> (context.<span class="built_in">nextValue</span>()) &#123;  </span><br><span class="line">      sum += HadoopUtils::<span class="built_in">toInt</span>(context.<span class="built_in">getInputValue</span>());  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">emit</span>(context.<span class="built_in">getInputKey</span>(), HadoopUtils::<span class="built_in">toString</span>(sum));  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(outputWords, <span class="number">1</span>);   </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">该任务编写了两个主要组件，mapper与reducer。要实现这两个组件需要继承相应的基类。基类声明如下：</span><br><span class="line"></span><br><span class="line">```c++</span><br><span class="line"><span class="comment">// wordcount-simple.cc -&gt; Mapper &amp; Reducer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountMap</span>: <span class="keyword">public</span> HadoopPipes::Mapper &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* inputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountMap</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    inputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, INPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">map</span><span class="params">(HadoopPipes::MapContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    std::vector&lt;std::string&gt; words =   </span><br><span class="line">      HadoopUtils::<span class="built_in">splitString</span>(context.<span class="built_in">getInputValue</span>(), <span class="string">&quot; &quot;</span>);  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i=<span class="number">0</span>; i &lt; words.<span class="built_in">size</span>(); ++i) &#123;  </span><br><span class="line">      context.<span class="built_in">emit</span>(words[i], <span class="string">&quot;1&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(inputWords, words.<span class="built_in">size</span>());  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountReduce</span>: <span class="keyword">public</span> HadoopPipes::Reducer &#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">  HadoopPipes::TaskContext::Counter* outputWords;  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountReduce</span>(HadoopPipes::TaskContext&amp; context) &#123;  </span><br><span class="line">    outputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, OUTPUT_WORDS);  </span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reduce</span><span class="params">(HadoopPipes::ReduceContext&amp; context)</span> </span>&#123;  </span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">while</span> (context.<span class="built_in">nextValue</span>()) &#123;  </span><br><span class="line">      sum += HadoopUtils::<span class="built_in">toInt</span>(context.<span class="built_in">getInputValue</span>());  </span><br><span class="line">    &#125;  </span><br><span class="line">    context.<span class="built_in">emit</span>(context.<span class="built_in">getInputKey</span>(), HadoopUtils::<span class="built_in">toString</span>(sum));  </span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(outputWords, <span class="number">1</span>);   </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">该任务编写了两个主要组件，mapper与reducer。要实现这两个组件需要继承相应的基类。基类声明如下：</span><br><span class="line"></span><br><span class="line">```c++</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountMap</span>: <span class="keyword">public</span> HadoopPipes::Mapper &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  HadoopPipes::TaskContext::Counter* inputWords;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">WordCountMap</span>(HadoopPipes::TaskContext&amp; context) &#123;</span><br><span class="line">    inputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, INPUT_WORDS);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">map</span><span class="params">(HadoopPipes::MapContext&amp; context)</span> </span>&#123;</span><br><span class="line">    std::vector&lt;std::string&gt; words = </span><br><span class="line">      HadoopUtils::<span class="built_in">splitString</span>(context.<span class="built_in">getInputValue</span>(), <span class="string">&quot; &quot;</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i=<span class="number">0</span>; i &lt; words.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">      context.<span class="built_in">emit</span>(words[i], <span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(inputWords, words.<span class="built_in">size</span>());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountReduce</span>: <span class="keyword">public</span> HadoopPipes::Reducer &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  HadoopPipes::TaskContext::Counter* outputWords;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">WordCountReduce</span>(HadoopPipes::TaskContext&amp; context) &#123;</span><br><span class="line">    outputWords = context.<span class="built_in">getCounter</span>(WORDCOUNT, OUTPUT_WORDS);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">reduce</span><span class="params">(HadoopPipes::ReduceContext&amp; context)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (context.<span class="built_in">nextValue</span>()) &#123;</span><br><span class="line">      sum += HadoopUtils::<span class="built_in">toInt</span>(context.<span class="built_in">getInputValue</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    context.<span class="built_in">emit</span>(context.<span class="built_in">getInputKey</span>(), HadoopUtils::<span class="built_in">toString</span>(sum));</span><br><span class="line">    context.<span class="built_in">incrementCounter</span>(outputWords, <span class="number">1</span>); </span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><br>该任务编写了两个主要组件，mapper与reducer。要实现这两个组件需要继承相应的基类，继承了相应的基类，就可以大胆的通过context获得key/value实现自己的逻辑了，结果处理完毕后，需要通过context.emit(key, value)将结果发送到下一阶段。</p>
+<p>注：</p>
+<ol>
+<li><p>由于Factory创建对象需要传入Context对象，所以还需要实现一个构造函数，参数为TaskContext。</p>
+</li>
+<li><p>Hadoop Pipes内部规定，map与reduce的key/value均为Text类型，在C++中表现为string类型。不过，Hadoop还是做得比较贴心，有专门的方法负责处理string，具体可以参见StringUtils.hh。</p>
+</li>
+<li><p>Counter可以称之为统计器，可供开发者统计一些需要的数据，如读入行数、处理字节数等。任务完毕后，可以在web控制参看结果。</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// wordcount-part.cc -&gt; Partitioner</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WordCountPartitioner</span>: <span class="keyword">public</span> HadoopPipes::Partitioner &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">WordCountPartitioner</span>(HadoopPipes::TaskContext&amp; context)&#123;&#125;</span><br><span class="line">         <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">partition</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">int</span> numOfReduces)</span> </span>&#123;   </span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>该实例在提供简单Mapper与Reducer方法的同时，还提供了Partitioner，实例实现较为简单，直接返回了第一个reduce位置。开发者自定义的Partitioner同mapper/reducer一致，需要继承其基类HadoopPipes:: Partitioner，也需要提供一个传入TaskContext的构造函数，它的声明如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Partitioner</span> &#123;   </span><br><span class="line">   <span class="keyword">public</span>:   </span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">partition</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">int</span> numOfReduces)</span> </span>= <span class="number">0</span>;   </span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Partitioner</span>() &#123;&#125;   </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><br>Partitioner编写方法与Java的一致，对于partition方法，框架会自动为它传入两个参数，分别为key值和reduce task的个数numOfReduces，用户只需返回一个0~ numOfReduces-1的值即可。</p>
+<p>RecordReader/RecordWriter实现较长，这里就不贴了，贴一下这俩的基类：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RecordReader</span>: <span class="keyword">public</span> Closable &#123;   </span><br><span class="line">   <span class="keyword">public</span>:   </span><br><span class="line">   <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">next</span><span class="params">(std::string&amp; key, std::string&amp; value)</span> </span>= <span class="number">0</span>;   <span class="number">4.</span>   <span class="comment">// 读进度   </span></span><br><span class="line">      <span class="function"><span class="keyword">virtual</span> <span class="type">float</span> <span class="title">getProgress</span><span class="params">()</span> </span>= <span class="number">0</span>;   </span><br><span class="line">&#125;;   </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RecordWriter</span>: <span class="keyword">public</span> Closable &#123;   </span><br><span class="line">   <span class="keyword">public</span>:   </span><br><span class="line">   <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">emit</span><span class="params">(<span class="type">const</span> std::string&amp; key,</span></span></span><br><span class="line"><span class="params"><span class="function">                     <span class="type">const</span> std::string&amp; value)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><br>对于RecordReader，用户自定义的构造函数需携带类型为HadoopPipes::MapContext的参数（而不能是TaskContext），通过该参数的getInputSplit()的方法，用户可以获取经过序列化的InpuSplit对象，Java端采用不同的InputFormat可导致InputSplit对象格式不同，但对于大多数InpuSplit对象，它们可以提供至少三个信息：当前要处理的InputSplit所在的文件名，所在文件中的偏移量，它的长度。用户获取这三个信息后，可使用libhdfs库读取文件，以实现next方法。</p>
+<p>用户自定的RecordWriter的构造函数需携带参数TaskContext，通过该参数的getJobConf()可获取一个HadoopPipes::JobConf的对象，用户可从该对象中获取该reduce task的各种参数，如：该reduce task的编号（这对于确定输出文件名有用），reduce task的输出目录等。同时实现emit方法，将数据写入文件。</p>
+<h1 id="4、Hadoop-Pipes任务提交"><a href="#4、Hadoop-Pipes任务提交" class="headerlink" title="4、Hadoop Pipes任务提交"></a>4、Hadoop Pipes任务提交</h1><p>Hadoop Pipes任务提交命令根据Hadoop版本而不一，主体的命令有如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop pipes [-conf ] [-D , , …] [-input ] [-output ] [-jar ] [-inputformat ] [-map ] [-partitioner ] [-reduce ] [-writer ] [-program ]</span><br><span class="line"></span><br><span class="line">示例：hadoop pipes -conf word.xml -input input -output output</span><br></pre></td></tr></table></figure></p>
+<p>具体可以参考<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developer.aliyun.com/article/174041">《Hadoop实战第2版》——3.5节Hadoop Pipes</a></p>
+<h1 id="5、小结"><a href="#5、小结" class="headerlink" title="5、小结"></a>5、小结</h1><p>本篇博文简要了说了一下Hadoop Pipes的使用方法。</p>
+<p>在这里贴一下快手大佬董西成的优化意见：为了提高系能，RecordReader和RecordWriter最好采用Java代码实现（或者重用Hadoop中自带的），这是因为Hadoop自带的C++库libhdfs采用JNI实现，底层还是要调用Java相关接口，效率很低，此外，如果要处理的文件为二进制文件或者其他非文本文件，libhdfs可能不好处理。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>喜欢你就打赏一下</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Bryce 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Bryce
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bryceustc.github.io/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/" title="Hadoop Pipes编程">https://bryceustc.github.io/2023/12/10/Hadoop-Pipes编程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hadoop/" rel="tag"><i class="fa fa-tag"></i> Hadoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/08/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/" rel="prev" title="剑指offer（十二）：矩阵中的路径">
+      <i class="fa fa-chevron-left"></i> 剑指offer（十二）：矩阵中的路径
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/12/22/HBase-%E6%A6%82%E8%BF%B0/" rel="next" title="HBase 概述">
+      HBase 概述 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1%E3%80%81Hadoop-Pipes%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1、Hadoop Pipes简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2%E3%80%81Hadoop-Pipes%E7%BC%96%E7%A8%8B%E5%88%9D%E6%8E%A2"><span class="nav-number">2.</span> <span class="nav-text">2、Hadoop Pipes编程初探</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3%E3%80%81Hadoop-Pipes%E7%BC%96%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">3、Hadoop Pipes编程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4%E3%80%81Hadoop-Pipes%E4%BB%BB%E5%8A%A1%E6%8F%90%E4%BA%A4"><span class="nav-number">4.</span> <span class="nav-text">4、Hadoop Pipes任务提交</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5%E3%80%81%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5、小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">书写是对思维的缓存</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">293k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xl0dCw4B0ewo6hdaDLfUhpQ2-9Nh9j0Va',
+      appKey     : 'To4mX7CgnCwpmrdnshxRlVPm',
+      placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

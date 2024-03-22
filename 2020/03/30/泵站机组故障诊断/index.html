@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-atom.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="故障诊断系统概述研究的基于自动化机器学习的故障诊断系统既具有故障诊断算法训练功能，也具有算法部署功能。它会读取故障数据，进行特征提取，然后使用自动化机器学习方法找出最优机器学习流程，并将该流程训练好保存下来，最后使用Web服务器对故障诊断算法进行部署。所研究的故障诊断系统具有高度自动化、功能拓展方便、模型更新方便的特点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="泵站机组故障诊断">
+<meta property="og:url" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/index.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="故障诊断系统概述研究的基于自动化机器学习的故障诊断系统既具有故障诊断算法训练功能，也具有算法部署功能。它会读取故障数据，进行特征提取，然后使用自动化机器学习方法找出最优机器学习流程，并将该流程训练好保存下来，最后使用Web服务器对故障诊断算法进行部署。所研究的故障诊断系统具有高度自动化、功能拓展方便、模型更新方便的特点。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/liucheng1.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/shujuku1.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/ROC.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/tezheng.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/environment.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/ini.jpg">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan2.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan3.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan4.png">
+<meta property="og:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/res.jpg">
+<meta property="article:published_time" content="2020-03-30T13:01:40.000Z">
+<meta property="article:modified_time" content="2020-03-30T13:01:40.000Z">
+<meta property="article:author" content="Bryce">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/liucheng1.png">
+
+<link rel="canonical" href="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>泵站机组故障诊断 | Bryce's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          泵站机组故障诊断
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-30 21:01:40" itemprop="dateCreated datePublished" datetime="2020-03-30T21:01:40+08:00">2020-03-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">项目</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="故障诊断系统概述"><a href="#故障诊断系统概述" class="headerlink" title="故障诊断系统概述"></a>故障诊断系统概述</h3><p>研究的基于自动化机器学习的故障诊断系统既具有故障诊断算法训练功能，也具有算法部署功能。它会读取故障数据，进行特征提取，然后使用自动化机器学习方法找出最优机器学习流程，并将该流程训练好保存下来，最后使用Web服务器对故障诊断算法进行部署。所研究的故障诊断系统具有高度自动化、功能拓展方便、模型更新方便的特点。<br><span id="more"></span><br>本系统由以下几个子部分构成：</p>
+<p>（1）系统运行日志。日志是对系统运行状态的记录，它可以帮助检验系统运行是否正常，在出现异常情况时可以帮助使用者快速查找错误。日志的记录是分级别的，一般分为DEBUG、INFO、WARNING、ERROR、CRITICAL 五个级别，这五个级别的严重程度越来越高。</p>
+<p>（2）系统配置文件。系统配置文件本质上是文本文件，通过配套的文本解析方法可以提取出变量名及其对应的设定值。系统在主功能运行前读取配置文件，从而设定程序的运行模式或训练任务，达到不改变代码就可以改变程序运行的效果。</p>
+<p>（3）故障样本数据库。所研究的故障诊断算法是基于机器学习的，而机器学习方法是由数据驱动的，因此一个故障样本数据库是必要的。由于本文研究对象泵站机组具有型号多、运行工况复杂的特点，故障样本数据库在设计的时候充分考虑了这些特点。</p>
+<p>（4）样本平衡性检验。在用数据进行训练之前，应该对样本平衡性进行检验，样本数量比较少的做一些特殊处理，样本数量太少的应从训练集里予以剔除，更失衡严重的就终止本次训练，等待数据收集完毕后再开始。</p>
+<p>（5）故障特征提取。从故障数据库获得的数据是传感器数据，而传感器数据是无法直接作为机器学习算法输入的。为了提高故障诊断算法的效果，应该先对数据库中传感器数据使用快速傅里叶变换进行预处理。</p>
+<p>（6）使用TPOT进行模型训练。采用基于遗传算法的自动化机器学习方法TPOT是使用遗传算法对特征归一化、特征选择、模型和参数选择等环节组成的机器学习流程进行自动构建并寻优的方法。</p>
+<p>（7）故障诊断模型工程部署。所研究的故障诊断模型工程部署方法是基于Python轻型Web服务器框架Flask通过HTTP协议实现Python环境与Java环境的交互。</p>
+<p>故障诊断系统工作流程图如下所示：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/liucheng1.png" alt></p>
+<h3 id="故障诊断系统研究"><a href="#故障诊断系统研究" class="headerlink" title="故障诊断系统研究"></a>故障诊断系统研究</h3><h4 id="故障数据库设计规范"><a href="#故障数据库设计规范" class="headerlink" title="故障数据库设计规范"></a>故障数据库设计规范</h4><p>在泵站机组型号或运行工况不一样的情况下，虽然机组发生了同一种故障类型，但同样位置的传感器数据会有所不同，这就导致提取的特征也有点不同。因此，在故障数据存储时必须要体现出故障样本的来源背景，这里用机组型号和运行工况来表示。</p>
+<p>以机组某个部件有两个传感器为例设计的故障数据库规范如下表所示：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/shujuku1.png" alt></p>
+<h4 id="故障样本不平衡处理"><a href="#故障样本不平衡处理" class="headerlink" title="故障样本不平衡处理"></a>故障样本不平衡处理</h4><h5 id="样本不平衡下的训练方法"><a href="#样本不平衡下的训练方法" class="headerlink" title="样本不平衡下的训练方法"></a>样本不平衡下的训练方法</h5><p>针对样本不平衡下的训练数据集采用简单易行的调整类的权重方法，该方法是在误差函数里添加类别权重，以达到误差平衡，带权重的误差函数为：</p>
+<script type="math/tex; mode=display">
+\text { error }=\frac{\sum_{i=1}^{n} w_{i}\left(y_{i}^{\prime}-y_{i}\right)^{2}}{n}</script><p>其中：</p>
+<p>$𝑛$ 代表样本总数；</p>
+<p>$𝑤_𝑖$ 代表第$i$个样本所在类别的权重；</p>
+<p>$y_{i}^{\prime}$代表第$i$个样本的预测结果；</p>
+<p>$𝑦_𝑖$代表第$i$个样本的实际结果。</p>
+<h5 id="样本不平衡下的评估方法"><a href="#样本不平衡下的评估方法" class="headerlink" title="样本不平衡下的评估方法"></a>样本不平衡下的评估方法</h5><p>在统计和机器学习中，常常用AUC 来评估二分类模型的性能（多分类也可以使用，作为二分类的拓展）。AUC 的全称是Area under the curve，即曲线下的面积。通常这里的曲线指的是受试者操作曲线(Receiver Operating Characteristic,ROC)。相比于准确率、召回率、F1 值等依赖于判决阈值的评估指标，AUC则没有这个问题。</p>
+<p>ROC 曲线：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/ROC.jpg" alt></p>
+<p>AUC值为ROC 曲线下方所覆盖的区域面积，AUC越大, 说明曲线越靠近(0,1) 这个点，越接近理想曲线，分类效果自然更好。</p>
+<p>AUC指标为什么可以作为样本不平衡情况下的模型评价指标？因为当用来验证算法效果的数据集中的样本比例发生变化时，ROC曲线的形状能够保持不变，而AUC是ROC曲线的下方面积，所以当模型一定时，AUC的值也不随正负样本分布的变化而变化，所以能够作为不平衡数据集的模型评价指标。</p>
+<h4 id="故障特征提取"><a href="#故障特征提取" class="headerlink" title="故障特征提取"></a>故障特征提取</h4><p>泵轴的常见故障有油膜涡动、接触摩擦、油膜振荡、转子不平衡和转子不对中，这些故障都可以体现在泵轴的振动信号里，通常采用泵轴的摆度数值作为它的振动信号。通过利用FFT快速傅里叶变换将时域的振动信号转换为频域的能量分布。</p>
+<p>下面对泵轴的转子不平衡故障数据进行特征提取实验，介绍如下：</p>
+<p>（1）数据来源传感器：泵轴$Y$方向摆度信号</p>
+<p>（2）数据滤波方法与窗函数：小波阈值去噪、汉宁窗</p>
+<p>（3）基频$𝐹<em>0$、采样频率$𝐹</em>𝑠$和采样点数$𝑁$：$20Hz$、$2048Hz$、$2048$由上面几个数据，可得到下面几个频谱分析需要的参数：</p>
+<p>（a）最高有效频率𝐹𝑚：𝐹𝑚 = 𝐹𝑠/2.56=800Hz</p>
+<p>（b）频率分辨率𝛥𝐹 ：𝛥𝐹 = 𝐹𝑠/𝑁=2048/2048=1Hz</p>
+<p>（c）谱线数𝑀：𝑀 = 𝑁/2.56=2048/2.56=800</p>
+<p>下图为转子不平衡故障特征提取过程。</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/tezheng.jpg" alt></p>
+<p>图中共有三个子图，其中最上面的图是泵轴摆度信号的时域图，表现出<br>了周期性，中间图是对摆度信号的时域数据作快速傅立叶变换得到的频谱，最下面图是从频谱提取的特征向量。</p>
+<h4 id="自动化机器学习工具TPOT"><a href="#自动化机器学习工具TPOT" class="headerlink" title="自动化机器学习工具TPOT"></a>自动化机器学习工具TPOT</h4><p><a href="/TPOT——一个自动化的Python机器学习工具.md">此节具体参考这里</a></p>
+<h4 id="诊断算法的部署"><a href="#诊断算法的部署" class="headerlink" title="诊断算法的部署"></a>诊断算法的部署</h4><p>设置Web服务器，通过HTTP协议进行调用。生产环境软件通过网络IP、端口将需要诊断的数据传递给Web服务器。Web服务器接受到数据后会进行诊断服务，在诊断结束后，诊断结果会原路返回给服务调用者。<br>诊断数据与Web 服务器之间使用HTTP协议进行通信，HTTP协议下有GET、POST、PUT 和DELETE 等方法，因为通信过程中需要传输传感器数据，所以这里使用可携带数据体的POST方法。</p>
+<p>在故障诊断的各个环节中，诊断算法具有“一次加载、多次使用”的特点，而特征提取、算法调用等步骤随着传输数据的不同而采用不同的方法，所以故障诊断Web服务器在实现时应该按照这样的方式：加载诊断算法在创建故障诊断Web服务器时进行，数据获取、特征提取、调用诊断算法和诊断结果返回这些步骤在POST方法中实现。</p>
+<h3 id="故障诊断系统具体实现"><a href="#故障诊断系统具体实现" class="headerlink" title="故障诊断系统具体实现"></a>故障诊断系统具体实现</h3><h4 id="系统开发环境"><a href="#系统开发环境" class="headerlink" title="系统开发环境"></a>系统开发环境</h4><p>故障诊断系统是在Windows 10上使用Python编程语言开发的，<br>其中数据库使用SQL Server，日志管理使用Logging，配置文件解析加载使用Configparser，频域分析工具包使用Scipy，矩阵数据处理使用Pandas 和Numpy，自动化机器学习工具使用TPOT，模型序列化保存工具使用Pickle，Web 应用框架使用Flask。</p>
+<p>下表是详细的故障诊断系统开发环境。</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/environment.png" alt></p>
+<h4 id="系统功能模块的实现"><a href="#系统功能模块的实现" class="headerlink" title="系统功能模块的实现"></a>系统功能模块的实现</h4><h5 id="日志管理"><a href="#日志管理" class="headerlink" title="日志管理"></a>日志管理</h5><p>系统日志管理工具使用Logging 模块实现，具体的是使用了Logging 下的logger 对象，使用logger 对象可以避免多个程序使用同一个日志文件时产生重复记录的问题。系统日志管理工具被打包成一个独立的文件，方便不同任务的复用。<a target="_blank" rel="noopener external nofollow noreferrer" href="https://cuiqingcai.com/6080.html">logging模块的基本用法</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_logger</span>():</span><br><span class="line">    logger = logging.getLogger(__name__)</span><br><span class="line">    logger.setLevel(logging.DEBUG)</span><br><span class="line"></span><br><span class="line">    stream_handler = logging.StreamHandler()</span><br><span class="line">    stream_handler.setLevel(logging.DEBUG)</span><br><span class="line"></span><br><span class="line">    file_handler = logging.FileHandler(filename=<span class="string">&#x27;日志.log&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    file_handler.setLevel(logging.INFO)</span><br><span class="line"></span><br><span class="line">    formatter = logging.Formatter(fmt=<span class="string">&#x27;%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    stream_handler.setFormatter(formatter)</span><br><span class="line">    file_handler.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">    logger.addHandler(stream_handler)</span><br><span class="line">    logger.addHandler(file_handler)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> logger</span><br></pre></td></tr></table></figure>
+<h5 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h5><p>配置文件的格式有ini、toml、yaml、json 和xml 等，其中ini格式的最为简单直观，这里使用的配置文件就是ini格式.部分配置如下图所示：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/ini.jpg" alt></p>
+<h4 id="建立机组故障数据库"><a href="#建立机组故障数据库" class="headerlink" title="建立机组故障数据库"></a>建立机组故障数据库</h4><p>利用数据库SQL Server 2017 与数据库可视化管理工具Navicat Premium进行搭建，首先参考<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cnblogs.com/ios9/p/9527939.html">Win10 SQL Server 2017安装</a>，利用Navicat进行创建一个Faults数据库，并在Faults数据库中创建Rotor表如图所示：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan2.png" alt></p>
+<p>然后根据数据库设计规范，在表中创建相对应的字段。如图所示:</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan.png" alt></p>
+<p><strong>注意：</strong> SQL Server 2017不支持数组形式，这里采用将数组转化为字符串,将他们拼接起来当做文本写入。</p>
+<p>字段类型在设置的时候注意采用nvarchar(max)的类型，具体如下图：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan3.png" alt></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://data.mendeley.com/datasets/p9bsmj4xwg/1/files/9ecd3bf8-6ed0-452b-8c84-05a4833ac803">Rotor数据</a>, 数据是.mat文件，利用Python处理数据后，写入数据库CGQ1这一列中，最终如图所示：</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/guifan4.png" alt></p>
+<h5 id="平衡性检验"><a href="#平衡性检验" class="headerlink" title="平衡性检验"></a>平衡性检验</h5><p>平衡性检验工具的实现是先使用Pandas 筛选数据，然后使用Collections模块的Counter 工具进行统计。</p>
+<h5 id="故障特征提取-1"><a href="#故障特征提取-1" class="headerlink" title="故障特征提取"></a>故障特征提取</h5><p>故障特征提取工具以独立的代码文件形式进行存放，该工具是多个特征提取函数的集合，如果想使用哪个特征提取函数，只需要在配置文件里指定函数名，如果想使用的函数不存在，模仿已有的函数编辑添加即可。通过这样的设计，无需更改主函数就可改变系统功能。特征提取函数代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> scipy.fftpack <span class="keyword">import</span> fft</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">transfer</span>(<span class="params">string</span>):</span><br><span class="line">    string_arr = string.split(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">    <span class="comment">#print(string_arr)</span></span><br><span class="line">    float_arr = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">float</span>, string_arr))</span><br><span class="line">    <span class="keyword">return</span> float_arr</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rotor_simple</span>(<span class="params">arr, logger, conf=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(arr,<span class="built_in">dict</span>):<span class="comment">#如果数据来源于web,  isinstance() 函数来判断一个对象是否是一个已知的类型，类似 type()。</span></span><br><span class="line">        arr = trans(arr)</span><br><span class="line">    <span class="comment">#print(arr[1])</span></span><br><span class="line">    rotation_frequency = <span class="built_in">round</span>(<span class="built_in">float</span>(arr[<span class="number">0</span>])/<span class="number">60</span>) <span class="comment"># 旋转频率</span></span><br><span class="line">    sample_frequency = <span class="built_in">int</span>(arr[<span class="number">1</span>]) <span class="comment"># 采样频率</span></span><br><span class="line">    useful_bandwidth = <span class="built_in">int</span>(sample_frequency/<span class="number">2.56</span>) <span class="comment"># 有效带宽</span></span><br><span class="line">    <span class="keyword">if</span> useful_bandwidth&lt;rotation_frequency*<span class="number">6</span>:</span><br><span class="line">        logger.warning(<span class="string">&#x27;数据采样频率过低！数据作废&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    sensor_data = transfer(arr[<span class="number">3</span>]) <span class="comment"># 将逗号拼接的传感器数据变成数组</span></span><br><span class="line">    data_length = <span class="built_in">len</span>(sensor_data) <span class="comment"># 采样长度</span></span><br><span class="line">    sample_time = data_length/sample_frequency <span class="comment"># 采样时间</span></span><br><span class="line">    frequency_resolution = <span class="number">1</span>/sample_time <span class="comment"># 频率分辨率</span></span><br><span class="line">    <span class="keyword">if</span> (rotation_frequency&lt;<span class="number">10</span> <span class="keyword">and</span> frequency_resolution&gt;<span class="number">0.1</span>) <span class="keyword">or</span> sample_time&lt;<span class="number">1</span>:</span><br><span class="line">        logger.warning(<span class="string">&#x27;采样时间过短！数据作废&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    f0_candidates = [rotation_frequency-<span class="number">2</span>,rotation_frequency-<span class="number">1</span>,rotation_frequency,rotation_frequency+<span class="number">1</span>,rotation_frequency+<span class="number">2</span>] <span class="comment"># 基频</span></span><br><span class="line">    spectrum = <span class="built_in">abs</span>(fft(sensor_data))[:useful_bandwidth]/<span class="built_in">len</span>(sensor_data)  <span class="comment"># 频谱</span></span><br><span class="line">    f0 = f0_candidates[spectrum[f0_candidates].argmax()]<span class="comment"># 确定基频</span></span><br><span class="line">    segments = [[<span class="number">1</span>,<span class="built_in">int</span>(<span class="number">0.40</span>*f0)],[<span class="built_in">int</span>(<span class="number">0.40</span>*f0),<span class="built_in">int</span>(<span class="number">0.50</span>*f0)],</span><br><span class="line">                [<span class="built_in">int</span>(<span class="number">0.5</span>*f0)],[<span class="built_in">int</span>(<span class="number">0.50</span>*f0)+<span class="number">1</span>,<span class="built_in">int</span>(f0)],[f0],[<span class="built_in">int</span>(<span class="number">2</span>*f0)],</span><br><span class="line">                [<span class="built_in">int</span>(<span class="number">3</span>*f0),<span class="built_in">int</span>(<span class="number">5</span>*f0)+<span class="number">1</span>],[<span class="built_in">int</span>(<span class="number">6</span>*f0),useful_bandwidth]]</span><br><span class="line">    temp = []</span><br><span class="line">    <span class="keyword">for</span> seg <span class="keyword">in</span> segments:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(seg)==<span class="number">2</span>:</span><br><span class="line">            max_value = <span class="built_in">max</span>(spectrum[seg[<span class="number">0</span>]:seg[<span class="number">1</span>]])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            max_value = spectrum[seg[<span class="number">0</span>]]</span><br><span class="line">        temp.append(max_value)</span><br><span class="line">    <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rotor</span>(<span class="params">data, useful_labels, conf, model_dir, logger</span>):</span><br><span class="line">    djzs_field_name = conf[<span class="string">&#x27;Table&#x27;</span>][<span class="string">&#x27;djzs_field_name&#x27;</span>]</span><br><span class="line">    gzlx_field_name = conf[<span class="string">&#x27;Table&#x27;</span>][<span class="string">&#x27;gzlx_field_name&#x27;</span>]</span><br><span class="line">    cypl_field_name = conf[<span class="string">&#x27;Table&#x27;</span>][<span class="string">&#x27;cypl_field_name&#x27;</span>]</span><br><span class="line">    filtered_data = data.loc[:,[djzs_field_name,cypl_field_name,gzlx_field_name,<span class="string">&#x27;CGQ1&#x27;</span>]][data[gzlx_field_name].isin(useful_labels)]</span><br><span class="line">    </span><br><span class="line">    config_for_web = &#123;<span class="string">&#x27;mission&#x27;</span>:conf[<span class="string">&#x27;Mission&#x27;</span>][<span class="string">&#x27;table&#x27;</span>],</span><br><span class="line">                      <span class="string">&#x27;label&#x27;</span>:useful_labels,</span><br><span class="line">                     <span class="string">&#x27;function_for_web&#x27;</span>:conf[<span class="string">&#x27;Mission&#x27;</span>][<span class="string">&#x27;extract_feature_function_for_web&#x27;</span>]&#125;</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(model_dir+<span class="string">&#x27;\config_for_web.json&#x27;</span>,<span class="string">&#x27;w&#x27;</span>,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        json.dump(config_for_web, file, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">    </span><br><span class="line">    feature_and_label = []</span><br><span class="line">    <span class="keyword">for</span> arr <span class="keyword">in</span> filtered_data.values:</span><br><span class="line">        temp = rotor_simple(arr, logger)</span><br><span class="line">        <span class="keyword">if</span> temp != <span class="literal">None</span>:<span class="comment"># 数据有效</span></span><br><span class="line">            temp.append(useful_labels.index(arr[<span class="number">2</span>]))</span><br><span class="line">            feature_and_label.append(temp)</span><br><span class="line">    feature_and_label = np.array(feature_and_label, dtype=np.float32)</span><br><span class="line">    </span><br><span class="line">    column = [<span class="string">&#x27;feature&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(feature_and_label.shape[<span class="number">1</span>]-<span class="number">1</span>)]+[<span class="string">&#x27;label&#x27;</span>]</span><br><span class="line">    df = pd.DataFrame(data=feature_and_label, columns=column)</span><br><span class="line">    df.to_csv(model_dir+<span class="string">&#x27;\\feature_and_label.csv&#x27;</span>, index=<span class="literal">False</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> feature_and_label</span><br></pre></td></tr></table></figure>
+<h5 id="自动化机器学习"><a href="#自动化机器学习" class="headerlink" title="自动化机器学习"></a>自动化机器学习</h5><p>Python 的第三方包TPOT已经实现了基于遗传算法的自动化机器学习，通过在Python 环境中安装TPOT，并且调用相关方法即可实现自动化机器学习。部分代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">logger.info(<span class="string">&#x27;自动化机器学习初始化...&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> tpot <span class="keyword">import</span> TPOTClassifier</span><br><span class="line"></span><br><span class="line">generations = <span class="built_in">int</span>(conf[<span class="string">&#x27;Tpot&#x27;</span>][<span class="string">&#x27;generations&#x27;</span>])</span><br><span class="line">population_size = <span class="built_in">int</span>(conf[<span class="string">&#x27;Tpot&#x27;</span>][<span class="string">&#x27;population_size&#x27;</span>])</span><br><span class="line">verbosity = <span class="built_in">int</span>(conf[<span class="string">&#x27;Tpot&#x27;</span>][<span class="string">&#x27;verbosity&#x27;</span>])</span><br><span class="line"></span><br><span class="line">model = TPOTClassifier(generations=generations, population_size=population_size,  scoring=<span class="string">&#x27;f1_macro&#x27;</span>, cv=<span class="number">5</span>, n_jobs=<span class="number">1</span>, verbosity=verbosity)</span><br><span class="line">feature = feature_and_label[:,:-<span class="number">1</span>]</span><br><span class="line">label = feature_and_label[:,-<span class="number">1</span>]</span><br><span class="line">logger.info(<span class="string">&#x27;初始化完毕，开始寻找最优机器学习流程...&#x27;</span>)</span><br><span class="line">model.fit(feature, label)</span><br><span class="line">logger.info(<span class="string">&#x27;寻优结束，开始保存最优机器学习流程...&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</span><br><span class="line">joblib.dump(model.fitted_pipeline_, model_dir+<span class="string">&#x27;\pipeline.pkl&#x27;</span>)</span><br><span class="line">logger.info(<span class="string">&#x27;保存成功，训练结束！&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="故障诊断系统部署"><a href="#故障诊断系统部署" class="headerlink" title="故障诊断系统部署"></a>故障诊断系统部署</h5><p>利用Python轻型Web框架来进行部署构建故障诊断Web服务器。加载诊断算法和实现HTTP的POST方法。、</p>
+<p>加载诊断算法并创建Web服务器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function_for_web = &#123;&#125;</span><br><span class="line">pipeline = &#123;&#125;</span><br><span class="line">label = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> each <span class="keyword">in</span> model_dirs:</span><br><span class="line">    logger.info(<span class="string">&#x27;正在读取web配置文件...&#x27;</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(each+<span class="string">&#x27;\config_for_web.json&#x27;</span>,<span class="string">&#x27;r&#x27;</span>,encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">            config_for_web = json.load(file)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        logger.error(<span class="string">&#x27;读取配置文件&#123;&#125;失败！&#x27;</span>.<span class="built_in">format</span>(each+<span class="string">&#x27;\config.ini&#x27;</span>), exc_info=<span class="literal">True</span>)</span><br><span class="line">        sys.exit(<span class="number">1</span>)</span><br><span class="line">    logger.info(<span class="string">&#x27;web配置文件读取完成&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    mission = config_for_web[<span class="string">&#x27;mission&#x27;</span>]</span><br><span class="line">    function_for_web[mission] = config_for_web[<span class="string">&#x27;function_for_web&#x27;</span>]</span><br><span class="line">    pipeline[mission] = joblib.load(each+<span class="string">&#x27;\pipeline.pkl&#x27;</span>)</span><br><span class="line">    label[mission] = config_for_web[<span class="string">&#x27;label&#x27;</span>]</span><br><span class="line">    </span><br><span class="line">app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">5050</span>)</span><br></pre></td></tr></table></figure>
+<p>POST方法实现<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span>,methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">diagnose</span>():</span><br><span class="line">    results = &#123;&#125;</span><br><span class="line">    all_data = request.json</span><br><span class="line">    missions = all_data.keys()</span><br><span class="line"><span class="comment">#     logger.info(str(missions))</span></span><br><span class="line">    <span class="keyword">for</span> mission <span class="keyword">in</span> missions:</span><br><span class="line">        <span class="built_in">exec</span>(<span class="string">&#x27;from extract_features import &#123;0&#125; as extract_function&#x27;</span>.<span class="built_in">format</span>(function_for_web[mission]), <span class="built_in">globals</span>())</span><br><span class="line">        data = all_data[mission]</span><br><span class="line">        feature = extract_function(data, logger, conf)<span class="comment"># feature is a list</span></span><br><span class="line">        proba = pipeline[mission].predict_proba(np.array(feature, np.float32).reshape(<span class="number">1</span>, -<span class="number">1</span>))[<span class="number">0</span>]</span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i, v <span class="keyword">in</span> <span class="built_in">enumerate</span>(proba):</span><br><span class="line">            result[label[mission][i]] = <span class="string">&#x27;%.1f&#x27;</span>%<span class="built_in">round</span>(<span class="built_in">float</span>(v)*<span class="number">100</span>,<span class="number">1</span>)</span><br><span class="line">        results[mission] = result</span><br><span class="line"><span class="comment">#     print(results)</span></span><br><span class="line">    <span class="keyword">return</span> json.dumps(results, ensure_ascii=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure></p>
+<h5 id="故障诊断系统测试"><a href="#故障诊断系统测试" class="headerlink" title="故障诊断系统测试"></a>故障诊断系统测试</h5><p>使用泵轴故障数据（数据类别为正常、转子不对中、转子不平衡、接触摩擦样本各45 个，来源工况单一）来简单测试一下所实现故障诊断系统，测试结果下图所示，横坐标代表机器学习流程组成的种群代数，纵坐标代表每代种群中最优机器学习流程的AUC评分。</p>
+<p><img src="/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/res.jpg" alt></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章推荐</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2020/04/01/语音识别/" rel="bookmark">语音识别</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>喜欢你就打赏一下</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Bryce 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Bryce
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bryceustc.github.io/2020/03/30/%E6%B3%B5%E7%AB%99%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD/" title="泵站机组故障诊断">https://bryceustc.github.io/2020/03/30/泵站机组故障诊断/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%A1%B9%E7%9B%AE/" rel="tag"><i class="fa fa-tag"></i> 项目</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/30/62_%E5%9C%86%E5%9C%88%E4%B8%AD%E6%9C%80%E5%90%8E%E5%89%A9%E4%B8%8B%E7%9A%84%E6%95%B0%E5%AD%97/" rel="prev" title="圆圈中最后剩下的数字">
+      <i class="fa fa-chevron-left"></i> 圆圈中最后剩下的数字
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/31/%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="next" title="常见排序算法">
+      常见排序算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">故障诊断系统概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD%E7%B3%BB%E7%BB%9F%E7%A0%94%E7%A9%B6"><span class="nav-number">2.</span> <span class="nav-text">故障诊断系统研究</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83"><span class="nav-number">2.1.</span> <span class="nav-text">故障数据库设计规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E6%A0%B7%E6%9C%AC%E4%B8%8D%E5%B9%B3%E8%A1%A1%E5%A4%84%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">故障样本不平衡处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E4%B8%8D%E5%B9%B3%E8%A1%A1%E4%B8%8B%E7%9A%84%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.1.</span> <span class="nav-text">样本不平衡下的训练方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E4%B8%8D%E5%B9%B3%E8%A1%A1%E4%B8%8B%E7%9A%84%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.2.</span> <span class="nav-text">样本不平衡下的评估方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">2.3.</span> <span class="nav-text">故障特征提取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B7%A5%E5%85%B7TPOT"><span class="nav-number">2.4.</span> <span class="nav-text">自动化机器学习工具TPOT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%8A%E6%96%AD%E7%AE%97%E6%B3%95%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="nav-number">2.5.</span> <span class="nav-text">诊断算法的部署</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD%E7%B3%BB%E7%BB%9F%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">故障诊断系统具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-number">3.1.</span> <span class="nav-text">系统开发环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.2.</span> <span class="nav-text">系统功能模块的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86"><span class="nav-number">3.2.1.</span> <span class="nav-text">日志管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.2.</span> <span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E6%9C%BA%E7%BB%84%E6%95%85%E9%9A%9C%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.3.</span> <span class="nav-text">建立机组故障数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E6%80%A7%E6%A3%80%E9%AA%8C"><span class="nav-number">3.3.1.</span> <span class="nav-text">平衡性检验</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">故障特征提取</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.3.3.</span> <span class="nav-text">自动化机器学习</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2"><span class="nav-number">3.3.4.</span> <span class="nav-text">故障诊断系统部署</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD%E7%B3%BB%E7%BB%9F%E6%B5%8B%E8%AF%95"><span class="nav-number">3.3.5.</span> <span class="nav-text">故障诊断系统测试</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">书写是对思维的缓存</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">293k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xl0dCw4B0ewo6hdaDLfUhpQ2-9Nh9j0Va',
+      appKey     : 'To4mX7CgnCwpmrdnshxRlVPm',
+      placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

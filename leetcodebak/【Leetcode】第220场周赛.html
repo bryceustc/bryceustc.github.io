@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-atom.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bryceustc.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="第220场周赛，拖了这么久，补一下。 1694. 重新格式化电话号码给你一个字符串形式的电话号码 number 。number 由数字、空格 ‘ ‘、和破折号 ‘-‘ 组成。 请你按下述方式重新格式化电话号码。 首先，删除 所有的空格和破折号。其次，将数组从左到右 每 3 个一组 分块，直到 剩下 4 个或更少数字。剩下的数字将按下述规定再分块：2 个数字：单个含 2 个数字的块。3 个数字：单个">
+<meta property="og:type" content="website">
+<meta property="og:title" content="【Leetcode】第220场周赛">
+<meta property="og:url" content="https://bryceustc.github.io/leetcodebak/%E3%80%90Leetcode%E3%80%91%E7%AC%AC220%E5%9C%BA%E5%91%A8%E8%B5%9B.html">
+<meta property="og:site_name" content="Bryce&#39;s Blog">
+<meta property="og:description" content="第220场周赛，拖了这么久，补一下。 1694. 重新格式化电话号码给你一个字符串形式的电话号码 number 。number 由数字、空格 ‘ ‘、和破折号 ‘-‘ 组成。 请你按下述方式重新格式化电话号码。 首先，删除 所有的空格和破折号。其次，将数组从左到右 每 3 个一组 分块，直到 剩下 4 个或更少数字。剩下的数字将按下述规定再分块：2 个数字：单个含 2 个数字的块。3 个数字：单个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/12/19/h.png">
+<meta property="og:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/12/19/q.png">
+<meta property="article:published_time" content="2021-01-08T03:01:59.000Z">
+<meta property="article:modified_time" content="2021-01-08T03:01:59.000Z">
+<meta property="article:author" content="Bryce">
+<meta property="article:tag" content="LeetCode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/12/19/h.png">
+
+<link rel="canonical" href="https://bryceustc.github.io/leetcodebak/%E3%80%90Leetcode%E3%80%91%E7%AC%AC220%E5%9C%BA%E5%91%A8%E8%B5%9B">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【Leetcode】第220场周赛 | Bryce's Blog
+</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bryceustc" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bryce's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Learn Everything.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page">
+            
+
+  <div class="posts-expand">
+    
+    
+    
+    <div class="post-block" lang="zh-CN">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">【Leetcode】第220场周赛
+</h1>
+
+<div class="post-meta">
+  
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <p>第220场周赛，拖了这么久，补一下。</p>
+<h3 id="1694-重新格式化电话号码"><a href="#1694-重新格式化电话号码" class="headerlink" title="1694. 重新格式化电话号码"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/problems/reformat-phone-number/">1694. 重新格式化电话号码</a></h3><p>给你一个字符串形式的电话号码 number 。number 由数字、空格 ‘ ‘、和破折号 ‘-‘ 组成。</p>
+<p>请你按下述方式重新格式化电话号码。</p>
+<p>首先，删除 所有的空格和破折号。<br>其次，将数组从左到右 每 3 个一组 分块，直到 剩下 4 个或更少数字。剩下的数字将按下述规定再分块：<br>2 个数字：单个含 2 个数字的块。<br>3 个数字：单个含 3 个数字的块。<br>4 个数字：两个分别含 2 个数字的块。<br>最后用破折号将这些块连接起来。注意，重新格式化过程中 不应该 生成仅含 1 个数字的块，并且 最多 生成两个含 2 个数字的块。</p>
+<p>返回格式化后的电话号码。</p>
+<span id="more"></span>
+<p>示例1：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入：number = "1-23-45 6"</span><br><span class="line">输出："123-456"</span><br><span class="line">解释：数字是 "123456"</span><br><span class="line">步骤 1：共有超过 4 个数字，所以先取 3 个数字分为一组。第 1 个块是 "123" 。</span><br><span class="line">步骤 2：剩下 3 个数字，将它们放入单个含 3 个数字的块。第 2 个块是 "456" 。</span><br><span class="line">连接这些块后得到 "123-456" 。</span><br></pre></td></tr></table></figure></p>
+<p>示例2:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入：number = "123 4-567"</span><br><span class="line">输出："123-45-67"</span><br><span class="line">解释：数字是 "1234567".</span><br><span class="line">步骤 1：共有超过 4 个数字，所以先取 3 个数字分为一组。第 1 个块是 "123" 。</span><br><span class="line">步骤 2：剩下 4 个数字，所以将它们分成两个含 2 个数字的块。这 2 块分别是 "45" 和 "67" 。</span><br><span class="line">连接这些块后得到 "123-45-67" 。</span><br></pre></td></tr></table></figure></p>
+<p>示例3:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入：number = "123 4-5678"</span><br><span class="line">输出："123-456-78"</span><br><span class="line">解释：数字是 "12345678" 。</span><br><span class="line">步骤 1：第 1 个块 "123" 。</span><br><span class="line">步骤 2：第 2 个块 "456" 。</span><br><span class="line">步骤 3：剩下 2 个数字，将它们放入单个含 2 个数字的块。第 3 个块是 "78" 。</span><br><span class="line">连接这些块后得到 "123-456-78" 。</span><br></pre></td></tr></table></figure></p>
+<p>示例4：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：number = "12"</span><br><span class="line">输出："12"</span><br></pre></td></tr></table></figure></p>
+<p>示例5：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：number = "--17-5 229 35-39475 "</span><br><span class="line">输出："175-229-353-94-75"</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>2 &lt;= number.length &lt;= 100</li>
+<li>number 由数字和字符 ‘-‘ 及 ‘ ‘ 组成。</li>
+<li>number 中至少含 2 个数字。<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3>先把出现的数字保存下来，然后逐个分组，模拟法</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">reformatNumber</span><span class="params">(string number)</span> </span>{</span><br><span class="line">        string res;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span> &amp;c : number) {</span><br><span class="line">            <span class="keyword">if</span> (c != <span class="string">' '</span> &amp;&amp; c !=<span class="string">'-'</span>) {</span><br><span class="line">                res += c;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="type">int</span> n = res.<span class="built_in">size</span>();</span><br><span class="line">        string ans;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n;) {</span><br><span class="line">            <span class="keyword">if</span> (n - i &gt; <span class="number">4</span>) {</span><br><span class="line">                ans += res.<span class="built_in">substr</span>(i, <span class="number">3</span>);</span><br><span class="line">                ans += <span class="string">'-'</span>;</span><br><span class="line">                i+=<span class="number">3</span>;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                <span class="keyword">if</span> (n - i == <span class="number">4</span>) {</span><br><span class="line">                    ans += res.<span class="built_in">substr</span>(i, <span class="number">2</span>);</span><br><span class="line">                    ans += <span class="string">'-'</span>;</span><br><span class="line">                    ans += res.<span class="built_in">substr</span>(i+<span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line">                    i+= <span class="number">4</span>;</span><br><span class="line">                } <span class="keyword">else</span> <span class="keyword">if</span> (n - i == <span class="number">3</span>) {</span><br><span class="line">                    ans += res.<span class="built_in">substr</span>(i, <span class="number">3</span>);</span><br><span class="line">                    i+=<span class="number">3</span>;</span><br><span class="line">                } <span class="keyword">else</span> <span class="keyword">if</span> (n - i == <span class="number">2</span>) {</span><br><span class="line">                    ans += res.<span class="built_in">substr</span>(i, <span class="number">2</span>);</span><br><span class="line">                    i+=<span class="number">2</span>;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<h3 id="1695-删除子数组的最大得分"><a href="#1695-删除子数组的最大得分" class="headerlink" title="1695. 删除子数组的最大得分"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/problems/maximum-erasure-value/">1695. 删除子数组的最大得分</a></h3><p>给你一个正整数数组 nums ，请你从中删除一个含有 若干不同元素 的子数组。删除子数组的 得分 就是子数组各元素之 和 。</p>
+<p>返回 只删除一个 子数组可获得的 最大得分 。</p>
+<p>如果数组 b 是数组 a 的一个连续子序列，即如果它等于 a[l],a[l+1],…,a[r] ，那么它就是 a 的一个子数组。</p>
+<p>示例 1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [4,2,4,5,6]</span><br><span class="line">输出：17</span><br><span class="line">解释：最优子数组是 [2,4,5,6]    </span><br></pre></td></tr></table></figure>
+<p>示例 2：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [5,2,1,2,5,2,1,2,5]</span><br><span class="line">输出：8</span><br><span class="line">解释：最优子数组是 [5,2,1] 或 [1,2,5]</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= nums.length &lt;= 10^5</li>
+<li>1 &lt;= nums[i] &lt;= 10^4</li>
+</ul>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>滑动窗口模板题，加强熟悉</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maximumUniqueSubarray</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>{</span><br><span class="line">        <span class="type">int</span> res = INT_MIN;</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; m;</span><br><span class="line">        <span class="comment">// 滑动窗口模板</span></span><br><span class="line">        <span class="keyword">while</span> (right &lt; n) {</span><br><span class="line">            <span class="type">int</span> a = nums[right++];</span><br><span class="line">            m[a]++;</span><br><span class="line">            sum += a;</span><br><span class="line">            <span class="keyword">while</span>( left &lt; n &amp;&amp; m[a] &gt; <span class="number">1</span>) {</span><br><span class="line">                m[nums[left]]--;</span><br><span class="line">                sum -= nums[left++];</span><br><span class="line">            }</span><br><span class="line">            res = <span class="built_in">max</span>(res, sum);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<h3 id="1696-跳跃游戏-VI"><a href="#1696-跳跃游戏-VI" class="headerlink" title="1696. 跳跃游戏 VI"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/problems/jump-game-vi/">1696. 跳跃游戏 VI</a></h3><p>给你一个下标从 0 开始的整数数组 nums 和一个整数 k 。</p>
+<p>一开始你在下标 0 处。每一步，你最多可以往前跳 k 步，但你不能跳出数组的边界。也就是说，你可以从下标 i 跳到 [i + 1， min(n - 1, i + k)] 包含 两个端点的任意位置。</p>
+<p>你的目标是到达数组最后一个位置（下标为 n - 1 ），你的 得分 为经过的所有数字之和。</p>
+<p>请你返回你能得到的 最大得分 。</p>
+<p>示例 1：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,-1,-2,4,-7,3], k = 2</span><br><span class="line">输出：7</span><br><span class="line">解释：你可以选择子序列 [1,-1,4,3] （上面加粗的数字），和为 7 。</span><br></pre></td></tr></table></figure></p>
+<p>示例 2：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [10,-5,-2,4,0,3], k = 3</span><br><span class="line">输出：17</span><br><span class="line">解释：你可以选择子序列 [10,4,3] （上面加粗数字），和为 17 。</span><br></pre></td></tr></table></figure></p>
+<p>示例3：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,-5,-20,4,-1,3,-6,-3], k = 2</span><br><span class="line">输出：0</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= nums.length, k &lt;= 10^5</li>
+<li>-10^4 &lt;= nums[i] &lt;= 10^4</li>
+</ul>
+<h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><p>动态规划 + 大顶堆</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><p>简单dp，超时<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxResult</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n)</span></span>;</span><br><span class="line">        dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; i++) {</span><br><span class="line">            <span class="type">int</span> cur = INT_MIN;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="built_in">max</span>(<span class="number">0</span>, i - k); j &lt; i; j++) {</span><br><span class="line">                cur = <span class="built_in">max</span>(cur, dp[j]);</span><br><span class="line">            }</span><br><span class="line">            dp[i] = nums[i] + cur;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dp[n<span class="number">-1</span>];</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></p>
+<p>大顶堆优化<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxResult</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> k)</span> </span>{</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 优先队列中的二元组即为 (f[j], j)</span></span><br><span class="line">        priority_queue&lt;pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt;&gt; q;</span><br><span class="line">        q.<span class="built_in">push</span>({nums[<span class="number">0</span>], <span class="number">0</span>});</span><br><span class="line">        <span class="type">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) {</span><br><span class="line">            <span class="comment">// 堆顶的 j 不满足限制</span></span><br><span class="line">            <span class="keyword">while</span> (i - q.<span class="built_in">top</span>().second &gt; k) {</span><br><span class="line">                q.<span class="built_in">pop</span>();</span><br><span class="line">            }</span><br><span class="line">            </span><br><span class="line">            ans = q.<span class="built_in">top</span>().first + nums[i];</span><br><span class="line">            q.<span class="built_in">push</span>({ans, i});</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure></p>
+<h3 id="1697-检查边长度限制的路径是否存在"><a href="#1697-检查边长度限制的路径是否存在" class="headerlink" title="1697. 检查边长度限制的路径是否存在"></a><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/problems/checking-existence-of-edge-length-limited-paths/">1697. 检查边长度限制的路径是否存在</a></h3><p>给你一个 n 个点组成的无向图边集 edgeList ，其中 edgeList[i] = [ui, vi, disi] 表示点 ui 和点 vi 之间有一条长度为 disi 的边。请注意，两个点之间可能有 超过一条边 。</p>
+<p>给你一个查询数组queries ，其中 queries[j] = [pj, qj, limitj] ，你的任务是对于每个查询 queries[j] ，判断是否存在从 pj 到 qj 的路径，且这条路径上的每一条边都 严格小于 limitj 。</p>
+<p>请你返回一个 布尔数组 answer ，其中 answer.length == queries.length ，当 queries[j] 的查询结果为 true 时， answer 第 j 个值为 true ，否则为 false 。</p>
+<p>示例 1：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/12/19/h.png" alt><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：n = 3, edgeList = [[0,1,2],[1,2,4],[2,0,8],[1,0,16]], queries = [[0,1,2],[0,2,5]]</span><br><span class="line">输出：[false,true]</span><br><span class="line">解释：上图为给定的输入数据。注意到 0 和 1 之间有两条重边，分别为 2 和 16 。</span><br><span class="line">对于第一个查询，0 和 1 之间没有小于 2 的边，所以我们返回 false 。</span><br><span class="line">对于第二个查询，有一条路径（0 -&gt; 1 -&gt; 2）两条边都小于 5 ，所以这个查询我们返回 true 。</span><br></pre></td></tr></table></figure></p>
+<p>示例 2：<br><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/12/19/q.png" alt><br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：n = 5, edgeList = [[0,1,10],[1,2,5],[2,3,9],[3,4,13]], queries = [[0,4,14],[1,4,13]]</span><br><span class="line">输出：[true,false]</span><br><span class="line">解释：上图为给定数据。</span><br></pre></td></tr></table></figure></p>
+<p>提示：</p>
+<ul>
+<li>2 &lt;= n &lt;= 105</li>
+<li>1 &lt;= edgeList.length, queries.length &lt;= 105</li>
+<li>edgeList[i].length == 3</li>
+<li>queries[j].length == 3</li>
+<li>0 &lt;= ui, vi, pj, qj &lt;= n - 1</li>
+<li>ui != vi</li>
+<li>pj != qj</li>
+<li>1 &lt;= disi, limitj &lt;= 109</li>
+<li>两个点之间可能有 多条 边。</li>
+</ul>
+<h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://leetcode-cn.com/problems/checking-existence-of-edge-length-limited-paths/solution/jian-cha-bian-chang-du-xian-zhi-de-lu-ji-c756/">并查集 + 离线思维</a></p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 并查集模板，包含路径压缩（参考 findset 函数）以及按秩合并（参考 sz 变量）</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UF</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; fa;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; sz;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="type">int</span> comp_cnt;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">UF</span>(<span class="type">int</span> _n): <span class="built_in">n</span>(_n), <span class="built_in">comp_cnt</span>(_n), <span class="built_in">fa</span>(_n), <span class="built_in">sz</span>(_n, <span class="number">1</span>) {</span><br><span class="line">        <span class="built_in">iota</span>(fa.<span class="built_in">begin</span>(), fa.<span class="built_in">end</span>(), <span class="number">0</span>);</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">findset</span><span class="params">(<span class="type">int</span> x)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> fa[x] == x ? x : fa[x] = <span class="built_in">findset</span>(fa[x]);</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">unite</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>{</span><br><span class="line">        x = <span class="built_in">findset</span>(x);</span><br><span class="line">        y = <span class="built_in">findset</span>(y);</span><br><span class="line">        <span class="keyword">if</span> (x == y) {</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (sz[x] &lt; sz[y]) {</span><br><span class="line">            <span class="built_in">swap</span>(x, y);</span><br><span class="line">        }</span><br><span class="line">        fa[y] = x;</span><br><span class="line">        sz[x] += sz[y];</span><br><span class="line">        --comp_cnt;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">connected</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>{</span><br><span class="line">        x = <span class="built_in">findset</span>(x);</span><br><span class="line">        y = <span class="built_in">findset</span>(y);</span><br><span class="line">        <span class="keyword">return</span> x == y;</span><br><span class="line">    }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">distanceLimitedPathsExist</span><span class="params">(<span class="type">int</span> n, vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; edgeList, vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; queries)</span> </span>{</span><br><span class="line">        <span class="comment">// 将 queries 按照边权限制从小到大排序</span></span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">qid</span><span class="params">(queries.size())</span></span>;</span><br><span class="line">        <span class="built_in">iota</span>(qid.<span class="built_in">begin</span>(), qid.<span class="built_in">end</span>(), <span class="number">0</span>);</span><br><span class="line">        <span class="built_in">sort</span>(qid.<span class="built_in">begin</span>(), qid.<span class="built_in">end</span>(), [&amp;](<span class="type">int</span> i, <span class="type">int</span> j) {</span><br><span class="line">            <span class="keyword">return</span> queries[i][<span class="number">2</span>] &lt; queries[j][<span class="number">2</span>];</span><br><span class="line">        });</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将 edgeList 按照边权从小到大排序</span></span><br><span class="line">        <span class="built_in">sort</span>(edgeList.<span class="built_in">begin</span>(), edgeList.<span class="built_in">end</span>(), [](<span class="type">const</span> <span class="keyword">auto</span>&amp; e1, <span class="type">const</span> <span class="keyword">auto</span>&amp; e2) {</span><br><span class="line">            <span class="keyword">return</span> e1[<span class="number">2</span>] &lt; e2[<span class="number">2</span>];</span><br><span class="line">        });</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 并查集</span></span><br><span class="line">        <span class="function">UF <span class="title">uf</span><span class="params">(n)</span></span>;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">ans</span><span class="params">(queries.size())</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> query: qid) {</span><br><span class="line">            <span class="comment">// 往并查集中添加边直到边权关系 dis_i &lt; limit_j 不满足</span></span><br><span class="line">            <span class="keyword">while</span> (i &lt; edgeList.<span class="built_in">size</span>() &amp;&amp; edgeList[i][<span class="number">2</span>] &lt; queries[query][<span class="number">2</span>]) {</span><br><span class="line">                uf.<span class="built_in">unite</span>(edgeList[i][<span class="number">0</span>], edgeList[i][<span class="number">1</span>]);</span><br><span class="line">                ++i;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">// 使用并查集判断连通性</span></span><br><span class="line">            ans[query] = uf.<span class="built_in">connected</span>(queries[query][<span class="number">0</span>], queries[query][<span class="number">1</span>]);</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+      </div>
+      
+      
+      
+    </div>
+    
+
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1694-%E9%87%8D%E6%96%B0%E6%A0%BC%E5%BC%8F%E5%8C%96%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">1694. 重新格式化电话号码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1695-%E5%88%A0%E9%99%A4%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%BE%97%E5%88%86"><span class="nav-number">4.</span> <span class="nav-text">1695. 删除子数组的最大得分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">5.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">6.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1696-%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F-VI"><span class="nav-number">7.</span> <span class="nav-text">1696. 跳跃游戏 VI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-2"><span class="nav-number">8.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="nav-number">9.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1697-%E6%A3%80%E6%9F%A5%E8%BE%B9%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E7%9A%84%E8%B7%AF%E5%BE%84%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="nav-number">10.</span> <span class="nav-text">1697. 检查边长度限制的路径是否存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-3"><span class="nav-number">11.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="nav-number">12.</span> <span class="nav-text">代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Bryce"
+      src="/images/touxiang.jfif">
+  <p class="site-author-name" itemprop="name">Bryce</p>
+  <div class="site-description" itemprop="description">书写是对思维的缓存</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bryceustc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bryceustc" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:bryceustc@mail.ustc.edu.cn" title="E-Mail → mailto:bryceustc@mail.ustc.edu.cn" rel="noopener external nofollow noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Bryce</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">293k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xl0dCw4B0ewo6hdaDLfUhpQ2-9Nh9j0Va',
+      appKey     : 'To4mX7CgnCwpmrdnshxRlVPm',
+      placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
