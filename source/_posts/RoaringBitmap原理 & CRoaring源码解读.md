@@ -1,30 +1,37 @@
 ---
-title: RoaringBitmap原理 & CRoaring源码解读
+title: RoaringBitmap原理 & CRoaring源码解读 & 优化寻址
 date: 2023-12-29 22:53:22
 tags: RoaringBitmap
 categories: RoaringBitmap
 ---
 
 ## RoaringBitMap原理
+
 Roaring Bitmap实现的主要思路是将32位无符号整数（0~4294967295）分成高16位和低16位两部分。通过高 16 位找到该数据存储在哪个桶中（高 16 位可以划分 2<sup>16</sup>个桶），把剩余的低 16 位放入该桶对应的 Container 中。
+
 每个桶都有对应的 Container，不同的 Container 存储方式不同。依据不同的场景，主要有 2 种不同的 Container，分别是 Array Container 和 Bitmap Container。Array Container 存放稀疏的数据，Bitmap Container 存放稠密的数据。若一个 Container 里面的元素数量小于 4096，使用 Array Container 来存储。当 Array Container 超过最大容量 4096 时，会转换为 Bitmap Container。
 <!--more-->
 简单举2个例子，说明rbm是如何存储数据的。
 
 例1：0x00020032（十进制131122）放入一个 RBM 的过程如下图所示：
 
-
+![](1.png)
 
 131122 的高 16 位是 0002，找到对应的桶 0x0002。在桶对应的 Container 中存储低 16 位，因为 Container 元素个数不足 4096，因此是一个 Array Container。低 16 位为 0032（十进制为50）, 在 Array Container 中二分查找找到相应的位置插入即可（如上图50的位置）。相较于纯Bitmap 需要占用 16K (131122/8/1024) 内存来存储这个数，而这种存储实际只占用了4B（桶中占 2 B，Container中占 2 B，不考虑数组的初始容量）。
 
 例2：0xFFFF3ACB（十进制4294916811）放入一个 RBM 的过程如下图所示：
+
+![](2.png)
   
-4294916811 的高 16 位是 FFFF，找到对应的桶 0xFFFF。在桶对应的 Container 中存储低 16 位，因为 Container 中元素个数已经超过 4096，底层是一个 Bitmap Container。低 16 位为 3ACB（十进制为15051）, 因此在 Bitmap Container 中通过下标直接寻址找到相应的位置，将其置为 1 即可（如上图15051的位置）。由于每个 Bitmap Container 需要处理低 16 位数据，使用 Bitmap 来存储需要 8192 Bytes（2^16/8）, 而一个 long 值占 8 个 Bytes，所以数组大小为 1024。因此一个 Bitmap Container 固定占用内存 8 KB。
+4294916811 的高 16 位是 FFFF，找到对应的桶 0xFFFF。在桶对应的 Container 中存储低 16 位，因为 Container 中元素个数已经超过 4096，底层是一个 Bitmap Container。低 16 位为 3ACB（十进制为15051）, 因此在 Bitmap Container 中通过下标直接寻址找到相应的位置，将其置为 1 即可（如上图15051的位置）。
+
+由于每个 Bitmap Container 需要处理低 16 位数据，使用 Bitmap 来存储需要 8192 Bytes（2^16/8）, 而一个 long 值占 8 个 Bytes，所以数组大小为 1024。因此一个 Bitmap Container 固定占用内存 8 KB。
 
 ## RoaringBitmap数据结构
+
 RoaringBitmap的基本构成如下:首先是一个RoaringArray，名字是high_low_container，该结构中存储了每个uint32整数的高16bit的索引keys以及具体存储数字的container。
 
-###RoaringArray
+### RoaringArray
 ```c++
 typedef struct roaring_bitmap_s {
     roaring_array_t high_low_container;
@@ -45,9 +52,10 @@ typedef struct roaring_array_s {
 	* typecodes：可理解为container type的数组，标识container的类型
 	* size：可理解为rbm包含的key-value有效数量
 
-PS：keys数组和containers数组是一一对应的，且keys永远保证有序，这是为了之后索引的二分查找
+PS：keys数组和containers数组是一一对应的，且keys永远保证有序，这是为了之后**索引的二分查找**
 
 ### Containers
+
 Container用于存储低16位的数据，根据数据量以及疏密程度分为以下3个容器：
 * ArrayContainer
 * BitmapContainer
@@ -119,7 +127,7 @@ STRUCT_CONTAINER(run_container_s) {
 
 例如：3,4,5,10,20,21,22,23这样一组数据会被优化成3,2,10,0,20,3，原理就是记录初始数字以及连续的数量，并把压缩后的数据记录在short数组中。这种压缩方式对于数据的疏密程度非常敏感，举两个最极端的例子：如果这个Container中所有数据都是连续的，也就是[0,1,2.....65535]，压缩后为0,65535，即2个short，4字节。若这个container中所有数据都是间断的（都是偶数或奇数），也就是[0,2,4,6....65532,65534]，压缩后为0,0,2,0.....65534,0，这不仅没有压缩反而膨胀了一倍，65536个short，即128kb
 
-因此是否选择RunContainer是需要判断的，RBM提供了一个转化方法runOptimize()用于对比和其他两种Container的空间大小，若占据优势则会进行转化。
+因此是否选择RunContainer是需要判断的，RBM提供了一个**转化方法runOptimize()**用于对比和其他两种Container的空间大小，若占据优势则会进行转化。
 
 **各个Container之间比较如下**：
 
@@ -128,24 +136,35 @@ STRUCT_CONTAINER(run_container_s) {
 只有BitmapContainer可根据下标直接寻址，复杂度为O(1)，ArrayContainer和RunContainer都需要二分查找，复杂度O(log n)
 
 **2. 内存占用**
- 
+ ![](4.png)
 
-### RoaringBitmap源码分析
+## RoaringBitmap源码分析
+
 CRoaring源码：https://github.com/RoaringBitmap/CRoaring
 
-#### 1、Add
+### 1、Add
+
 Add大致流程：
+
 1. 二分判断新加的Value的高16位是否存在，不存在新建一个ArrayContainer，然后添加低16位数值即可
+
 2. 若存在，确定低16位Container位置后，判断对应Container的类型：
-	a. Array Container：
-		i. 通过二分查找Value低16位所在的ArrayContainer中的位置，若存在说明已经添加了则不处理
-		ii. 不存在则对元素容量Cardinality进行判断，决定是否需要扩容或者升级为BitmapContainer
-		iii. 将ArrayContainer中insert_idx之后的子数组后移一位，将数据插入，形成新的Array数组
-	b. Bitmap Container
-		i. 通过pos/64找到bitmap中的long数组中的位置得到原值old_word
-		ii. old_word | (1 << (pos%64) ) 得到new_word并赋值
-		iii. 更新Cardinality
-高16位
+
+    1. Array Container：
+        -  通过二分查找Value低16位所在的ArrayContainer中的位置，若存在说明已经添加了则不处理
+
+        - 不存在则对元素容量Cardinality进行判断，决定是否需要扩容或者升级为BitmapContainer
+		
+        - 将ArrayContainer中insert_idx之后的子数组后移一位，将数据插入，形成新的Array数组
+	2. Bitmap Container
+        
+        - 通过pos/64找到bitmap中的long数组中的位置得到原值old_word
+		
+        - old_word | (1 << (pos%64) ) 得到new_word并赋值
+		
+        - 更新Cardinality
+#### 高16位Add
+```c++
 void roaring_bitmap_add(roaring_bitmap_t *r, uint32_t val) {
     roaring_array_t *ra = &r->high_low_container;
 		// 获取待插入数val的高16位
@@ -176,7 +195,13 @@ void roaring_bitmap_add(roaring_bitmap_t *r, uint32_t val) {
                                    container, typecode);
     }
 }
-Array Container Add
+```
+
+#### 低16位Add
+
+##### Array Container Add
+
+```c++
 /**
  * Add value to the set if final cardinality doesn't exceed max_cardinality.
  * Return code:
@@ -221,11 +246,16 @@ static inline int array_container_try_add(array_container_t *arr, uint16_t value
         return -1;
     }
 }
-add流程：
-1、通过二分查找找到val所在的array中的位置，若存在则不处理，不存在则进入下一步。
-2、对cardinality进行判断，决定是否需要升级为BitmapContainer或者扩容。
-3、将array中insert_idx之后的子数组后移一位，将数据插入，形成新的Array数组。
-Bitmap Container Add
+```
+**add流程：**
+
+1. 通过二分查找找到val所在的array中的位置，若存在则不处理，不存在则进入下一步。
+2. 对cardinality进行判断，决定是否需要升级为BitmapContainer或者扩容。
+3. 将array中insert_idx之后的子数组后移一位，将数据插入，形成新的Array数组。
+
+##### Bitmap Container Add
+
+```C++
 // file contains grubby stuff that must know impl. details of all container
 // types.
 bitset_container_t *bitset_container_from_array(const array_container_t *ac) {
@@ -267,27 +297,34 @@ static inline bool bitset_container_add(bitset_container_t *bitset,
     bitset->words[pos >> 6] = new_word;
     return increment > 0;
 }
+```
 
-add流程：
-1、通过pos/64找到bitmap中的long数组中的位置得到原值old_word。
-2、old_word | (1 << (pos%64) ) 得到new_word。
-3、改变cardinality。
-2、And
-And流程：
+**add流程：**
+1. 通过pos/64找到bitmap中的long数组中的位置得到原值old_word。
+2. old_word | (1 << (pos%64) ) 得到new_word。
+3. 改变cardinality。
+
+### 2、And
+
+**And流程：**
+
 1. 获取high_low_container，判断keys数组中元素是否相等，即判断高16位
 2. 在高16位元素相等的情况下，去判断对应Container中存储的低16位元素：
-	a. Bitmap Container & Bitmap Container
-		i. 快速获取两个Bitmap求交后的元素个数（底层AVX2指令集优化）
-		ii. 若求交后元素个数大于4096，用Bitmap Container存储，否则用Array Container存储。
-	b. Array Container & Array Container
-		i. 计算结果集的cardinality的上限，并初始化
-		ii. 两个Array Container元素相差较大，差距大于64倍的时候，会调用intersect_skewed_uint16，步长为2的幂次方的形式递增，加速跳过不相交的元素。如果相差不大的时候，调用intersect_uint16步长为1进行比较（底层就是两个有序数组求交集） 或者intersect_vector16进行AVX2指令集加速
-	c. Bitmap Container & Array Container
-		i. 给结果数组dst申请扩容，初始长度为Array Container的array的长度
-		ii. for循环遍历Array Container，依次其中的元素是否在Bitmap Container中存在，如果存在的话，则更新到结果answer中，并更新Cardinality。
-	d. Array Container & Bitmap Container
-		i. 同上
-高16位
+    1. Bitmap Container & Bitmap Container
+		- 快速获取两个Bitmap求交后的元素个数（底层AVX2指令集优化）
+		- 若求交后元素个数大于4096，用Bitmap Container存储，否则用Array Container存储。
+	2. Array Container & Array Container
+		- 计算结果集的cardinality的上限，并初始化
+		- 两个Array Container元素相差较大，差距大于64倍的时候，会调用intersect_skewed_uint16，步长为2的幂次方的形式递增，加速跳过不相交的元素。如果相差不大的时候，调用intersect_uint16步长为1进行比较（底层就是两个有序数组求交集） 或者intersect_vector16进行AVX2指令集加速
+	3. Bitmap Container & Array Container
+		- 给结果数组dst申请扩容，初始长度为Array Container的array的长度
+		- for循环遍历Array Container，依次其中的元素是否在Bitmap Container中存在，如果存在的话，则更新到结果answer中，并更新Cardinality。
+	4. Array Container & Bitmap Container
+		- 同上
+
+#### 高16位 And
+
+```c++
 roaring_bitmap_t *roaring_bitmap_and(const roaring_bitmap_t *x1,
                                      const roaring_bitmap_t *x2) {
     uint8_t result_type = 0;
@@ -332,7 +369,11 @@ roaring_bitmap_t *roaring_bitmap_and(const roaring_bitmap_t *x1,
     }
     return answer;
 }
-低16位
+```
+
+#### 低16位And
+
+```c++
 static inline container_t *container_and(
     const container_t *c1, uint8_t type1,
     const container_t *c2, uint8_t type2,
@@ -392,10 +433,16 @@ static inline container_t *container_and(
             return NULL;
     }
 }
-Bitmap Container & Bitmap Container
+```
+
+
+##### Bitmap Container & Bitmap Container
+
 两个Bitmap Container求And流程：
-1、快速获取两个Bitmap求交后的元素个数
-2、若求交后元素个数大于4096，用Bitmap Container存储，否则用Array Container存储。
+1. 快速获取两个Bitmap求交后的元素个数
+2. 若求交后元素个数大于4096，用Bitmap Container存储，否则用Array Container存储。
+
+```c++
 bool bitset_bitset_container_intersection(
     const bitset_container_t *src_1, const bitset_container_t *src_2,
     container_t **dst
@@ -447,10 +494,14 @@ size_t bitset_extract_intersection_setbits_uint16(const uint64_t * __restrict__ 
     }
     return outpos;
 }
-Array Container & Array Container
+```
+
+##### Array Container & Array Container
 两个Array Container求And流程：
-1、首先计算结果集的cardinality的上限，并初始化
-2、两个Array Container元素相差较大，差距大于64倍的时候，会调用intersect_skewed_uint16，步长为2的幂次方的形式递增，加速跳过不相交的元素。如果相差不大的时候，调用intersect_uint16步长为1进行比较（底层就是两个有序数组求交集） 或者intersect_vector16进行avx2指令集加速。
+1. 首先计算结果集的cardinality的上限，并初始化
+2. 两个Array Container元素相差较大，差距大于64倍的时候，会调用intersect_skewed_uint16，步长为2的幂次方的形式递增，加速跳过不相交的元素。如果相差不大的时候，调用intersect_uint16步长为1进行比较（底层就是两个有序数组求交集） 或者intersect_vector16进行avx2指令集加速。
+
+```c++
 void array_container_intersection(const array_container_t *array1,
                                   const array_container_t *array2,
                                   array_container_t *out) {
@@ -494,10 +545,16 @@ void array_container_intersection(const array_container_t *array1,
 #endif
     }
 }
-Bitmap Container & Array Container
+```
+
+##### Bitmap Container & Array Container
+
 Bitmap Container 和 Array Container And流程：
-1、首先，给dst申请扩容，初始长度为ArrayContainer的array的长度
-2、然后for循环遍历ArrayContainer，依次其中的元素是否在BitmapContainer中存在，如果存在的话，则更新到结果answer中，并增加cardinality。void array_bitset_container_intersection(const array_container_t *src_1,
+
+1. 首先，给dst申请扩容，初始长度为ArrayContainer的array的长度
+2. 然后for循环遍历ArrayContainer，依次其中的元素是否在BitmapContainer中存在，如果存在的话，则更新到结果answer中，并增加cardinality。
+```c++
+void array_bitset_container_intersection(const array_container_t *src_1,
                                          const bitset_container_t *src_2,
                                          array_container_t *dst) {
     if (dst->capacity < src_1->cardinality) {
@@ -512,24 +569,35 @@ Bitmap Container 和 Array Container And流程：
     }
     dst->cardinality = newcard;
 }
-Array Container & Bitmap Container
+```
+
+##### Array Container & Bitmap Container
+
 同上Bitmap Container & Array Container的原理。
+
 同时还有iand，标识inplace的And操作，原理与上述基本类似。
-3、Or
-Or流程：
+
+### 3、Or
+
+**Or流程：**
+
 1. 获取high_low_container，while循环遍历判断keys数组中元素，在高16位相等的情况下，调用container_or求两个container的并集
-	a. Bitmap Container | Bitmap Container
-		i. 两个Bitmap求并集（底层使用AVX2指令集加速批量处理）
-	b. Array Container | Array Container
-		i. 预估取并集后的元素个数是否小于4096，
+	1. Bitmap Container | Bitmap Container
+		- 两个Bitmap求并集（底层使用AVX2指令集加速批量处理）
+	2. Array Container | Array Container
+		- 预估取并集后的元素个数是否小于4096，
 			1. 是，则新建一个Array Container
 			2. 否，则新建一个Bitmap Container
-	c. Bitmap Container | Array Container
-		i. Copy一份Bitmap Container
-		i. 遍历Array Container的元素，添加进新的Bitmap Container
-	b. Array Container | Bitmap Container
-		i. 同上
+	3. Bitmap Container | Array Container
+		1. Copy一份Bitmap Container
+		2. 遍历Array Container的元素，添加进新的Bitmap Container
+	4. Array Container | Bitmap Container
+		- 同上
 2. 高16位元素不相等，直接给answer添加对应的key及container
+
+#### 高16位 or
+
+```c++
 roaring_bitmap_t *roaring_bitmap_or(const roaring_bitmap_t *x1,
                                     const roaring_bitmap_t *x2) {
     uint8_t result_type = 0;
@@ -605,7 +673,9 @@ roaring_bitmap_t *roaring_bitmap_or(const roaring_bitmap_t *x1,
     }
     return answer;
 }
-ContainerOr
+```
+#### 低16位 Container Or
+```c++
 static inline container_t *container_or(
     const container_t *c1, uint8_t type1,
     const container_t *c2, uint8_t type2,
@@ -668,7 +738,10 @@ static inline container_t *container_or(
             return NULL;  // unreached
     }
 }
-两个Array Container求Or
+```
+
+##### 两个Array Container求Or
+```c++
 bool array_array_container_union(
     const array_container_t *src_1, const array_container_t *src_2,
     container_t **dst
@@ -706,7 +779,9 @@ bool array_array_container_union(
     }
     return returnval;
 }
-Array Container 和 Bitmap Container求 Or
+```
+##### Array Container 和 Bitmap Container求 Or
+```c++
 void array_bitset_container_union(const array_container_t *src_1,
                                   const bitset_container_t *src_2,
                                   bitset_container_t *dst) {
@@ -735,7 +810,9 @@ uint64_t bitset_set_list_withcard(uint64_t *words, uint64_t card,
     }
     return card;
 }
-4、FastUnion
+```
+### 4、FastUnion
+```c++
 static Roaring fastunion(size_t n, const Roaring **inputs) {
         const roaring_bitmap_t **x =
             (const roaring_bitmap_t **)malloc(n * sizeof(roaring_bitmap_t *));
@@ -876,18 +953,82 @@ roaring_bitmap_t *roaring_bitmap_lazy_or(const roaring_bitmap_t *x1,
     }
     return answer;
 }
+```
 
-EXPERIMENTS
+
+
+## EXPERIMENTS
+
 参考论文：https://arxiv.org/pdf/1709.07821.pdf
+
 内存使用：
+![](5.png)
  
 遍历一遍所使用的耗时：
+![](6.png)
  
 随机获取某个元素的耗时：
+![](7.png)
  
 两两求交集：
+![](8.png)
  
 两两求并集：
+![](9.png)
  
 多个集合求并集： 
+![](10.png)
 
+## RoaringBitmap优化寻址
+
+利用 RBM 结构特性去计算某个 doc 对应的下标，即计算某个数是 RBM 中的第几个 1，在此基础上我针对CRoaring源码实现部分，做了一些小小的优化，现将优化思路简单分享一下。
+
+CRoaring原生的提供两个接口``contains`` 和 ``rank``，一个是判断某个数是否存在，一个是计算集合中小于等于某个数的个数，接口函数代码如下：
+```c++
+
+/**
+ * Check if value x is present
+ */
+bool contains(uint32_t x) const noexcept {
+    return api::roaring_bitmap_contains(&roaring, x);
+}
+
+/**
+ * Returns the number of integers that are smaller or equal to x.
+ * Thus the rank of the smallest element is one.  If
+ * x is smaller than the smallest element, this function will return 0.
+ * The rank and select functions differ in convention: this function returns
+ * 1 when ranking the smallest value, but the select function returns the
+ * smallest value when using index 0.
+ */
+uint64_t rank(uint32_t x) const noexcept {
+    return api::roaring_bitmap_rank(&roaring, x);
+    }
+```
+
+针对一些数据，写了一个benchmark的工具
+
+![](11.png)
+
+核心的优化思路是充分利用LocalDocID的有序性，尽可能缓存上一次的计算结果，减少重复计算。
+
+优化图例介绍：
+
+![](12.png)
+
+
+其中 exp2的这部分的寻址优化工作也向CRoaring开源库提交一次[PR](https://github.com/RoaringBitmap/CRoaring/pull/470)，已由开源项目维护者审核通过并发布。
+
+```c++
+/**
+ * Returns the index of x in the set, index start from 0.
+ * If the set doesn't contain x , this function will return -1.
+ * The difference with rank function is that this function will return -1
+ * when x isn't in the set, but the rank function will return a
+ * non-negative number.
+ */
+int64_t getIndex(uint32_t x) const noexcept {
+    return api::roaring_bitmap_get_index(&roaring, x);
+}
+```
+![](13.png)
