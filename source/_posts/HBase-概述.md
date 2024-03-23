@@ -40,7 +40,7 @@ Hbase的扩展性主要体现在两个方面，一个是**基于上层处理能�
 稀疏主要是针对Hbase列的灵活性，在列族中，你可以指定任意多的列，在列数据为空的情况下，是不会占用存储空间的。
 
 ## HBase 架构
-![](./HBase-概述/HBase架构.png)
+![](HBase架构.png)
 
 从图中可以看出Hbase是由**Client、Zookeeper、Master、HRegionServer、HDFS**等几个组件组成，下面来介绍一下几个组件的相关功能：
 
@@ -118,7 +118,7 @@ HFile存储在Store中，一个Store对应HBase表中的一个列族(列簇， C
 
 ## 1、HBase读流程
 
-![](./HBase-概述/HBase读流程.png)
+![](HBase读流程.png)
 
 1）Client先访问zookeeper，从meta表读取region的位置，然后读取meta表中的数据。meta中又存储了用户表的region信息；
 
@@ -136,7 +136,7 @@ HFile存储在Store中，一个Store对应HBase表中的一个列族(列簇， C
 
 ## 2、HBase写流程
 
-![](./HBase-概述/HBase写流程.png)
+![](HBase写流程.png)
 
 1）Client向HregionServer发送写请求；
 
