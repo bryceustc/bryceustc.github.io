@@ -305,12 +305,12 @@
 <p>注：这两种方法，在博客首页显示的效果不一样，根据自己的需要，选择自己喜欢的方法</p>
 <h4 id="5、在博文中添加图片"><a href="#5、在博文中添加图片" class="headerlink" title="5、在博文中添加图片"></a>5、在博文中添加图片</h4><p>方法一：</p>
 <p>(1)在blog目录下，安装插件：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-asset-image --save</span><br></pre></td></tr></table></figure><br>(2)在blog\source 目录下新建一个images文件夹，把图片放置在里面；</p>
-<p>(3)在xxx.md文件中引用图片：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![header]( images/header.jpg)</span><br></pre></td></tr></table></figure></p>
+<p>(3)在xxx.md文件中引用图片：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{% asset_img "header.jpg" "header" %}</span><br></pre></td></tr></table></figure></p>
 <p>方法二：</p>
 <p>(1)在全局配置文件（blog/_config.yml)中将post_asset_folder设置为true；</p>
 <p>(2)创建文章（在创建的时候，会在blog/source/_post目录下，生成一个XXX.md文件和一个XXX的文件夹）：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;XXX&quot;</span><br></pre></td></tr></table></figure></p>
 <p>(3)把XXX这个博文需要展示的图片放在XXX文件夹目录下；</p>
-<p>(4)在XXX.md文件中引入图片的方式：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![你想输入的替代文字](XXX/图片名.jpg)</span><br></pre></td></tr></table></figure></p>
+<p>(4)在XXX.md文件中引入图片的方式：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{% asset_img "图片名.jpg" "你想输入的替代文字" %}</span><br></pre></td></tr></table></figure></p>
 <h4 id="6、发布到Github上"><a href="#6、发布到Github上" class="headerlink" title="6、发布到Github上"></a>6、发布到Github上</h4><p>（1）发表的文章在本地预览无误后，在 Git Bash 命令窗口执行以下命令：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
 <p>（2）在浏览器，访问自己的博客域名，即可看到刚 发布的文章</p>
@@ -324,10 +324,10 @@
   <div class="popular-posts-header">相关文章推荐</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/03/21/Hexo-NexT主题博客相关设置/" rel="bookmark">Hexo + NexT主题博客相关设置</a></div>
+      <div class="popular-posts-title"><a href="/2020/03/19/Hexo-GitHub-Pages-搭建个人博客/" rel="bookmark">Hexo + GitHub Pages 搭建个人博客</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2020/03/19/Hexo-GitHub-Pages-搭建个人博客/" rel="bookmark">Hexo + GitHub Pages 搭建个人博客</a></div>
+      <div class="popular-posts-title"><a href="/2020/03/21/Hexo-NexT主题博客相关设置/" rel="bookmark">Hexo + NexT主题博客相关设置</a></div>
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2020/03/21/利用Github分支备份Hexo博客源文件/" rel="bookmark">利用Github分支备份Hexo博客源文件</a></div>

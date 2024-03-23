@@ -29,13 +29,13 @@
 <meta property="og:site_name" content="Bryce&#39;s Blog">
 <meta property="og:description" content="题目描述：给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bryceustc.github.io/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/1.png">
+<meta property="og:image" content="https://bryceustc.github.io/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/1.png">
 <meta property="article:published_time" content="2023-09-21T07:28:35.000Z">
 <meta property="article:modified_time" content="2023-09-21T07:28:35.000Z">
 <meta property="article:author" content="Bryce">
 <meta property="article:tag" content="剑指Offer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bryceustc.github.io/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/1.png">
+<meta name="twitter:image" content="https://bryceustc.github.io/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/1.png">
 
 <link rel="canonical" href="https://bryceustc.github.io/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/">
 
@@ -404,7 +404,7 @@ mjx-container[display="true"] + br {
       
         <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p>给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。<br><span id="more"></span></p>
 <h1 id="本题考点："><a href="#本题考点：" class="headerlink" title="本题考点："></a>本题考点：</h1><p>  二叉树的中序遍历(LDR)，以及分情况讨论。</p>
-<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路:"></a>解题思路:</h1><p><img src="/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/1.png" alt></p>
+<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路:"></a>解题思路:</h1><img src="/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/1.png" class>
 <p>上图二叉树的中序遍历是d,b,h,e,i,a,f,c,g。</p>
 <p><strong>情况1:</strong> </p>
 <p><strong>如果一个结点有右子树，那么它的下一个结点就是它的右子树的最左子结点</strong>。也就是说从右子结点出发一直沿着指向左子树结点的指针，我们就能找到它的下一个结点。例如，图中结点b的下一个结点是h，结点a的下一个结点是f。</p>
@@ -425,13 +425,13 @@ mjx-container[display="true"] + br {
   <div class="popular-posts-header">相关文章推荐</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/09/16/剑指offer（三）：数组中重复的数字/" rel="bookmark">剑指offer（三）：数组中重复的数字</a></div>
+    </li>
+    <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2023/09/16/剑指offer（一）：赋值运算符函数/" rel="bookmark">剑指offer（一）：赋值运算符函数</a></div>
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2023/09/20/剑指offer（七）：重建二叉树/" rel="bookmark">剑指offer（七）：重建二叉树</a></div>
-    </li>
-    <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/2023/09/16/剑指offer（三）：数组中重复的数字/" rel="bookmark">剑指offer（三）：数组中重复的数字</a></div>
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="/2023/09/26/剑指offer（九）：用两个栈实现队列/" rel="bookmark">剑指offer（九）：用两个栈实现队列</a></div>
