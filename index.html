@@ -204,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2023/12/29/CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2023/12/29/RoaringBitmap%E5%8E%9F%E7%90%86%20&%20CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.jfif">
@@ -218,7 +218,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/12/29/CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" class="post-title-link" itemprop="url">RoaringBitmap原理 & CRoaring源码解读</a>
+            <a href="/2023/12/29/RoaringBitmap%E5%8E%9F%E7%90%86%20&%20CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" class="post-title-link" itemprop="url">RoaringBitmap原理 & CRoaring源码解读 & 优化寻址</a>
         </h2>
 
         <div class="post-meta">
@@ -249,8 +249,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/12/29/CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/12/29/CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/12/29/RoaringBitmap%E5%8E%9F%E7%90%86%20&%20CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/12/29/RoaringBitmap%E5%8E%9F%E7%90%86%20&%20CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -260,14 +260,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>26k</span>
+              <span>29k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>23 分钟</span>
+              <span>26 分钟</span>
             </span>
 
         </div>
@@ -279,10 +279,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="RoaringBitMap原理"><a href="#RoaringBitMap原理" class="headerlink" title="RoaringBitMap原理"></a>RoaringBitMap原理</h2><p>Roaring Bitmap实现的主要思路是将32位无符号整数（0~4294967295）分成高16位和低16位两部分。通过高 16 位找到该数据存储在哪个桶中（高 16 位可以划分 2<sup>16</sup>个桶），把剩余的低 16 位放入该桶对应的 Container 中。<br>每个桶都有对应的 Container，不同的 Container 存储方式不同。依据不同的场景，主要有 2 种不同的 Container，分别是 Array Container 和 Bitmap Container。Array Container 存放稀疏的数据，Bitmap Container 存放稠密的数据。若一个 Container 里面的元素数量小于 4096，使用 Array Container 来存储。当 Array Container 超过最大容量 4096 时，会转换为 Bitmap Container。<br></p>
+          <h2 id="RoaringBitMap原理"><a href="#RoaringBitMap原理" class="headerlink" title="RoaringBitMap原理"></a>RoaringBitMap原理</h2><p>Roaring Bitmap实现的主要思路是将32位无符号整数（0~4294967295）分成高16位和低16位两部分。通过高 16 位找到该数据存储在哪个桶中（高 16 位可以划分 2<sup>16</sup>个桶），把剩余的低 16 位放入该桶对应的 Container 中。</p>
+<p>每个桶都有对应的 Container，不同的 Container 存储方式不同。依据不同的场景，主要有 2 种不同的 Container，分别是 Array Container 和 Bitmap Container。Array Container 存放稀疏的数据，Bitmap Container 存放稠密的数据。若一个 Container 里面的元素数量小于 4096，使用 Array Container 来存储。当 Array Container 超过最大容量 4096 时，会转换为 Bitmap Container。<br></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/12/29/CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/#more" rel="contents">
+              <a class="btn" href="/2023/12/29/RoaringBitmap%E5%8E%9F%E7%90%86%20&%20CRoaring%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -849,13 +850,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">293k</span>
+    <span title="站点总字数">296k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:26</span>
+    <span title="站点阅读时长">4:29</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
