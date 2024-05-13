@@ -316,6 +316,110 @@ mjx-container[display="true"] + br {
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jfif">
+      <meta itemprop="name" content="Bryce">
+      <meta itemprop="description" content="书写是对思维的缓存">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bryce's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">Hadoop Pipes编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-12-10 14:14:05" itemprop="dateCreated datePublished" datetime="2023-12-10T14:14:05+08:00">2023-12-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop-Pipes/" itemprop="url" rel="index"><span itemprop="name">Hadoop Pipes</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1、Hadoop-Pipes简介"><a href="#1、Hadoop-Pipes简介" class="headerlink" title="1、Hadoop Pipes简介"></a>1、Hadoop Pipes简介</h1><p>Hadoop Pipes是Hadoop MapReduce的C++接口代称。不同于使用标准输入和输出来实现的map代码和reduce代码之间的Streaming编程，Pipes使用Socket作为TaskTracker与C++进程之间数据传输的通道，数据传输为字节流。</p>
+<h1 id="2、Hadoop-Pipes编程初探"><a href="#2、Hadoop-Pipes编程初探" class="headerlink" title="2、Hadoop Pipes编程初探"></a>2、Hadoop Pipes编程初探</h1><p>Hadoop Pipes可供开发者编写RecordReader、Mapper、Partitioner、Reducer、RecordWriter五个组件，当然，也可以自定义Combiner。</p>
+<p>WordCount.cc 示例，也可以参考该git项目<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/alexanderkoumis/hadoop-wordcount-cpp/tree/master：">https://github.com/alexanderkoumis/hadoop-wordcount-cpp/tree/master：</a></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/12/10/Hadoop-Pipes%E7%BC%96%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2023/10/08/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -722,108 +826,6 @@ mjx-container[display="true"] + br {
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bryceustc.github.io/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/touxiang.jfif">
-      <meta itemprop="name" content="Bryce">
-      <meta itemprop="description" content="书写是对思维的缓存">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bryce's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/" class="post-title-link" itemprop="url">剑指offer（八）：二叉树的下一个节点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-09-21 15:28:35" itemprop="dateCreated datePublished" datetime="2023-09-21T15:28:35+08:00">2023-09-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%91%E6%8C%87Offer/" itemprop="url" rel="index"><span itemprop="name">剑指Offer</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p>给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。<br></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/09/21/%E5%89%91%E6%8C%87offer%EF%BC%88%E5%85%AB%EF%BC%89%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -896,7 +898,7 @@ mjx-container[display="true"] + br {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-count">94</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -954,13 +956,13 @@ mjx-container[display="true"] + br {
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">296k</span>
+    <span title="站点总字数">297k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:29</span>
+    <span title="站点阅读时长">4:30</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener external nofollow noreferrer" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
