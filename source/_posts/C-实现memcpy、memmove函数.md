@@ -5,7 +5,7 @@ tags: C++
 categories: C++
 ---
 
-记录有道面试题实现memmove函数，C语言语法有点生疏了，Practice Makes Perfect.
+C++实现实现memcpy、memmove函数.
 
 memcpy与memmove的目的都是将N个字节的源内存地址的内容拷贝到目标内存地址中。但当源内存和目标内存存在重叠时，**memcpy不保证拷贝结果的正确，而memmove能正确地实施拷贝**，但这也增加了一点点开销。
 
