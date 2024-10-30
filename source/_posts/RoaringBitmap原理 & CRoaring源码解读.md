@@ -1017,7 +1017,7 @@ uint64_t rank(uint32_t x) const noexcept {
 ![](12.png)
 
 
-其中 exp2的这部分的寻址优化工作也向CRoaring开源库提交一次[PR](https://github.com/RoaringBitmap/CRoaring/pull/470)，已由开源项目维护者审核通过并发布。
+其中这部分的寻址优化工作也向CRoaring开源库成功提交一次[PR](https://github.com/RoaringBitmap/CRoaring/pull/470)。
 
 ```c++
 /**
@@ -1031,4 +1031,3 @@ int64_t getIndex(uint32_t x) const noexcept {
     return api::roaring_bitmap_get_index(&roaring, x);
 }
 ```
-![](13.png)
